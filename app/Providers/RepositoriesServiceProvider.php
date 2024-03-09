@@ -159,21 +159,50 @@ class RepositoriesServiceProvider extends ServiceProvider
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
             ->give(\Domains\CategoriesOfEmployees\Repositories\CategoryOfEmployeReadOnlyRepository::class);
-            
-            
-        // Bind ReadWriteRepositoryInterface to CategoryOfEmployeReadWriteRepository
-        $this->app->when(\Domains\Employees\Services\RESTful\CategoryOfEmployeRESTfulReadWriteService::class)
+        
+
+
+        // Bind ReadWriteRepositoryInterface to EmployeeReadWriteRepository
+        $this->app->when(\Domains\Employees\Services\RESTful\EmployeeRESTfulReadWriteService::class)
         ->needs(
             \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
         )
-        ->give(\Domains\Employees\Repositories\CategoryOfEmployeReadWriteRepository::class);
+        ->give(\Domains\Employees\Repositories\EmployeeReadWriteRepository::class);
 
-        // Bind ReadWriteRepositoryInterface to CategoryOfEmployeReadOnlyRepository
-        $this->app->when(\Domains\Employees\Services\RESTful\CategoryOfEmployeRESTfulQueryService::class)
+        // Bind ReadWriteRepositoryInterface to EmployeeReadOnlyRepository
+        $this->app->when(\Domains\Employees\Services\RESTful\EmployeeRESTfulQueryService::class)
             ->needs(
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
-            ->give(\Domains\Employees\Repositories\CategoryOfEmployeReadOnlyRepository::class);
+            ->give(\Domains\Employees\Repositories\EmployeeReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to EmployeeContractuelReadWriteRepository
+        $this->app->when(\Domains\Employees\EmployeeContractuels\Services\RESTful\EmployeeContractuelRESTfulReadWriteService::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+        )
+        ->give(\Domains\Employees\EmployeeContractuels\Repositories\EmployeeContractuelReadWriteRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to EmployeeContractuelReadOnlyRepository
+        $this->app->when(\Domains\Employees\EmployeeContractuels\Services\RESTful\EmployeeContractuelRESTfulQueryService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Employees\EmployeeContractuels\Repositories\EmployeeContractuelReadOnlyRepository::class);
+            
+        // Bind ReadWriteRepositoryInterface to EmployeeNonContractuelReadWriteRepository
+        $this->app->when(\Domains\Employees\EmployeeNonContractuels\Services\RESTful\EmployeeNonContractuelRESTfulReadWriteService::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+        )
+        ->give(\Domains\Employees\EmployeeNonContractuels\Repositories\EmployeeNonContractuelReadWriteRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to EmployeeNonContractuelReadOnlyRepository
+        $this->app->when(\Domains\Employees\EmployeeNonContractuels\Services\RESTful\EmployeeNonContractuelRESTfulQueryService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Employees\EmployeeNonContractuels\Repositories\EmployeeNonContractuelReadOnlyRepository::class);
     }
 
     /**

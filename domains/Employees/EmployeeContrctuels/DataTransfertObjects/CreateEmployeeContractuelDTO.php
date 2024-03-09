@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Domains\Employees\DataTransfertObjects;
+namespace Domains\Employees\EmployeeContrctuels\DataTransfertObjects;
 
-use Domains\Users\DataTransfertObjects\CreateUserDTO;
 use App\Models\EmployeeContractuel;
 use Core\Utils\DataTransfertObjects\BaseDTO;
+use Core\Utils\Enums\StatutContratEnum;
+use Core\Utils\Enums\TypeContratEnum;
+use Illuminate\Validation\Rules\Enum;
 
 class CreateEmployeeContractuelDTO extends BaseDTO
 {
@@ -26,6 +28,7 @@ class CreateEmployeeContractuelDTO extends BaseDTO
         return EmployeeContractuel::class;
     }
 
+
     /**
      * Get the validation rules for the DTO object.
      *
@@ -33,29 +36,24 @@ class CreateEmployeeContractuelDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
-        $userDTO = new CreateUserDTO();
-        $userRules = $userDTO->rules();
-
-        $rules = array_merge([
-            'matricule'             => ['required', 'string'],
-            'type_employee'         => ['required', 'string'],
-            'statut_employee'       => ['required', 'string'],
-            'reference'             => ['required', 'string'],
-            'type_contract'         => ['required', 'string'],
-            'duree'                 => ['required', 'decimal'],
-            'date_debut'            => ['required', 'date'],
-            'date_fin'              => ['required', 'date'],
-            'contract_status'       => ['required', 'string'],
+        $rules = array_merge([//
+            'reference'             => ['sometimes', 'string'],
+            'type_contract'         => ['required', "string", new Enum(TypeContratEnum::class)],
+            'duree'                 => ['required', 'numeric'],
+            'date_debut'            => ['sometimes', 'date'],
+            'date_fin'              => ['nullable', 'date'],
             'renouvelable'          => ['required', 'boolean'],
-            'est_renouveler'        => ['required', 'boolean'],
             'poste_id'              => ['required', 'string', 'exists:postes,id'],
+            "poste_salaire_id"      => ["present_if:salaire,null", "sometimes", "uuid", "exists:poste_salaries,id"],
+            "salaire"               => ["present_if:poste_salaire_id,null", "sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             'unite_mesures_id'      => ['required', 'string', 'exists:unite_mesures,id'],
             'can_be_deleted'        => ['sometimes', 'boolean']
             
-        ], $userRules);
+        ], $rules);
 
         return $this->rules = parent::rules($rules);
     }
+
 
     /**
      * Get the validation error messages for the DTO object.
@@ -64,12 +62,13 @@ class CreateEmployeeContractuelDTO extends BaseDTO
      */
     public function messages(array $messages = []): array
     {
-        // Vous pouvez soit copier les messages de validation de CreateUserDTO ici
-        // ou bien utiliser les messages de validation de CreateUserDTO directement
+        $default_messages = array_merge([
+            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
+            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+        ], $messages);
 
-        $userDTO = new CreateUserDTO();
-        $userMessages = $userDTO->messages();
+        $messages = array_merge([], $default_messages);
 
-        return $this->messages = parent::messages($userMessages);
+        return $this->messages = parent::messages($messages);
     }
 }

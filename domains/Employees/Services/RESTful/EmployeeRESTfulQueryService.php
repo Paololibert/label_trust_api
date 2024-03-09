@@ -6,11 +6,7 @@ namespace Domains\Employees\Services\RESTful;
 
 use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\RestJsonQueryService;
-use Core\Utils\Exceptions\ServiceException;
-use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Domains\Employees\Services\RESTful\Contracts\EmployeeRESTfulQueryServiceContract;
-use Illuminate\Http\Response;
-use Throwable;
 
 /**
  * Class ***`EmployeeRESTfulQueryService`***

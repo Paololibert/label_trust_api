@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Domains\Employees\DataTransfertObjects;
+namespace Domains\Employees\EmployeeContractuels\DataTransfertObjects;
 
-use Domains\Users\People\DataTransfertObjects\UpdatePersonDTO;
 use App\Models\EmployeeContractuel;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
@@ -33,26 +32,20 @@ class UpdateEmployeeContractuelDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
-        $updatePersonDTO = new UpdatePersonDTO();
-        $personRules = $updatePersonDTO->rules();
-
         $rules = array_merge([
-            'matricule'             => ['sometimes', 'string'],
-            'type_employee'         => ['sometimes', 'string'],
-            'statut_employee'       => ['sometimes', 'string'],
             'reference'             => ['sometimes', 'string'],
             'type_contract'         => ['sometimes', 'string'],
-            'duree'                 => ['sometimes', 'decimal'],
+            'duree'                 => ['sometimes', 'numeric'],
             'date_debut'            => ['sometimes', 'date'],
             'date_fin'              => ['sometimes', 'date'],
             'contract_status'       => ['sometimes', 'string'],
             'renouvelable'          => ['sometimes', 'boolean'],
-            'est_renouveler'        => ['sometimes', 'boolean'],
+            "poste_salaire_id"      => ["present_if:salaire,null", "sometimes", "uuid", "exists:poste_salaries,id"],
+            "salaire"               => ["present_if:poste_salaire_id,null", "sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             'poste_id'              => ['sometimes', 'string', 'exists:postes,id'],
-            'employee_contractuel_id' => ['sometimes', 'string', 'exists:employee_contractuels,id'],
             'unite_mesures_id'      => ['sometimes', 'string', 'exists:unite_mesures,id'],
             'can_be_deleted'        => ['sometimes', 'boolean']
-        ], $personRules);
+        ], $rules);
 
         return $this->rules = parent::rules($rules);
     }
@@ -64,9 +57,13 @@ class UpdateEmployeeContractuelDTO extends BaseDTO
      */
     public function messages(array $messages = []): array
     {
-        $updatePersonDTO = new UpdatePersonDTO();
-        $personMessages = $updatePersonDTO->messages();
+        $default_messages = array_merge([
+            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
+            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+        ], $messages);
 
-        return $this->messages = parent::messages($personMessages);
+        $messages = array_merge([], $default_messages);
+
+        return $this->messages = parent::messages($messages);
     }
 }

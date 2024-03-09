@@ -43,7 +43,7 @@ class CreateSalairesTable extends Migration
 
                 $table->decimal('montant', 10, 2);
                 // 
-                $table->date('date_debut')
+                $table->date('date_debut')->useCurrent()
                     ->comment('Indicate when the contract was created');
                 // 
                 $table->date('date_fin')->nullable()

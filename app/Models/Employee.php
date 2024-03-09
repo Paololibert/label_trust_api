@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Employee extends ModelContract
 {
     use Profilable;
+    
     /**
      * The database connection that should be used by the model.
      *
@@ -86,7 +87,7 @@ class Employee extends ModelContract
      * @var array<int, string>
      */
     protected $with = [
-        'user'
+        'employee_temporaire','user'
     ];
 
     /**
@@ -110,6 +111,19 @@ class Employee extends ModelContract
     public function employee_temporaire()
     {
         return $this->morphedByMany(EmployeeNonContractuel::class, 'contractuelable', 'contractuelables', 'contractuelable_id', 'employee_id')
+                    ->using(Contractuelable::class)/* ->wherePivot('actif', true) */; 
+    }
+
+       /**
+     * Get of the non_contractuel (temporaire) that is assigned this employee.
+     */
+    /* public function employee_temporaire(): MorphOne
+    {
+        return $this->morphedByOne(EmployeeNonContractuel::class, 'contractuelable');
+    } */
+    public function employee_contractuel()
+    {
+        return $this->morphedByMany(EmployeeContractuel::class, 'contractuelable', 'contractuelables', 'contractuelable_id', 'employee_id')
                     ->using(Contractuelable::class)/* ->wherePivot('actif', true) */; 
     }
     /**

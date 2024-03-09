@@ -6,6 +6,7 @@ namespace Core\Data\Eloquent\ORMs;
 
 use App\Models\Employee;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -16,15 +17,15 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @return MorphOne
  */
 
-trait Contactuelable
+trait Contractuelable
 {
     
     /**
      * Get all of the employees for the post.
      */
-    public function employee(): MorphOne
+    public function employee(): MorphToMany
     {
-        return $this->morphOne(Employee::class, 'contractuelable');
+        return $this->morphToMany(Employee::class, 'contractuelable');
     }
 
     /**

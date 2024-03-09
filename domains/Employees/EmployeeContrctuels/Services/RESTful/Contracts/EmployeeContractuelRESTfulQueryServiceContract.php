@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Domains\Users\Companies\Services\RESTful\Contracts;
+namespace Domains\Employees\EmployeeContractuels\Services\RESTful\Contracts;
 
 use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
 
@@ -19,7 +19,7 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
  * defined in this interface, which includes `querying`, `filtering`, `sorting`, `pagination`,
  * and other operations specific to EmployeeContractuel resources.
  *
- * @package ***`\Domains\Users\Companies\Services\RESTful\Contracts`***
+ * @package ***`\Domains\Employees\EmployeeContractuels\Services\RESTful\Contracts`***
  */
 interface EmployeeContractuelRESTfulQueryServiceContract extends RestJsonQueryServiceContract
 {

@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Domains\Users\Companies\Repositories;
+namespace Domains\Employees\EmployeeContractuels\Repositories;
 
 use App\Models\EmployeeContractuel;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
-
 /**
  * ***`EmployeeContractuelReadWriteRepository`***
  *
  * This class extends the EloquentReadWriteRepository class, which suggests that it is responsible for providing read-only access to the EmployeeContractuel $instance data.
  *
- * @package ***`Domains\Users\Companies\Repositories`***
+ * @package ***`Domains\Employees\EmployeeContractuels\Repositories`***
  */
 class EmployeeContractuelReadWriteRepository extends EloquentReadWriteRepository
 {

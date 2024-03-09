@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Core\Data\Eloquent\Contract\ModelContract;
+use Core\Data\Eloquent\ORMs\Contractuelable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class ***`EmployeeNonContractuel`***
@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class EmployeeNonContractuel extends ModelContract
 {
+    use Contractuelable;
     /**
      * The database connection that should be used by the model.
      *
@@ -41,7 +42,7 @@ class EmployeeNonContractuel extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'est_convertir','categories_of_employee_id'
+        'est_convertir','category_of_employee_id'
     ];
 
     /**
@@ -70,7 +71,7 @@ class EmployeeNonContractuel extends ModelContract
      */
     protected $casts = [
         'est_convertir'                 =>'boolean',
-        'categories_of_employee_id'     =>'string'
+        'category_of_employee_id'     =>'string'
     ];
 
     /**

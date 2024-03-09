@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Core\Data\Eloquent\Contract\ModelContract;
-use Core\Utils\Enums\StatutContratEnum;
-use Core\Utils\Enums\TypeContratEnum;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Core\Utils\Traits\CPivot;
 
 /**
  * Class ***`Contractuelable`***
@@ -22,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  */
 class Contractuelable extends ModelContract
 {
+    use  CPivot;
     /**
      * The database connection that should be used by the model.
      *

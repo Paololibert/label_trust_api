@@ -27,7 +27,7 @@ class UserObserver extends ModelContractObserver
         }
         else if($model->type_of_account === TypeOfAccountEnum::MORAL)
         {
-            $model->username = $model->userable->name;
+            $model->username = $model->userable?->name;
         }
     }
 }

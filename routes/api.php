@@ -154,7 +154,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                 Route::apiResource('categories_of_employees', 'CategoryOfEmployeController')->parameters(['categories_of_employees' => 'category_of_employee_id']);
 
-                Route::apiResource('employees', 'CategoryOfEmployeController')->parameters([
+                Route::apiResource('employees', 'EmployeeController')->parameters([
                     'employees' => 'employee_id'
                 ]);;
 

@@ -47,7 +47,7 @@ class CreateEmployeeNonContractuelsTable extends Migration
                 // Define a foreign key for 'categories_of_employees', pointing to the 'categories_of_employees' table
                 $this->foreignKey(
                     table: $table,          // The table where the foreign key is being added
-                    column: 'categories_of_employee_id',   // The column to which the foreign key is added ('categories_of_employee_id' in this case)
+                    column: 'category_of_employee_id',   // The column to which the foreign key is added ('categories_of_employee_id' in this case)
                     references: 'categories_of_employees',    // The referenced table (categories_of_employees) to establish the foreign key relationship
                     onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
                     nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows NULL)

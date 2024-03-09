@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Domains\Employees\DataTransfertObjects;
 
 use App\Models\Employee;
-use Core\Utils\Rules\ExistsForAuthUserAndUUID;
 use Core\Utils\DataTransfertObjects\BaseDTO;
-
+use Core\Utils\Enums\StatutEmployeeEnum;
+use Core\Utils\Enums\TypeEmployeeEnum;
+use Domains\Employees\EmployeeContrctuels\DataTransfertObjects\CreateEmployeeContractuelDTO;
+use Domains\Employees\EmployeeNonContractuels\DataTransfertObjects\CreateEmployeeNonContractuelDTO;
+use Domains\Users\DataTransfertObjects\CreateUserDTO;
+use Illuminate\Validation\Rules\Enum;
 
 /**
  * Class ***`CreateEmployeeDTO`***
@@ -23,6 +27,19 @@ class CreateEmployeeDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
+        
+        if(request('type_employee')){
+            switch (request()->type_employee) {
+                case TypeEmployeeEnum::NON_REGULIER->value:
+                    $this->merge(new CreateEmployeeNonContractuelDTO, 'data', ["required", "array"]);
+                    break;                
+                default:
+                    $this->merge(new CreateEmployeeContractuelDTO, 'data', ["required", "array"]);
+                    break;
+            }
+        }
+        
+        $this->merge(new CreateUserDTO, 'user', ["required", "array"]);
     }
 
     /**
@@ -44,9 +61,7 @@ class CreateEmployeeDTO extends BaseDTO
     {
         $rules = array_merge([
             'matricule'             => ['required',"string"],
-            "unite_mesure_id"       => ["required",'exists:unite_mesures,id'],
-            'type_employee'         => ['required',"string"],
-            'statut_employee'       => ['required',"string"],
+            "type_employee"         => ['required', "string", new Enum(TypeEmployeeEnum::class)],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

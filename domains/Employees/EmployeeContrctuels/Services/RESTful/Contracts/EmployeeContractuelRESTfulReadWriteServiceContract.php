@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Domains\Users\Companies\Services\RESTful\Contracts;
+namespace Domains\Employees\EmployeeContractuels\Services\RESTful\Contracts;
 
 use Core\Logic\Services\RestJson\Contracts\RestJsonReadWriteServiceContract;
 
@@ -15,7 +15,7 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonReadWriteServiceContract;
  *
  * Implementing classes should provide the necessary functionality to perform `read` and `write` operations on EmployeeContractuel resources via RESTful API endpoints.
  *
- * @package ***`\Domains\Users\Companies\Services\RESTful\Contracts`***
+ * @package ***`\Domains\Employees\EmployeeContractuels\Services\RESTful\Contracts`***
  */
 interface EmployeeContractuelRESTfulReadWriteServiceContract extends RestJsonReadWriteServiceContract
 {

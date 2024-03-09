@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Domains\Users\Companies\Services\RESTful;
+namespace Domains\Employees\EmployeeContractuels\Services\RESTful;
 
 use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\RestJsonQueryService;
-use Domains\Users\Companies\Services\RESTful\Contracts\EmployeeContractuelRESTfulQueryServiceContract;
-
+use Domains\Employees\EmployeeContractuels\Services\RESTful\Contracts\EmployeeContractuelRESTfulQueryServiceContract as ContractsEmployeeContractuelRESTfulQueryServiceContract;
 /**
  * Class ***`EmployeeContractuelRESTfulQueryService`***
  *
@@ -16,9 +15,9 @@ use Domains\Users\Companies\Services\RESTful\Contracts\EmployeeContractuelRESTfu
  *
  * The `EmployeeContractuelRESTfulQueryService` class primarily serves as a wrapper around the underlying query service, providing RESTful capabilities for querying EmployeeContractuel resources.
  *
- * @package ***`\Domains\Users\Companies\Services\RESTful`***
+ * @package ***`\Domains\Employees\EmployeeContractuels\Services\RESTful`***
  */
-class EmployeeContractuelRESTfulQueryService extends RestJsonQueryService implements EmployeeContractuelRESTfulQueryServiceContract
+class EmployeeContractuelRESTfulQueryService extends RestJsonQueryService implements ContractsEmployeeContractuelRESTfulQueryServiceContract
 {
     /**
      * Constructor for the EmployeeContractuelRESTfulQueryService class.

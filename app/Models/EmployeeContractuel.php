@@ -18,6 +18,7 @@ use Core\Data\Eloquent\Contract\ModelContract;
  */
 class EmployeeContractuel extends ModelContract
 {
+    
     /**
      * The database connection that should be used by the model.
      *
@@ -39,7 +40,7 @@ class EmployeeContractuel extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'categories_of_employee_id'
+
     ];
 
     /**
@@ -58,7 +59,7 @@ class EmployeeContractuel extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'categories_of_employee_id'
+
     ];
 
     /**
@@ -67,7 +68,7 @@ class EmployeeContractuel extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
-        'categories_of_employee_id'     =>'string'
+        
     ];
        
 

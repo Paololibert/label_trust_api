@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Domains\Employees\DataTransfertObjects;
+namespace Domains\Employees\EmployeeNonContractuels\DataTransfertObjects;
 
 use Domains\Users\People\DataTransfertObjects\UpdatePersonDTO;
 use App\Models\EmployeeContractuel;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
-class UpdateEmployeeContractuelDTO extends BaseDTO
+class UpdateEmployeeNonContractuelDTO extends BaseDTO
 {
 
     public function __construct()
@@ -37,19 +37,15 @@ class UpdateEmployeeContractuelDTO extends BaseDTO
         $personRules = $updatePersonDTO->rules();
 
         $rules = array_merge([
-            'matricule'                   => ['sometimes', 'string'],
-            'type_employee'               => ['sometimes', 'string'],
-            'statut_employee'             => ['sometimes', 'string'],
-            'can_be_deleted'              => ['sometimes', 'boolean'],
-            'date_debut'                  => ['sometimes', 'date'],
-            'poste_id'              => ['sometimes', 'string', 'exists:postes,id'],
-            'employee_contractuel_id' => ['sometimes', 'string', 'exists:employee_contractuels,id'],
-            'unite_mesures_id'      => ['sometimes', 'string', 'exists:unite_mesures,id'],
-            'can_be_deleted'        => ['sometimes', 'boolean']
+            'can_be_deleted'                => ['sometimes', 'boolean'],
+            'category_of_employee_id'       => ['sometimes', 'string', 'exists:categories_of_employees,id'],
+            'date_debut'                    => ['sometimes', 'date'],
+            'category_taux_id'             => ['sometimes', 'string', 'exists:categorie_taux,id'],
         ], $personRules);
 
         return $this->rules = parent::rules($rules);
     }
+
 
     /**
      * Get the validation error messages for the DTO object.
@@ -58,9 +54,13 @@ class UpdateEmployeeContractuelDTO extends BaseDTO
      */
     public function messages(array $messages = []): array
     {
-        $updatePersonDTO = new UpdatePersonDTO();
-        $personMessages = $updatePersonDTO->messages();
+        $default_messages = array_merge([
+            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
+            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+        ], $messages);
 
-        return $this->messages = parent::messages($personMessages);
+        $messages = array_merge([], $default_messages);
+
+        return $this->messages = parent::messages($messages);
     }
 }

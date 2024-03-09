@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Domains\Users\Companies\Services\RESTful;
+namespace Domains\Employees\EmployeeContractuels\Services\RESTful;
 
 use Core\Logic\Services\Contracts\ReadWriteServiceContract;
 use Core\Logic\Services\RestJson\RestJsonReadWriteService;
-use Domains\Users\Companies\Services\RESTful\Contracts\EmployeeContractuelRESTfulReadWriteServiceContract;
+use Domains\Employees\EmployeeContractuels\Services\RESTful\Contracts\EmployeeContractuelRESTfulReadWriteServiceContract as ContractsEmployeeContractuelRESTfulReadWriteServiceContract;
 
 /**
  * The ***`EmployeeContractuelRESTfulReadWriteService`*** class provides RESTful CRUD operations for the "EmployeeContractuel" resource.
@@ -15,9 +15,9 @@ use Domains\Users\Companies\Services\RESTful\Contracts\EmployeeContractuelRESTfu
  * It implements the `EmployeeContractuelRESTfulReadWriteServiceContract` interface that defines the contract for this service.
  * The class leverages the `JsonResponseTrait` to create consistent JSON responses with `success`, `error`, and `validation` error structures.
  *
- * @package ***`\Domains\Users\Companies\Services\RESTful`***
+ * @package ***`\Domains\Employees\EmployeeContractuels\Services\RESTful`***
  */
-class EmployeeContractuelRESTfulReadWriteService extends RestJsonReadWriteService implements EmployeeContractuelRESTfulReadWriteServiceContract
+class EmployeeContractuelRESTfulReadWriteService extends RestJsonReadWriteService implements ContractsEmployeeContractuelRESTfulReadWriteServiceContract
 {
     /**
      * Constructor for the EmployeeContractuelRESTfulReadWriteService class.

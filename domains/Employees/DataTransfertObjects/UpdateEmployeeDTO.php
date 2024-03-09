@@ -6,7 +6,12 @@ namespace Domains\Employees\DataTransfertObjects;
 
 use App\Models\Employee;
 use Core\Utils\DataTransfertObjects\BaseDTO;
-
+use Core\Utils\Enums\StatutEmployeeEnum;
+use Core\Utils\Enums\TypeEmployeeEnum;
+use Domains\Employees\EmployeeContractuels\DataTransfertObjects\UpdateEmployeeContractuelDTO;
+use Domains\Employees\EmployeeNonContractuels\DataTransfertObjects\UpdateEmployeeNonContractuelDTO;
+use Domains\Users\DataTransfertObjects\UpdateUserDTO;
+use Illuminate\Validation\Rules\Enum;
 
 /**
  * Class ***`UpdateEmployeeDTO`***
@@ -22,6 +27,19 @@ class UpdateEmployeeDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
+        
+        if(request('type_employee')){
+            switch (request()->type_employee) {
+                case TypeEmployeeEnum::NON_REGULIER->value:
+                    $this->merge(new UpdateEmployeeNonContractuelDTO, 'data', ["required", "array"]);
+                    break;                
+                default:
+                    $this->merge(new UpdateEmployeeContractuelDTO, 'data', ["required", "array"]);
+                    break;
+            }
+        }
+        
+        $this->merge(new UpdateUserDTO, 'user', ["required", "array"]);
     }
     
     /**
@@ -42,8 +60,9 @@ class UpdateEmployeeDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:employees,name,' . request()->route('employee_id') . ',id'],
-            "user_id"         => ["sometimes",'exists:users,id'],
+            'matricule'             => ['sometimes',"string"],
+            "type_employee"       => ['sometimes', "string", new Enum(TypeEmployeeEnum::class)],
+            'statut_employee'         => ['sometimes', "string", new Enum(StatutEmployeeEnum::class)],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
