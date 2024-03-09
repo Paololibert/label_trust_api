@@ -31,9 +31,6 @@ abstract class CreateResourceRequest extends ResourceRequest
      */
     public function authorize(): bool
     {
-        // Set the Data Transfer Object (DTO) associated with this request.
-        $this->setDto($this->getDto()->fromRequest($this));
-
         // Check the concrete class's authorization.
         return $this->isAuthorize();
     }

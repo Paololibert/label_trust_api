@@ -19,7 +19,7 @@ class UpdateUniteMesureRequest extends UpdateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(new UpdateUniteMesureDTO, 'unite_mesure');
+        parent::__construct(UpdateUniteMesureDTO::fromRequest(request()), 'unite_mesure');
     }
 
     /**
@@ -28,6 +28,11 @@ class UpdateUniteMesureRequest extends UpdateResourceRequest
     public function isAuthorize(): bool
     {
         return true;
+    }
+    
+    public function authorize(): bool
+    {
+        return parent::authorize();
     }
 
 }

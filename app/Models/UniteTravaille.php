@@ -80,6 +80,15 @@ class UniteTravaille extends ModelContract
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array<int, string>
+     */
+    protected $with = [
+        'taux'
+    ];
+
+    /**
      * Get the Unit mesure of the unitTravaille.
      *
      * @return BelongsTo
@@ -92,19 +101,19 @@ class UniteTravaille extends ModelContract
     /**
      * Get the user's full name attribute.
      *
-     * @return string The user's full name.
+     * @return string|null The user's full name.
      */
-    public function getUniteMesureSymbolAttribute(): string
+    public function getUniteMesureSymbolAttribute(): ?string
     {
-        return $this->uniteMesure->symbol ;
+        return $this->uniteMesure?->symbol ;
     }
 
     /**
      * Get the Unit mesure of the unitTravaille.
      *
-     * @return BelongsTo
+     * @return BelongsTo|null
      */
-    public function article(): BelongsTo
+    public function article(): ?BelongsTo
     {
         return $this->belongsTo(Article::class, 'article_id');
     }

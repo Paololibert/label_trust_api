@@ -19,7 +19,7 @@ class UpdateRoleRequest extends UpdateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(new UpdateRoleDTO, 'role');
+        parent::__construct(UpdateRoleDTO::fromRequest(request()), 'role');
     }
 
     /**
@@ -28,6 +28,11 @@ class UpdateRoleRequest extends UpdateResourceRequest
     public function isAuthorize(): bool
     {
         return true;
+    }
+    
+    public function authorize(): bool
+    {
+        return parent::authorize();
     }
 
 }

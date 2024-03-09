@@ -54,7 +54,7 @@ class CreatePersonDTO extends BaseDTO
             'marital_status'        => ['sometimes', "string", new Enum(MaritalStatusEnum::class)],
             "birth_date"            => ["sometimes", "datetime", 'Y-m-d', 'date_format:Y-m-d', 'before:today', 'max_age'],
 			"nationality"           => ["sometimes", "string", 'max:255'],
-            'can_be_deleted'         => ['sometimes', 'boolean', 'in:'.true.','.false]
+            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false]
         ], $rules);
 
         return $this->rules = parent::rules($rules);

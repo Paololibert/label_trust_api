@@ -42,7 +42,7 @@ class UpdateCategoryOfEmployeDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            	  => ["string", "required", 'unique:categories_of_employees,name,' . $this->ignoreValues['categories_of_employee'] . ',id'],
+            "name"            	  => ["string", "required", 'unique:categories_of_employees,name,' . request()->route("category_of_employee_id"). ',id'],
             'can_be_deleted'      => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

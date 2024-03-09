@@ -53,6 +53,7 @@ class BaseDTO implements DTOInterface
     {
         $this->mergeArray($data);
         $this->getProperties();
+        $this->rules();
         $this->messages();
     }
 
@@ -162,14 +163,55 @@ class BaseDTO implements DTOInterface
      * @param  \Core\Utils\DataTransfertObjects\DTOInterface $dto The DTO to merge.
      * @return void
      */
-    public function merge(DTOInterface $dto, string $key = null, array $key_rules = []): void
+    public function merge(DTOInterface $dto, string $array_key = null, array $key_rules = []): void
     {
         $this->properties = array_merge($this->properties, $dto->getProperties());
-        $rules = $key ? ["$key" => array_merge($key_rules, $dto->getValidationRules())] : $dto->getValidationRules();
-        $messages = $key ? ["$key" => $dto->getValidationMessages()] : $dto->getValidationMessages();
+        //$rules = $key ? ["$key.*" => array_merge($key_rules, $dto->getValidationRules())] : $dto->getValidationRules();
+        //$messages = $key ? ["$key.*" => $dto->getValidationMessages()] : $dto->getValidationMessages();
+
+        $rules = [];
+        $messages = [];
+
+        if($array_key){
+
+            if(count($key_rules)) {
+                $rules["{$array_key}"] = $key_rules;
+                $rules["{$array_key}"] = ['distinct'];
+            }
+
+            foreach ($dto->getValidationRules() as $key => $value) {
+                $rules["{$array_key}.{$key}"] = $value;
+            }
+
+            foreach ($dto->getValidationMessages() as $key => $value) {
+                $messages["{$array_key}.{$key}"] = $value;
+            }
+        }
+        else{
+            $rules = $dto->getValidationRules();
+        }
+
         $this->rules($rules);
         $this->messages($messages);
     }
+
+    function generateNestedValidationRules(array $attributes, string $parentKey = ''): array
+    {
+        $rules = [];
+
+        foreach ($attributes as $key => $value) {
+            $currentKey = $parentKey ? "{$parentKey}.{$key}" : $key;
+
+            if (is_array($value)) {
+                $rules = array_merge($rules, $this->generateNestedValidationRules($value, $currentKey));
+            } else {
+                $rules[$currentKey] = ['required']; // You can add additional rules here if needed
+            }
+        }
+
+        return $rules;
+    }
+
 
     /**
      * Merge an associative array of properties into the current DTO object.

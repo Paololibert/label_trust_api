@@ -25,8 +25,9 @@ abstract class UpdateResourceRequest extends ResourceRequest
      */
     public function __construct(\Core\Utils\DataTransfertObjects\DTOInterface $dto, string $resource_name = null)
     {
-        $this->resource = $resource_name;
         parent::__construct($dto);
+        $this->resource = $resource_name;
+        $this->dto->setIgnoreValue("{$this->resource}", request("{$this->resource}"));
     }
 
     /**
@@ -48,20 +49,7 @@ abstract class UpdateResourceRequest extends ResourceRequest
      */
     public function authorize(): bool
     {
-        // Set the Data Transfer Object (DTO) associated with this request.
-        //$this->setDto($this->getDto()->fromRequest($this));
-        //$this->dto = UpdateRoleDTO::fromRequest($this);
-        
-        $this->dto = $this->getDto()->fromRequest($this);
-
-        // Set the "role" property of the DTO to the current role
-        $this->dto->setIgnoreValue("{$this->resource}", $this->{$this->resource});
-
-        //dd(" {$this->resource} " . $this->{$this->resource});
-
         // Check the concrete class's authorization.
         return $this->isAuthorize();
-        // Check the concrete class's authorization.
-        return parent::authorize();
     }
 }

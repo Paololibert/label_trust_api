@@ -19,7 +19,7 @@ class CreateCategoryOfEmployeRequest extends CreateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(new CreateCategoryOfEmployeDTO);
+        parent::__construct(CreateCategoryOfEmployeDTO::fromRequest(request()));
     }
 
     /**
@@ -28,6 +28,11 @@ class CreateCategoryOfEmployeRequest extends CreateResourceRequest
     public function isAuthorize(): bool
     {
         return true;
+    }
+    
+    public function authorize(): bool
+    {
+        return parent::authorize();
     }
 
 }

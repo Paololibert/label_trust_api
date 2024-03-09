@@ -42,7 +42,7 @@ class UpdateEmployeeDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:employees,name,' . $this->ignoreValues['employee'] . ',id'],
+            "name"            		=> ["string", "required", 'unique:employees,name,' . request()->route('employee_id') . ',id'],
             "user_id"         => ["sometimes",'exists:users,id'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);

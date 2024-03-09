@@ -42,7 +42,7 @@ class UpdatePosteDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:postes,name,' . $this->ignoreValues['poste'] . ',id'],
+            "name"            		=> ["string", "required", 'unique:postes,name,' . request()->route('poste_id') . ',id'],
             "department_id"         => ["sometimes",'exists:departements,id'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);

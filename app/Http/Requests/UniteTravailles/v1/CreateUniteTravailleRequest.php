@@ -19,7 +19,7 @@ class CreateUniteTravailleRequest extends CreateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(new CreateUniteTravailleDTO);
+        parent::__construct(CreateUniteTravailleDTO::fromRequest(request()));
     }
 
     /**
@@ -29,5 +29,9 @@ class CreateUniteTravailleRequest extends CreateResourceRequest
     {
         return true;
     }
-
+    
+    public function authorize(): bool
+    {
+        return parent::authorize();
+    }
 }

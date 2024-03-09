@@ -6,7 +6,11 @@ namespace Domains\Users\DataTransfertObjects;
 
 use App\Models\User;
 use Core\Utils\DataTransfertObjects\BaseDTO;
+use Core\Utils\Enums\Users\TypeOfAccountEnum;
 use Core\Utils\Rules\PhoneNumberRule;
+use Domains\Users\Companies\DataTransfertObjects\CreateCompanyDTO;
+use Domains\Users\People\DataTransfertObjects\CreatePersonDTO;
+use Illuminate\Validation\Rules\Enum;
 
 /**
  * Class ***`CreateUserDTO`***
@@ -22,6 +26,17 @@ class CreateUserDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
+
+        if(request('type_of_account')){
+            switch (request()->type_of_account) {
+                case TypeOfAccountEnum::MORAL->value:
+                    $this->merge(new CreateCompanyDTO, 'user', ["required", "array"]);
+                    break;                
+                default:
+                    $this->merge(new CreatePersonDTO, 'user', ["required", "array"]);
+                    break;
+            }
+        }
     }
 
     /**
@@ -42,7 +57,8 @@ class CreateUserDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            'type_of_account'       => ['required', 'in:personal,moral'],
+            'type_of_account'       => ['required', "string", new Enum(TypeOfAccountEnum::class)],
+
             'username'              => ['sometimes', 'string', 'min:6', 'max:30', 'unique:users,username'],
             'email'                 => ['sometimes', 'email', 'max:120', 'unique:users,email'],
 			"address"     		    => ["string", "sometimes"],

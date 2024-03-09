@@ -19,7 +19,7 @@ class CreatePosteRequest extends CreateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(new CreatePosteDTO);
+        parent::__construct(CreatePosteDTO::fromRequest(request()));
     }
 
     /**
@@ -28,6 +28,11 @@ class CreatePosteRequest extends CreateResourceRequest
     public function isAuthorize(): bool
     {
         return true;
+    }
+    
+    public function authorize(): bool
+    {
+        return parent::authorize();
     }
 
 }

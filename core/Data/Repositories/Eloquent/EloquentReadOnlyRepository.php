@@ -68,7 +68,7 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
     public function find($id, array $columns = ['*']): ?Model
     {
         try {
-            return $this->model->select($columns)->findOrFail($id);
+            return $this->model->select($columns)->findOrFail($id)->fresh();
         } catch (ModelNotFoundException $exception) {
             // Customize the message for ModelNotFoundException
             throw new QueryException(message: "Record not found.", previous: $exception);
@@ -92,7 +92,7 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
     public function first(array $conditions, array $columns = ['*']): ?Model
     {
         try {
-            return $this->model->select($columns)->where($conditions)->first();
+            return $this->model->select($columns)->where($conditions)->first()->fresh();
         } catch (QueryException $exception) {
             throw new QueryException(message: "Error while retrieving the record.", previous: $exception);
         } catch (Throwable $exception) {

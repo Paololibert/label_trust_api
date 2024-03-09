@@ -65,9 +65,9 @@ trait HasPermissions
         $intermediateModel = class_basename(__CLASS__) . 'HasPermission';
 
         $relationship = $this->belongsToMany(Permission::class, $intermediateTable, convertToSnakeCase(class_basename(__CLASS__)) . '_id', 'permission_id')
-            ->withPivot(['status', 'deleted_at', 'can_be_detach'])
-            ->wherePivot('status', true)
-            ->wherePivot('deleted_at', null);
+            ->withPivot(['status', 'deleted_at', 'can_be_detach']);
+            //->wherePivot('status', true)
+            //->wherePivot('deleted_at', null);
 
         if (class_exists("App\\Models\\$intermediateModel")) {
             $relationship->using("App\\Models\\$intermediateModel");

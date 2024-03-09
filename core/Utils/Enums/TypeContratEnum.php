@@ -53,13 +53,6 @@ enum TypeContratEnum: string implements EnumContract
     case ALTERNANCE = 'alternance';
 
     /**
-     * Represents the typecontrat "resilier".
-     *
-     * @var string
-     */
-    case RESILIER = 'resilier';
-
-    /**
      * Represents the typecontrat "ctt".
      *
      * @var string

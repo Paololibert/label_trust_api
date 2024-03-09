@@ -19,7 +19,7 @@ class UpdatePosteRequest extends UpdateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(new UpdatePosteDTO, 'poste');
+        parent::__construct(UpdatePosteDTO::fromRequest(request()), 'poste');
     }
 
     /**
@@ -28,6 +28,11 @@ class UpdatePosteRequest extends UpdateResourceRequest
     public function isAuthorize(): bool
     {
         return true;
+    }
+    
+    public function authorize(): bool
+    {
+        return parent::authorize();
     }
 
 }

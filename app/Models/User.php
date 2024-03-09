@@ -204,6 +204,7 @@ class User extends ModelContract implements AuthenticatableContract, Authorizabl
      */
     protected static function booted(): void
     {
+        parent::booted();
         static::observe(\App\Observers\UserObserver::class);
     }
 

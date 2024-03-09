@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Domains\UniteTravailles\DataTransfertObjects;
 
 use App\Models\UniteTravaille;
-use Core\Utils\Rules\ExistsForAuthUserAndUUID;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Core\Utils\Enums\TypeUniteTravailleEnum;
+use Domains\TauxAndSalaries\DataTransfertObjects\CreateTauxAndSalaryDTO;
 use Illuminate\Validation\Rules\Enum;
 
 /**
@@ -24,6 +24,7 @@ class CreateUniteTravailleDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
+        $this->merge(new CreateTauxAndSalaryDTO, 'taux', ["required", "array"]);
     }
 
     /**
@@ -44,13 +45,11 @@ class CreateUniteTravailleDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'min:2', 'max:25' ,'unique:unite_travailles,name'],
-            "hint"                  => ["required", "numeric|regex:/^\d+(\.\d{1,2})?$/"],
-            "rate"                  => ["required", "numeric|regex:/^\d+(\.\d{1,2})?$/"],
-            "unite_mesure_id"       => ["required",'exists:unite_mesures,id'],
-            "article_id"            => ["sometimes",'exists:articles,id'],
-            "type_of_unite_travaille" => ['required', "string", new Enum(TypeUniteTravailleEnum::class)],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "type_of_unite_travaille"   => ['required', "string", new Enum(TypeUniteTravailleEnum::class)],
+            "unite_mesure_id"           => ["required",'exists:unite_mesures,id'],
+            // Use 'required_if' rule to make 'article_id' required only when 'type_of_unite_travaille' is 'article'
+            "article_id"                => ['required_if:type_of_unite_travaille,article', 'exists:articles,id'],
+            'can_be_deleted'            => ['sometimes', 'boolean', 'in:'.true.','.false]
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -64,8 +63,8 @@ class CreateUniteTravailleDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
+            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
         ], $messages);
 
         $messages = array_merge([], $default_messages);

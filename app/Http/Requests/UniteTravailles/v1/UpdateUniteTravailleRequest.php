@@ -19,7 +19,7 @@ class UpdateUniteTravailleRequest extends UpdateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(new UpdateUniteTravailleDTO, 'unite_travaille');
+        parent::__construct(UpdateUniteTravailleDTO::fromRequest(request()), 'unite_travaille');
     }
 
     /**
@@ -28,6 +28,11 @@ class UpdateUniteTravailleRequest extends UpdateResourceRequest
     public function isAuthorize(): bool
     {
         return true;
+    }
+    
+    public function authorize(): bool
+    {
+        return parent::authorize();
     }
 
 }

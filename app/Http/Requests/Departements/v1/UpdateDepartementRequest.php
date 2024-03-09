@@ -19,7 +19,7 @@ class UpdateDepartementRequest extends UpdateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(new UpdateDepartementDTO, 'departement');
+        parent::__construct(UpdateDepartementDTO::fromRequest(request()), 'departement');
     }
 
     /**
@@ -28,6 +28,11 @@ class UpdateDepartementRequest extends UpdateResourceRequest
     public function isAuthorize(): bool
     {
         return true;
+    }
+    
+    public function authorize(): bool
+    {
+        return parent::authorize();
     }
 
 }

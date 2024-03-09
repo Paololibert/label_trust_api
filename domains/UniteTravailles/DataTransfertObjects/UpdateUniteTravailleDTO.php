@@ -7,6 +7,7 @@ namespace Domains\UniteTravailles\DataTransfertObjects;
 use App\Models\UniteTravaille;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Core\Utils\Enums\TypeUniteTravailleEnum;
+use Domains\TauxAndSalaries\DataTransfertObjects\UpdateTauxAndSalaryDTO;
 use Illuminate\Validation\Rules\Enum;
 
 /**
@@ -23,6 +24,7 @@ class UpdateUniteTravailleDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
+        $this->merge(new UpdateTauxAndSalaryDTO, 'taux', ["sometimes", "array"]);
     }
     
     /**
@@ -43,12 +45,10 @@ class UpdateUniteTravailleDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:unite_travailles,name,' . $this->ignoreValues['unite_travaille'] . ',id'],
-            "hint"                  => ["sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
-            "rate"                  => ["sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
-            "article_id"            => ["sometimes",'exists:articles,id'],
-            "type_of_unite_travaille" => ['sometimes', "string", new Enum(TypeUniteTravailleEnum::class)],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "type_of_unite_travaille"   => ['sometimes', "string", new Enum(TypeUniteTravailleEnum::class)],
+            "unite_mesure_id"           => ["sometimes",'exists:unite_mesures,id'],
+            "article_id"                => ['required_if:type_of_unite_travaille,article', 'exists:articles,id'],
+            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false]
         ], $rules);
 
         return $this->rules = parent::rules($rules);

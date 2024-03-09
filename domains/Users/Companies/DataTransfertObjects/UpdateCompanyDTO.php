@@ -6,6 +6,8 @@ namespace Domains\Users\Companies\DataTransfertObjects;
 
 use App\Models\Company;
 use Core\Utils\DataTransfertObjects\BaseDTO;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 /**
  * Class ***`UpdateCompanyDTO`***
@@ -41,8 +43,8 @@ class UpdateCompanyDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:companies,name,'. $this->ignoreValues['company'] . ',id'],
-			"registration_number"   => ["string", "nullable"],
+            "name"            		=> ["string", "required"],
+			"registration_number"   => ["string", "sometimes", 'unique:companies,registration_number'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

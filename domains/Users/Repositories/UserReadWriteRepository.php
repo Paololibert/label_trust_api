@@ -63,11 +63,11 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
 
             if($data['type_of_account'] === TypeOfAccountEnum::PERSONAL->value)
             {
-                $this->model->userable = $this->personReadWriteRepository->create($data);
+                $this->model->userable = $this->personReadWriteRepository->create($data['user']);
             }
             else if($data['type_of_account'] === TypeOfAccountEnum::MORAL->value)
             {
-                $this->model->userable = $this->companyReadWriteRepository->create($data);
+                $this->model->userable = $this->companyReadWriteRepository->create($data['user']);
             }
             else throw new Exception("Unknown type of account", 1);
 
@@ -87,6 +87,57 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
             throw new QueryException(message: "Error while creating the record.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
+        }
+    }
+
+    /**
+     * Update an existing record.
+     *
+     * @param  Model|string $id       The ID of the record to update.
+     * @param  array        $data     The data for updating the record.
+     * @return bool|Model|null        Whether the update was successful or not.
+     *
+     * @throws ModelNotFoundException If the record with the given ID is not found.
+     * @throws \Core\Utils\Exceptions\RepositoryException    If there is an error while updating the record.
+     */
+    public function update($id, array $data)
+    {
+        try {
+            $this->model = parent::find($id);
+
+            if($this->model->type_of_account = $data['type_of_account'])
+            {
+                $this->model->userable->update($this->model->userable->id, $data['user']);
+            }/* 
+            else{
+                $userable = $this->model->userable();
+                if($data['type_of_account'] === TypeOfAccountEnum::PERSONAL->value)
+                {
+                    $this->model->userable = $this->personReadWriteRepository->create($data['user']);
+                }
+                else if($data['type_of_account'] === TypeOfAccountEnum::MORAL->value)
+                {
+                    $this->model->userable = $this->companyReadWriteRepository->create($data['user']);
+                }
+                else throw new Exception("Unknown type of account", 1);
+
+                dd($this->model->userable);
+
+                $this->model->refresh();
+
+                if($this->model){
+                    $userable->delete();
+                }
+            } */
+
+            $result = $this->model->update($data);
+            return $result ? $this->model->refresh() : $result;
+        } catch (ModelNotFoundException $exception) {
+            throw new QueryException(message: $exception->getMessage(), code: $exception->getCode());
+        } catch (QueryException $exception) {
+            throw new QueryException(message: "Error while updating the record.", previous: $exception);
+        } catch (Throwable $exception) {
+            throw new RepositoryException(message: "Error while updating the record.", previous: $exception);
         }
     }
 

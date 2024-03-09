@@ -79,13 +79,13 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
             */
             Route::group([], function () {
 
-                Route::apiResource('roles', 'RoleController', ["parameters" => ['role' => 'role_id']])->parameters(['role' => 'role_id']);
+                Route::apiResource('roles', 'RoleController')->parameters(['roles' => 'role_id']);
 
                 Route::group(['prefix'=> 'roles'], function () {
                     // Get all roles
-                    Route::put('{role}/grant-access', 'RoleController@grantAccess')->name('roles.grantAccess');
-                    Route::put('{role}/revoke-access', 'RoleController@revokeAccess')->name('roles.revokeAccess');
-                    Route::get('{role}/access', 'RoleController@fetchRoleAccess')->name('roles.fetchRoleAccess');
+                    Route::put('{role_id}/grant-access', 'RoleController@grantAccess')->name('roles.grantAccess');
+                    Route::put('{role_id}/revoke-access', 'RoleController@revokeAccess')->name('roles.revokeAccess');
+                    Route::get('{role_id}/access', 'RoleController@fetchRoleAccess')->name('roles.fetchRoleAccess');
                 });
             });
 
@@ -102,14 +102,14 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
             */
             Route::group([], function () {
 
-                Route::apiResource('users', 'UserController', ["parameters" => ['user' => 'user_id']])->parameters(['user' => 'user_id']);
+                Route::apiResource('users', 'UserController')->parameters(['users' => 'user_id']);
 
 
                 Route::group(['prefix'=> 'users'], function () {
                     // Get user privileges
-                    Route::put('{user}/assign-roles', 'UserController@assignRolePrivileges')->name('users.assignRolePrivileges');
-                    Route::put('{user}/revoke-roles', 'UserController@revokeRolePrivileges')->name('users.revokeRolePrivileges');
-                    Route::get('{user}/roles', 'UserController@fetchUserRoles')->name('users.fetchUserRoles');
+                    Route::put('{user_id}/assign-roles', 'UserController@assignRolePrivileges')->name('users.assignRolePrivileges');
+                    Route::put('{user_id}/revoke-roles', 'UserController@revokeRolePrivileges')->name('users.revokeRolePrivileges');
+                    Route::get('{user_id}/roles', 'UserController@fetchUserRoles')->name('users.fetchUserRoles');
                 });
 
 
@@ -144,17 +144,19 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
             */
             Route::group([], function () {
 
-                Route::apiResource('departements', 'DepartementController');
+                Route::apiResource('departements', 'DepartementController')->parameters(['departements' => 'departement_id']);
 
-                Route::apiResource('postes', 'PosteController');
+                Route::apiResource('postes', 'PosteController')->parameters(['postes' => 'poste_id']);
 
-                Route::apiResource('unite_mesures', 'UniteMesureController');
+                Route::apiResource('unite_mesures', 'UniteMesureController')->parameters(['unite_mesures' => 'unite_mesure_id']);
 
-                Route::apiResource('unite_travailles', 'UniteTravailleController');
+                Route::apiResource('unite_travailles', 'UniteTravailleController')->parameters(['unite_travailles' => 'unite_travaille_id']);
 
-                Route::apiResource('categories_of_employees', 'CategoryOfEmployeController');
+                Route::apiResource('categories_of_employees', 'CategoryOfEmployeController')->parameters(['categories_of_employees' => 'category_of_employee_id']);
 
-                Route::apiResource('employees', 'CategoryOfEmployeController');
+                Route::apiResource('employees', 'CategoryOfEmployeController')->parameters([
+                    'employees' => 'employee_id'
+                ]);;
 
             });
 

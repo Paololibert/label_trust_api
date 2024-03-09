@@ -44,7 +44,7 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
     public function create(array $data): Model
     {
         try {
-            return $this->model->create($data);
+            return $this->model->create($data)->fresh();
         } catch (QueryException $exception) {
             throw new QueryException(message: "Error while creating the record.", previous: $exception);
         } catch (Throwable $exception) {

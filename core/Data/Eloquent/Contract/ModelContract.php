@@ -242,7 +242,15 @@ class ModelContract extends Model
     {
         parent::boot();
 
-        //self::observe(ModelContractObserver::class);
+        // Apply the StatutScope as a global scope with the default status value of true
+        //sstatic::addGlobalScope(new StatutScope(true));
+
+        // Apply the global scope with status = true
+        /* static::addGlobalScope('status', function ($query) {
+            static::addGlobalScope($query, true);
+        }); */
+
+        self::observe(ModelContractObserver::class);
     }
 
     public function authorable(): string

@@ -19,7 +19,7 @@ class UpdateCategoryOfEmployeRequest extends UpdateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(new UpdateCategoryOfEmployeDTO, 'categories_of_employee');
+        parent::__construct(UpdateCategoryOfEmployeDTO::fromRequest(request()), 'categories_of_employee');
     }
 
     /**
@@ -28,6 +28,11 @@ class UpdateCategoryOfEmployeRequest extends UpdateResourceRequest
     public function isAuthorize(): bool
     {
         return true;
+    }
+    
+    public function authorize(): bool
+    {
+        return parent::authorize();
     }
 
 }

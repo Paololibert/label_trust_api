@@ -54,9 +54,6 @@ abstract class ResourceRequest extends FormRequest implements ResourceRequestInt
      * @return bool Whether the user is authorized.
      */
     abstract public function authorize(): bool;
-    /* {
-        return $this->isAuthorize();
-    } */
 
     /**
      * Get the validation rules that apply to the request.
@@ -119,7 +116,7 @@ abstract class ResourceRequest extends FormRequest implements ResourceRequestInt
      */
     public function process(): \Core\Utils\DataTransfertObjects\DTOInterface
     {
-        return $this->getDto()->fromRequest($this);
+        return $this->dto->fromRequest(Request());
     }
 
     /**

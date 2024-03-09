@@ -42,7 +42,7 @@ class UpdateRoleDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:roles,name,' . $this->ignoreValues['role'] . ',id'],
+            "name"            		=> ["string", "required", 'unique:roles,name,' . request()->route('role_id') . ',id'],
 			"description"     		=> ["string", "required"],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
             'permissions'           => 'sometimes|array|min:1',

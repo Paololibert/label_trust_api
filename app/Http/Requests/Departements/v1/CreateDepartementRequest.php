@@ -19,7 +19,7 @@ class CreateDepartementRequest extends CreateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(new CreateDepartementDTO);
+        parent::__construct(CreateDepartementDTO::fromRequest(request()));
     }
 
     /**
@@ -28,6 +28,11 @@ class CreateDepartementRequest extends CreateResourceRequest
     public function isAuthorize(): bool
     {
         return true;
+    }
+    
+    public function authorize(): bool
+    {
+        return parent::authorize();
     }
 
 }

@@ -42,7 +42,7 @@ class UpdateDepartementDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:departements,name,' . $this->ignoreValues['departement'] . ',id'],
+            "name"            		=> ["string", "required", 'unique:departements,name,' . request()->route("departement_id") . ',id'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

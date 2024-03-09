@@ -65,7 +65,7 @@ class CreateUsersTable extends Migration
              * - 'profilable' (string): Type of the related model
              * - 'profilable_id' (uuid): ID of the related model
              */
-            $table->uuidMorphs('profilable');
+            $table->nullableUuidMorphs('profilable');
             
             // Nullable timestamp for email verification
             $table->timestamp('email_verified_at')->nullable()->comment('Timestamp of email verification');

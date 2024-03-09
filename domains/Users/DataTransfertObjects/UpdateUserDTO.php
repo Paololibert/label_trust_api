@@ -6,7 +6,11 @@ namespace Domains\Users\DataTransfertObjects;
 
 use App\Models\User;
 use Core\Utils\DataTransfertObjects\BaseDTO;
+use Core\Utils\Enums\Users\TypeOfAccountEnum;
 use Core\Utils\Rules\PhoneNumberRule;
+use Domains\Users\Companies\DataTransfertObjects\UpdateCompanyDTO;
+use Domains\Users\People\DataTransfertObjects\UpdatePersonDTO;
+use Illuminate\Validation\Rules\Enum;
 
 /**
  * Class ***`UpdateUserDTO`***
@@ -22,6 +26,17 @@ class UpdateUserDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
+
+        if(request('type_of_account')){
+            switch (request()->type_of_account) {
+                case TypeOfAccountEnum::MORAL->value:
+                    $this->merge(new UpdateCompanyDTO, 'user', ["sometimes", "array"]);
+                    break;                
+                default:
+                    $this->merge(new UpdatePersonDTO, 'user', ["sometimes", "array"]);
+                    break;
+            }
+        }
     }
     
     /**
@@ -41,13 +56,14 @@ class UpdateUserDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
+
         $rules = array_merge([
-            'type_of_account'       => ['required', 'in:personal,moral'],
-            'username'              => ['sometimes', 'string', 'min:6', 'max:30', 'unique:users,username'],
-            'email'                 => ['sometimes', 'email', 'max:120', 'unique:users,email'],
+            'type_of_account'       => ['required', "string", new Enum(TypeOfAccountEnum::class)],
+            'username'              => ['sometimes', 'string', 'min:6', 'max:30', 'unique:users,username,' . request()->route('user_id') . ',id'],
+            'email'                 => ['sometimes', 'email', 'max:120', 'unique:users,email'. request()->route('user_id') . ',id' ],
 			"address"     		    => ["string", "sometimes"],
-            'phone_number'          => ['required', new PhoneNumberRule()],
-            'role_id'               => 'required|exists:roles,id',
+            'phone_number'          => ['sometimes', new PhoneNumberRule(), 'unique:users,phone_number,'. request()->route('user_id') . ',id'],
+            'role_id'               => 'required|exists:roles,id'
         ], $rules);
 
         return $this->rules = parent::rules($rules);

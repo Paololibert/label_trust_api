@@ -61,6 +61,7 @@ class CoreException extends \Exception
      */
     public function __construct(string $message = 'An unexpected error occurred.', int $error_code = ErrorCodeEnum::DEFAULT, int $status_code = Response::HTTP_INTERNAL_SERVER_ERROR, $error = null, int $code = 0, \Throwable $previous = null)
     {
+        dd($message, $previous);
         parent::__construct(message: $message, code: $code, previous: $previous);
 
         $this->error_code    = $error_code ?? $this->code;
