@@ -89,4 +89,16 @@ class CategoryOfEmploye extends ModelContract
                     ->wherePivot('deleted_at', null) // Filter records where the deleted_at column is null
                     ->using(CategorieTaux::class); // Specify the intermediate model for the pivot relationship
     }
+
+    /**
+     * Define a many-to-many relationship with the EmployeeNonContractuel model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function employees(): BelongsToMany
+    {
+        return $this->belongsToMany(EmployeeNonContractuel::class, 'noncontractuelcategories', 'categorie_of_employee_id', 'employee_non_contractuel_id')
+                    ->withPivot('date_debut', 'date_fin')
+                    ->withTimestamps(); // Enable automatic timestamps for the pivot table
+    }
 }

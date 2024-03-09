@@ -7,6 +7,7 @@ namespace App\Models;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Utils\Enums\StatutContratEnum;
 use Core\Utils\Enums\TypeContratEnum;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class ***`NonContractuelCategorie`***
@@ -34,17 +35,15 @@ class NonContractuelCategorie extends ModelContract
      */
     protected $table = 'non_contractuel_categories';
 
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'date_debut','date_fin',
-        'employee_non_contractuel_id','categories_of_employee_id'
+        'date_debut','categories_of_employee_id',
+        'employee_non_contractuel_id', 'date_fin','categorie_taux_id'
     ];
-    
     
     /**
      * The model's default attribute values.
@@ -52,7 +51,7 @@ class NonContractuelCategorie extends ModelContract
      * @var array<string, mixed>
      */
     protected $attributes = [
-        'date_fin'          =>null,
+        'date_fin' =>null
     ];
 
 
@@ -62,7 +61,7 @@ class NonContractuelCategorie extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'date_debut','employee_non_contractuel_id','categories_of_employee_id'
+        'date_debut',
     ];
 
     /**
@@ -75,7 +74,28 @@ class NonContractuelCategorie extends ModelContract
         'date_fin'                                  =>'datetime:Y-m-d H:i:s',
         'employee_non_contractuel_id'               =>'string',
         'categories_of_employee_id'                 =>'string',
+        'categorie_taux_id'                         =>'string',
     ];
     
+
+    /**
+     * Get the Non contractuel employee of the non caontractuel categorie.
+     *
+     * @return BelongsTo
+     */
+    public function employee_non_contractuel(): BelongsTo
+    {
+        return $this->belongsTo(EmployeeNonContractuel::class, 'employee_non_contractuel_id');
+    }
+
+    /**
+     * Get the Non contractuel employee of the non caontractuel categorie. 
+     *
+     * @return BelongsTo
+     */
+    public function categorie_employee(): BelongsTo
+    {
+        return $this->belongsTo(CategoryOfEmploye::class, 'categories_of_employee_id');
+    }
 
 }

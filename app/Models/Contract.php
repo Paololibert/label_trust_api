@@ -7,6 +7,7 @@ namespace App\Models;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Utils\Enums\StatutContratEnum;
 use Core\Utils\Enums\TypeContratEnum;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class ***`Contract`***
@@ -91,5 +92,34 @@ class Contract extends ModelContract
         'unite_mesures_id'              =>'boolean',
     ];
     
+    /**
+     * Get the poste of the contract. employee_contractuel_id
+     *
+     * @return BelongsTo
+     */
+    public function poste(): BelongsTo
+    {
+        return $this->belongsTo(Poste::class, 'poste_id');
+    }
 
+    /**
+     * Get the employee to who the contract is.
+     *
+     * @return BelongsTo
+     */
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(EmployeeContractuel::class, 'employee_contractuel_id');
+    }
+
+    /**
+     * Get the employee to who the contract is. 
+     *
+     * @return BelongsTo
+     */
+    public function unite_mesure(): BelongsTo
+    {
+        return $this->belongsTo(UniteMesure::class, 'unite_mesures_id');
+    }
+    
 }

@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Core\Data\Eloquent\Contract\ModelContract;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class ***`EmployeeContractuel`***
+ * Class ***`EmployeeNonContractuel`***
  *
- * This model represents the `employee_contractuels` table in the database.
+ * This model represents the `employee_non_contractuels` table in the database.
  * It extends the ModelContract class and provides access to the database table associated with the model.
  *
  * @property  string    $name;
  *
  * @package ***`\App\Models`***
  */
-class EmployeeContractuel extends ModelContract
+class EmployeeNonContractuel extends ModelContract
 {
     /**
      * The database connection that should be used by the model.
@@ -30,7 +32,7 @@ class EmployeeContractuel extends ModelContract
      *
      * @var string
      */
-    protected $table = 'employee_contractuels';
+    protected $table = 'employee_non_contractuels';
 
 
     /**
@@ -39,7 +41,7 @@ class EmployeeContractuel extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'categories_of_employee_id'
+        'est_convertir','categories_of_employee_id'
     ];
 
     /**
@@ -48,7 +50,7 @@ class EmployeeContractuel extends ModelContract
      * @var array<string, mixed>
      */
     protected $attributes = [
-
+        'est_convertir'                 =>false,
     ];
 
 
@@ -58,7 +60,7 @@ class EmployeeContractuel extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'categories_of_employee_id'
+
     ];
 
     /**
@@ -67,8 +69,22 @@ class EmployeeContractuel extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
+        'est_convertir'                 =>'boolean',
         'categories_of_employee_id'     =>'string'
     ];
-       
+
+    /**
+     * Define a many-to-many relationship with the CategorieOfEmployee model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(CategorieOfEmployee::class, 'noncontractuelcategories', 'employee_non_contractuel_id', 'categorie_of_employee_id')
+                    ->withPivot('date_debut', 'date_fin')
+                    ->withTimestamps()
+                    ->using(NonContractuelCategorie::class); // Enable automatic timestamps for the pivot table
+    }
+
 
 }

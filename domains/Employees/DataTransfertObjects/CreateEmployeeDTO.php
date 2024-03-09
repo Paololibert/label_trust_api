@@ -43,8 +43,10 @@ class CreateEmployeeDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["required", "string", 'unique:employees,name'],
-            "user_id"         => ["required", "exists:users,id"],
+            'matricule'             => ['required',"string"],
+            "unite_mesure_id"       => ["required",'exists:unite_mesures,id'],
+            'type_employee'         => ['required',"string"],
+            'statut_employee'       => ['required',"string"],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
