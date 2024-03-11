@@ -103,7 +103,7 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
     public function update($id, array $data)
     {
         try {
-            $this->model = parent::find($id);
+            $this->model = $this->find($id);
 
             if($this->model->type_of_account = $data['type_of_account'])
             {
@@ -155,7 +155,7 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
     {
         try {
 
-            $user = parent::find($userId);
+            $user = $this->find($userId);
 
             return $user->grantPrivileges($roleIds) ? true : false;
         } catch (ModelNotFoundException $exception) {
@@ -180,7 +180,7 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
     public function revokeRolePrivileges(string $userId, array|string $roleIds): bool
     {
         try {
-            $user = parent::find($userId);
+            $user = $this->find($userId);
             return $user->revokePrivileges($roleIds) ? true : false;
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);

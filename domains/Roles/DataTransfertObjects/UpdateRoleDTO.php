@@ -7,7 +7,6 @@ namespace Domains\Roles\DataTransfertObjects;
 use App\Models\Role;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
-
 /**
  * Class ***`UpdateRoleDTO`***
  *

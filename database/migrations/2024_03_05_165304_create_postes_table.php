@@ -107,6 +107,7 @@ class CreatePostesTable extends Migration
         DB::beginTransaction();
 
         try {
+
             // Drop the "postes" table if it exists
             Schema::dropIfExists('postes');
 

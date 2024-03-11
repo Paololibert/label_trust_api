@@ -61,7 +61,7 @@ class CreatePosteSalariesTable extends Migration
                         column: 'salary_id',   // The column to which the foreign key is added ('salary_id' in this case)
                         references: 'taux_and_salaries',    // The referenced table (taux_and_salaries) to establish the foreign key relationship
                         onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                        nullable: true          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
+                        nullable: false          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
                     );
 
                 // Add a boolean column 'status' to the table

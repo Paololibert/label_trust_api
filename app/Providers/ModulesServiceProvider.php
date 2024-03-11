@@ -2,12 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Requests\Roles\v1\CreateRoleRequest;
-use App\Http\Requests\Roles\v1\UpdateRoleRequest;
-use App\Http\Requests\Users\v1\CreateUserRequest;
-use App\Http\Requests\Users\v1\UpdateUserRequest;
-use Core\Utils\Requests\CreateResourceRequest;
-use Core\Utils\Requests\UpdateResourceRequest;
 use Illuminate\Support\ServiceProvider;
 
 class ModulesServiceProvider extends ServiceProvider
@@ -235,27 +229,27 @@ class ModulesServiceProvider extends ServiceProvider
         );
 
 
-        // Binds the implementation of CategoryOfEmployeRESTfulReadWriteServiceContract to the CategoryOfEmployeRESTfulReadWriteService class.
+        // Binds the implementation of CategoryOfEmployeeRESTfulReadWriteServiceContract to the CategoryOfEmployeeRESTfulReadWriteService class.
         $this->app->bind(
-            \Domains\CategoriesOfEmployees\Services\RESTful\Contracts\CategoryOfEmployeRESTfulReadWriteServiceContract::class,
+            \Domains\CategoriesOfEmployees\Services\RESTful\Contracts\CategoryOfEmployeeRESTfulReadWriteServiceContract::class,
             function ($app) {
-                // Resolve the necessary dependencies for CategoryOfEmployeRESTfulReadWriteService
+                // Resolve the necessary dependencies for CategoryOfEmployeeRESTfulReadWriteService
                 $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
 
-                // Create and return an instance of CategoryOfEmployeRESTfulReadWriteService
-                return new \Domains\CategoriesOfEmployees\Services\RESTful\CategoryOfEmployeRESTfulReadWriteService($readWriteService);
+                // Create and return an instance of CategoryOfEmployeeRESTfulReadWriteService
+                return new \Domains\CategoriesOfEmployees\Services\RESTful\CategoryOfEmployeeRESTfulReadWriteService($readWriteService);
             }
         );
 
-        // Binds the implementation of CategoryOfEmployeRESTfulQueryServiceContract to the CategoryOfEmployeRESTfulQueryService class.
+        // Binds the implementation of CategoryOfEmployeeRESTfulQueryServiceContract to the CategoryOfEmployeeRESTfulQueryService class.
         $this->app->bind(
-            \Domains\CategoriesOfEmployees\Services\RESTful\Contracts\CategoryOfEmployeRESTfulQueryServiceContract::class,
+            \Domains\CategoriesOfEmployees\Services\RESTful\Contracts\CategoryOfEmployeeRESTfulQueryServiceContract::class,
             function ($app) {
-                // Resolve the necessary dependencies for CategoryOfEmployeRESTfulQueryService
+                // Resolve the necessary dependencies for CategoryOfEmployeeRESTfulQueryService
                 $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
 
-                // Create and return an instance of CategoryOfEmployeRESTfulQueryService
-                return new \Domains\CategoriesOfEmployees\Services\RESTful\CategoryOfEmployeRESTfulQueryService($queryService);
+                // Create and return an instance of CategoryOfEmployeeRESTfulQueryService
+                return new \Domains\CategoriesOfEmployees\Services\RESTful\CategoryOfEmployeeRESTfulQueryService($queryService);
             }
         );
 

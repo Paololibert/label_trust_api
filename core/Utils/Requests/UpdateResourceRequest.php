@@ -27,7 +27,9 @@ abstract class UpdateResourceRequest extends ResourceRequest
     {
         parent::__construct($dto);
         $this->resource = $resource_name;
-        $this->dto->setIgnoreValue("{$this->resource}", request("{$this->resource}"));
+        if($resource_name){
+            $this->dto->setIgnoreValue("{$this->resource}", request("{$this->resource}"));
+        }
     }
 
     /**

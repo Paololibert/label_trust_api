@@ -142,7 +142,7 @@ class AddNewColumnsToTables extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to migrate "credentials" table: ' . $exception->getMessage(),
+                message: 'Failed to migrate table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }

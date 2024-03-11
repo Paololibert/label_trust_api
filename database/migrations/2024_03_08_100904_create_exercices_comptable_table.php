@@ -62,7 +62,7 @@ class CreateExercicesComptableTable extends Migration
                     column: 'periode_exercice_id',   // The column to which the foreign key is added ('periode_exercice_id' in this case)
                     references: 'periodes_exercice',    // The referenced table (periodes_exercice) to establish the foreign key relationship
                     onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: true          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
+                    nullable: false          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
                 );
                 
                 // Define a foreign key for 'plan_comptable_id', referencing the 'plans_comptable' table

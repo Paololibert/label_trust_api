@@ -7,6 +7,7 @@ namespace App\Models;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Accountable;
 use Core\Data\Eloquent\ORMs\Balanceable;
+use Core\Utils\Traits\CPivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
@@ -23,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
  */
 class Account extends ModelContract
 {
-    use AsPivot, Balanceable, Accountable;
+    use AsPivot, CPivot, Balanceable, Accountable;
     
     /**
      * The database connection that should be used by the model.

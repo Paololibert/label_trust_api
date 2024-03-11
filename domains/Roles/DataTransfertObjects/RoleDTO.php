@@ -7,14 +7,13 @@ namespace Domains\Roles\DataTransfertObjects;
 use App\Models\Role;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
-
 /**
- * Class ***`PermissionDTO`***
+ * Class ***`RoleDTO`***
  *
  * This class extends the ***`BaseDTO`*** class.
  * It represents the data transfer object for creating a new ***`Role`*** model.
  *
- * @package ***`\Domains\roles\DataTransfertObjects`***
+ * @package ***`\Domains\Roles\DataTransfertObjects`***
  */
 class RoleDTO extends BaseDTO
 {

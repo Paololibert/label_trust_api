@@ -23,5 +23,18 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
  */
 interface PosteRESTfulQueryServiceContract extends RestJsonQueryServiceContract
 {
+    /**
+     * Retrieve salries associated with a specific poste.
+     *
+     * This method queries the system to fetch the salries linked to a particular poste. The response
+     * is returned as a JSON format, providing details about the salries granted to the specified poste.
+     *
+     * @param   string                                  $posteId    The unique identifier of the poste to query taux for.
+     * 
+     * @return  \Illuminate\Http\JsonResponse                       The JSON response containing information about the taux associated with the poste.
+     * 
+     * @throws  \Core\Utils\Exceptions\ServiceException             Throws an exception if there is an issue with the service operation.
+     */
+    public function fetchPosteSalaries(string $posteId): \Illuminate\Http\JsonResponse;
 
 }

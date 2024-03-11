@@ -8,8 +8,6 @@ use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\RestJsonQueryService;
 use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
-use Domains\Users\Companies\Services\RESTful\Contracts\CompanyRESTfulQueryServiceContract;
-use Domains\Users\People\Services\RESTful\Contracts\PersonRESTfulQueryServiceContract;
 use Domains\Users\Services\RESTful\Contracts\UserRESTfulQueryServiceContract;
 use Illuminate\Http\Response;
 use Throwable;
@@ -34,6 +32,23 @@ class UserRESTfulQueryService extends RestJsonQueryService implements UserRESTfu
     public function __construct(QueryServiceContract $queryService)
     {
         parent::__construct($queryService);
+    }
+
+    /**
+     * Get all records.
+     *
+     * @param  array $columns                    The columns to select.
+     * @return \Illuminate\Http\JsonResponse     The JSON response containing the collection of all records.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException If there is an error retrieving the records.
+     */
+    public function all(array $columns = ['*']): \Illuminate\Http\JsonResponse
+    {
+        try {
+            return JsonResponseTrait::success(message: "", data: $this->queryService->all($columns));
+        } catch (Throwable $exception) {
+            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        }
     }
 
     /**

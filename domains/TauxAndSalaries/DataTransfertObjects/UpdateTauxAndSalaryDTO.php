@@ -41,10 +41,13 @@ class UpdateTauxAndSalaryDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "rate"                  => ["sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
-            "hint"                  => ["sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
-            "unite_mesure_id"       => ["sometimes",'exists:unite_mesures,id'],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false]
+            "taux"                      => ["required", "array"],
+            "taux.*"                    => ["distinct", "array", "min:2"],
+            "taux.*.taux_id"            => ["required", "uuid", "exists:taux_and_salaries,id"],
+            "taux.*.rate"               => ["sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            "taux.*.hint"               => ["sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            "taux.*.unite_mesure_id"    => ["sometimes", "uuid", "exists:unite_mesures,id"],
+            'taux.*.can_be_deleted'     => ['nullable', 'boolean', 'in:'.true.','.false]
         ], $rules);
 
         return $this->rules = parent::rules($rules);

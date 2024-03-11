@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Domains\Roles\DataTransfertObjects;
 
 use App\Models\Role;
-use Core\Utils\Rules\ExistsForAuthUserAndUUID;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\RESTful\V1\Auths\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +32,15 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
     // public routes
     ///Route::post('/login', 'Auth\ApiAuthController@login')->name('login.api');
 
-    Route::middleware([])->group(function () {
+    Route::group(['namespace' => 'V1', 'as' => 'v1.'], function () {
+        // Login
+        Route::post('login', 'Auths\LoginController');
+
+
+        Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
+
+        Route::get('/user', 'Auths\AuthController@user')
+            ->middleware('auth:api');
 
     });
 
@@ -148,13 +157,31 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                 Route::apiResource('postes', 'PosteController')->parameters(['postes' => 'poste_id']);
 
+                Route::group(['prefix'=> 'postes'], function () {
+                    Route::put('{poste_id}/attach-salaries', 'PosteController@attachSalariesToAPoste')->name('postes.attach');
+                    Route::delete('{poste_id}/detach-salaries', 'PosteController@detachSalariesFromAPoste')->name('postes.detach');
+                    Route::get('{poste_id}/salaries', 'PosteController@fetchPosteSalaries')->name('postes.salaries');
+                });
+
                 Route::apiResource('unite_mesures', 'UniteMesureController')->parameters(['unite_mesures' => 'unite_mesure_id']);
 
                 Route::apiResource('unite_travailles', 'UniteTravailleController')->parameters(['unite_travailles' => 'unite_travaille_id']);
 
-                Route::apiResource('categories_of_employees', 'CategoryOfEmployeController')->parameters(['categories_of_employees' => 'category_of_employee_id']);
+                Route::group(['prefix'=> 'unite_travailles'], function () {
+                    Route::put('{unite_travaille_id}/add-taux', 'UniteTravailleController@addTaux')->name('unite_travailles.addTaux');
+                    Route::patch('{unite_travaille_id}/edit-taux', 'UniteTravailleController@editTaux')->name('unite_travailles.editTaux');
+                    Route::delete('{unite_travaille_id}/remove-taux', 'UniteTravailleController@removeTaux')->name('unite_travailles.removeTaux');
+                });
 
-                Route::apiResource('employees', 'EmployeeController')->parameters([
+                Route::apiResource('categories_of_employees', 'CategoryOfEmployeeController')->parameters(['categories_of_employees' => 'category_of_employee_id']);
+
+                Route::group(['prefix'=> 'categories_of_employees'], function () {
+                    Route::put('{category_of_employee_id}/attach-taux', 'CategoryOfEmployeeController@attachTauxToACategoryOfEmployee')->name('categories_of_employees.attach');
+                    Route::delete('{category_of_employee_id}/detach-taux', 'CategoryOfEmployeeController@detachTauxFromACategoryOfEmployee')->name('categories_of_employees.detach');
+                    Route::get('{category_of_employee_id}/taux', 'CategoryOfEmployeeController@fetchCategoryOfEmployeeTaux')->name('categories_of_employees.taux');
+                });
+
+                Route::apiResource('employees', 'CategoryOfEmployeeController')->parameters([
                     'employees' => 'employee_id'
                 ]);;
 

@@ -11,7 +11,7 @@ use ReflectionClass;
  * 
  * @package ***`\Core\Utils\Traits`***
  */
-trait IsEnum{
+trait IsEnum {
 
     /**
      * Get a random enum constant.

@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Core\Data\Eloquent\Contract\ModelContract;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
+
 
 /**
  * Class ***`Credential`***
@@ -18,8 +23,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @package ***`App\Models`***
  */
-class Credential extends ModelContract
+class Credential extends ModelContract implements AuthenticatableContract
 {
+    use Authenticatable, Notifiable, HasApiTokens;
 
     /**
      * The table associated with the model.
@@ -77,6 +83,16 @@ class Credential extends ModelContract
     ];
 
     /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+
+    /**
      * Get the user who created the credential.
      *
      * @return BelongsTo
@@ -97,5 +113,16 @@ class Credential extends ModelContract
         if ($user){
             $this->user()->associate($user);
         }
+    }
+
+    /**
+     * Find the user instance for the given identifier.
+     *
+     * @param  string  $identifier
+     * @return \App\Models\Credential
+     */
+    public function findForPassport($identifier)
+    {
+        return $this->where('identifier', $identifier)->first();
     }
 }

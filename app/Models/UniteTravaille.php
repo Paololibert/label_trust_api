@@ -105,7 +105,7 @@ class UniteTravaille extends ModelContract
      */
     public function getUniteMesureSymbolAttribute(): ?string
     {
-        return $this->uniteMesure?->symbol ;
+        return $this->uniteMesure?->symbol;
     }
 
     /**

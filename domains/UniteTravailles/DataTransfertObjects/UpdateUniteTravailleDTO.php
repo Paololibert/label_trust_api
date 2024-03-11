@@ -24,7 +24,7 @@ class UpdateUniteTravailleDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
-        $this->merge(new UpdateTauxAndSalaryDTO, 'taux', ["sometimes", "array"]);
+        $this->merge(new UpdateTauxAndSalaryDTO);
     }
     
     /**

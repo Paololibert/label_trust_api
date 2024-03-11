@@ -9,10 +9,8 @@ use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\HasRoles;
 use Core\Utils\Enums\Users\TypeOfAccountEnum;
 use Core\Utils\Enums\Users\UserAccountStatus;
-use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -59,9 +57,9 @@ use Illuminate\Notifications\Notifiable;
  *
  * @package ***`App\Models`***
  */
-class User extends ModelContract implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
+class User extends ModelContract implements /* AuthenticatableContract,  */AuthorizableContract, CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword, Notifiable, HasRoles;
+    use /* AuthenticatableTrait, HasApiTokens,  */Authorizable, CanResetPassword, Notifiable, HasRoles;
 
     /**
      * The table associated with the model.
@@ -78,6 +76,7 @@ class User extends ModelContract implements AuthenticatableContract, Authorizabl
     public $guarded = [
         'userable_type',
         'userable_id',
+        'first_login',
         'account_status',
         'userable_type', 'userable_id',
         'profilable_type', 'profilable_id',
@@ -94,7 +93,10 @@ class User extends ModelContract implements AuthenticatableContract, Authorizabl
     protected $fillable = [
         'type_of_account',
         'username',
+        'login_channel',
         'phone_number',
+        'identifier',
+        'password',
         'email',
         'address',
         'profilable_type',
@@ -119,6 +121,8 @@ class User extends ModelContract implements AuthenticatableContract, Authorizabl
      */
     protected $attributes = [
         'type_of_account'          => TypeOfAccountEnum::DEFAULT,
+        'login_channel'            => 'email',
+        'first_login'              => 'true',
         'email'                    => NULL,
         'account_status'           => UserAccountStatus::DEFAULT,
         'can_be_delete'            => true,
@@ -138,8 +142,9 @@ class User extends ModelContract implements AuthenticatableContract, Authorizabl
      * @var array<int, string>
      */
     protected $hidden = [
+        'password',
         'type_of_account',
-        'email',
+        'first_login',
         'account_status',
         'userable_type', 'userable_id',
         'email_verified', 'email_verified_at',
@@ -166,6 +171,8 @@ class User extends ModelContract implements AuthenticatableContract, Authorizabl
      */
     protected $casts = [
         'type_of_account'           => TypeOfAccountEnum::class,
+        'first_login'               => 'boolean',
+        'login_channel'             => 'string',
         'username'                  => 'string',
         'userable_type'             => 'string',
         'userable_id'               => 'string',
@@ -192,10 +199,19 @@ class User extends ModelContract implements AuthenticatableContract, Authorizabl
     protected $with = [
         'userable'
     ];
+    
+    /**
+     * The accessors to append to the model's array and JSON representation.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'role_ids'
+    ];
 
     public function getUnmodifiableAttributes() {
         return [
-            "email"
+            "{$this->login_channel}"
         ];
     }
 
@@ -218,6 +234,16 @@ class User extends ModelContract implements AuthenticatableContract, Authorizabl
     public function credential(): ?HasOne
     {
         return $this->hasOne(Credential::class, 'user_id');
+    }
+
+    /**
+     * Get the user's full name attribute.
+     *
+     * @return array<int, string> The user's full name.
+     */
+    public function getRoleIdsAttribute(): array
+    {
+        return $this->roles->pluck('id')->toArray();
     }
 
     /**

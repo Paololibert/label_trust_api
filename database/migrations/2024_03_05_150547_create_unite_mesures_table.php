@@ -101,6 +101,7 @@ class CreateUniteMesuresTable extends Migration
         DB::beginTransaction();
 
         try {
+
             // Drop the "unite_mesures" table if it exists
             Schema::dropIfExists('unite_mesures');
 

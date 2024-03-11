@@ -31,7 +31,6 @@ class RoleReadWriteRepository extends EloquentReadWriteRepository
         parent::__construct($model);
     }
 
-
     /**
      * Grant access to role
      *
@@ -46,7 +45,7 @@ class RoleReadWriteRepository extends EloquentReadWriteRepository
     {
         try {
 
-            $role = parent::find($roleId);
+            $role = $this->find($roleId);
 
             return $role->grantAccess($accessIds) ? true : false;
         } catch (ModelNotFoundException $exception) {
@@ -71,7 +70,7 @@ class RoleReadWriteRepository extends EloquentReadWriteRepository
     public function revokeAccess(string $roleId, array $accessIds): bool
     {
         try {
-            $role = parent::find($roleId);
+            $role = $this->find($roleId);
 
             return $role->revokeAccess($accessIds) ? true : false;
         } catch (ModelNotFoundException $exception) {

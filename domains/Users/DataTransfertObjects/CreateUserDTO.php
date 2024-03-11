@@ -58,12 +58,12 @@ class CreateUserDTO extends BaseDTO
     {
         $rules = array_merge([
             'type_of_account'       => ['required', "string", new Enum(TypeOfAccountEnum::class)],
-
             'username'              => ['sometimes', 'string', 'min:6', 'max:30', 'unique:users,username'],
-            'email'                 => ['sometimes', 'email', 'max:120', 'unique:users,email'],
-			"address"     		    => ["string", "sometimes"],
-            'phone_number'          => ['required', new PhoneNumberRule()],
-            'role_id'               => 'required|exists:roles,id'
+            'login_channel'         => ['required', 'string', 'in:email,phone_number'],
+            'email'                 => ['required_if:login_channel,email', 'email', 'max:120', 'unique:users,email'],
+            'phone_number'          => ['required_if:login_channel,phone_number', new PhoneNumberRule()],
+            'role_id'               => 'required|exists:roles,id',
+			"address"     		    => ["string", "sometimes"]
         ], $rules);
 
         return $this->rules = parent::rules($rules);

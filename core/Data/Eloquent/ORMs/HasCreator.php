@@ -98,10 +98,12 @@ trait HasCreator
     /**
      * Get the user who created the model.
      *
-     * @return BelongsTo
+     * @return BelongsTo|null
      */
-    public function creator(): BelongsTo
+    public function creator(): ?BelongsTo
     {
+        if(!$this->authorable()) return null;
+
         return $this->belongsTo(User::class, "{$this->authorable()}");
     }
 
@@ -113,8 +115,9 @@ trait HasCreator
      */
     public function setCreator(?User $user): void
     {
-        if ($user)
+        if ($user){
             $this->creator()->associate($user);
+        }
             ///throw new ModelNotFoundException("User not found.");
 
         ///$this->creator()->associate($user);
@@ -189,40 +192,43 @@ trait HasCreator
         static::creating(function (Model $model) {
 
             $user = null;
-            
-            // Set the default creator if not already set
-            if (!$model->{$model->authorable()}) {
-                if (auth()->check()) {
-                    $model->setCreator(auth()->user());
-                }
-                else {
-                    try {
-                        
-                        $user = User::whereHas('roles', function ($query) {
-                            // For example, check for a specific role name
-                            $query->where('key', 'super_administrateur');
-                        })->where("status", TRUE)->first(); ///->firstOrFail();  */
 
-                        if(!$user)
-                        {
-                            $userExistInDB = User::count();
-                            if(!$userExistInDB && $model instanceof User){
-                                $model->{$model->authorable()} = $model->id;
+            if($model->authorable()){
+                
+                // Set the default creator if not already set
+                if (!$model->{$model->authorable()}) {
+                    if (auth()->check()) {
+                        $model->setCreator(auth()->user());
+                    }
+                    else {
+                        try {
+                            
+                            $user = User::whereHas('roles', function ($query) {
+                                // For example, check for a specific role name
+                                $query->where('key', 'super_administrateur');
+                            })->where("status", TRUE)->first(); ///->firstOrFail();  */
+
+                            if(!$user)
+                            {
+                                $userExistInDB = User::count();
+                                if(!$userExistInDB && $model instanceof User){
+                                    $model->{$model->authorable()} = $model->id;
+                                }
+                                else if($userExistInDB){
+                                    $model->{$model->authorable()} = User::first()->id;
+                                }
                             }
-                            else if($userExistInDB){
-                                $model->{$model->authorable()} = User::first()->id;
+                            else{
+                                $model->setCreator($user);
                             }
+                        } catch (QueryException $exception) {
+                            ///throw $exception;
+                            ///throw new CoreQueryException(message: $exception->getMessage(), code: $exception->getCode());
+                            // Handle any query exceptions that may occur
+                            // You can customize the error handling here
+                        } catch (ModelNotFoundException $exception) {
+                            throw new ModelNotFoundException('User not found.');
                         }
-                        else{
-                            $model->setCreator($user);
-                        }
-                    } catch (QueryException $exception) {
-                        ///throw $exception;
-                        ///throw new CoreQueryException(message: $exception->getMessage(), code: $exception->getCode());
-                        // Handle any query exceptions that may occur
-                        // You can customize the error handling here
-                    } catch (ModelNotFoundException $exception) {
-                        throw new ModelNotFoundException('User not found.');
                     }
                 }
             }

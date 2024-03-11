@@ -48,7 +48,7 @@ class UserController extends RESTfulResourceController
      */
     public function assignRolePrivileges(Request $request, string $id): JsonResponse
     {
-        $createRequest = app(ResourceRequest::class, [new RoleDTO]);
+        $createRequest = app(ResourceRequest::class, ['dto' => new RoleDTO]);
 
         if ($createRequest) {
             $createRequest->validate($createRequest->rules());
@@ -66,7 +66,7 @@ class UserController extends RESTfulResourceController
      */
     public function revokeRolePrivileges(Request $request, string $id): JsonResponse
     {
-        $createRequest = app(ResourceRequest::class, [new RoleDTO]);
+        $createRequest = app(ResourceRequest::class, ['dto' => new RoleDTO]);
 
         if ($createRequest) {
             $createRequest->validate($createRequest->rules());

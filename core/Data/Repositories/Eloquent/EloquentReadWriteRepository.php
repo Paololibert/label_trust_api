@@ -32,7 +32,6 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
         parent::__construct($model);
     }
 
-
     /**
      * Create a new record.
      *

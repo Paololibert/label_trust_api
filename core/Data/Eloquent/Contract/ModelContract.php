@@ -201,16 +201,25 @@ class ModelContract extends Model
 
         $this->attributes       = array_unique(array_merge($this->default_attributes,       $this->attributes));
         // $this->attributes       = array_unique(array_merge($this->attributes,               ["{$this->deleteable()}"=> FALSE]));
-        $this->default_fillable = array_unique(array_merge($this->default_fillable,         ["{$this->deleteable()}", "{$this->authorable()}"]));
+        if($this->authorable()){
+            $this->default_fillable = array_unique(array_merge($this->default_fillable,         ["{$this->deleteable()}", "{$this->authorable()}"]));
+        }
         $this->fillable         = array_unique(array_merge($this->default_fillable,         $this->fillable));
         $this->guarded          = array_unique(array_merge($this->default_guarded,          $this->guarded));
         $this->default_appends  = array_unique(array_merge($this->default_appends,          $this->getAppends()));
         $this->appends          = array_unique(array_merge($this->default_appends,          $this->appends));
         $this->with             = array_unique(array_merge($this->default_with,             $this->with));
 
-        $this->default_hidden   = array_unique(array_merge($this->default_hidden,          ["{$this->deleteable()}", "{$this->authorable()}"]));
+        if($this->authorable()){
+            $this->default_hidden   = array_unique(array_merge($this->default_hidden,          ["{$this->deleteable()}", "{$this->authorable()}"]));
+        }
+
         $this->hidden           = array_unique(array_merge($this->default_hidden,           $this->hidden));
-        $this->default_casts    = array_unique(array_merge($this->default_casts,            ["{$this->deleteable()}"=> 'boolean', "{$this->authorable()}"=> 'string']));
+        
+        if($this->authorable()){
+            $this->default_casts    = array_unique(array_merge($this->default_casts,            ["{$this->deleteable()}"=> 'boolean', "{$this->authorable()}"=> 'string']));
+        }
+        
         $this->casts            = array_unique(array_merge($this->default_casts,            $this->casts));
         $this->default_visible  = array_unique(array_merge($this->default_visible,          ["{$this->deleteable()}"]));
         $this->visible          = array_unique(array_merge($this->default_visible,          $this->visible));
@@ -253,7 +262,7 @@ class ModelContract extends Model
         self::observe(ModelContractObserver::class);
     }
 
-    public function authorable(): string
+    public function authorable(): ?string
     {
         return "created_by";
     }

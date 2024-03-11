@@ -116,15 +116,15 @@ class ResourcesServiceProvider extends ServiceProvider
 
             
         
-            // Bind ReadOnlyRepositoryInterface to CategoryOfEmployeReadOnlyRepository
-            $this->app->when(\App\Http\Controllers\API\RESTful\V1\CategoryOfEmployeController::class)
+            // Bind ReadOnlyRepositoryInterface to CategoryOfEmployeeReadOnlyRepository
+            $this->app->when(\App\Http\Controllers\API\RESTful\V1\CategoryOfEmployeeController::class)
                 ->needs(
                     \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
                 )
-                ->give(\Domains\CategoriesOfEmployees\Repositories\CategoryOfEmployeReadOnlyRepository::class);
+                ->give(\Domains\CategoriesOfEmployees\Repositories\CategoryOfEmployeeReadOnlyRepository::class);
 
-            // Bind ReadWriteRepositoryInterface to CategoryOfEmployeReadWriteRepository
-            $this->app->when(\App\Http\Controllers\API\RESTful\V1\CategoryOfEmployeController::class)
+            // Bind ReadWriteRepositoryInterface to CategoryOfEmployeeReadWriteRepository
+            $this->app->when(\App\Http\Controllers\API\RESTful\V1\CategoryOfEmployeeController::class)
                 ->needs(
                     \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
                 )
@@ -144,7 +144,7 @@ class ResourcesServiceProvider extends ServiceProvider
                     \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
                 )
                 ->give(\Domains\Employees\Repositories\EmployeeReadWriteRepository::class);
-            
+          
         }
 
     /**

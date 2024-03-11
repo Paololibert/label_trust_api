@@ -49,8 +49,7 @@ class RoleController extends RESTfulResourceController
     public function grantAccess(Request $request, string $id): JsonResponse
     {
 
-        $createRequest = app(ResourceRequest::class, [new PermissionDTO()]);
-
+        $createRequest = app(ResourceRequest::class, ['dto' => new PermissionDTO()]);
         if ($createRequest) {
             $createRequest->validate($createRequest->rules());
         }
@@ -68,7 +67,7 @@ class RoleController extends RESTfulResourceController
     public function revokeAccess(Request $request, string $id): JsonResponse
     {
 
-        $createRequest = app(ResourceRequest::class, [new PermissionDTO]);
+        $createRequest = app(ResourceRequest::class, ['dto' => new PermissionDTO]);
 
         if ($createRequest) {
             $createRequest->validate($createRequest->rules());

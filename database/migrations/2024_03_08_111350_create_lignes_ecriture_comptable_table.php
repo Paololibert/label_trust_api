@@ -65,7 +65,7 @@ class CreateLignesEcritureComptableTable extends Migration
                         ); // Describe the meaning of the 'status' column
 
                 // Add a boolean column 'can_be_delete' with default value false
-                $this->addCanDeleteColumn(table: $table, column_name: 'can_be_delete', can_be_delete: false);
+                $this->addCanDeleteColumn(table: $table, column_name: 'can_be_delete', can_be_delete: true);
                 
                 // Define a foreign key for 'created_by', pointing to the 'users' table
                 $this->foreignKey(

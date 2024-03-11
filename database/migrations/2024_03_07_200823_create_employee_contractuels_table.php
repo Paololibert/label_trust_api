@@ -96,6 +96,7 @@ class CreateEmployeeContractuelsTable extends Migration
         DB::beginTransaction();
 
         try {
+    
             // Drop the "employee_contractuels" table if it exists
             Schema::dropIfExists('employee_contractuels');
 

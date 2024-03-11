@@ -152,6 +152,7 @@ class CreateContractsTable extends Migration
         DB::beginTransaction();
 
         try {
+            
             // Drop the "contrats" table if it exists
             Schema::dropIfExists('contrats');
 

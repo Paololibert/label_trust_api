@@ -8,6 +8,7 @@ use App\Models\UniteTravaille;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Core\Utils\Enums\TypeUniteTravailleEnum;
 use Domains\TauxAndSalaries\DataTransfertObjects\CreateTauxAndSalaryDTO;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 /**
@@ -24,7 +25,7 @@ class CreateUniteTravailleDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
-        $this->merge(new CreateTauxAndSalaryDTO, 'taux', ["required", "array"]);
+        $this->merge(new CreateTauxAndSalaryDTO);
     }
 
     /**
@@ -46,7 +47,17 @@ class CreateUniteTravailleDTO extends BaseDTO
     {
         $rules = array_merge([
             "type_of_unite_travaille"   => ['required', "string", new Enum(TypeUniteTravailleEnum::class)],
-            "unite_mesure_id"           => ["required",'exists:unite_mesures,id'],
+            'unite_mesure_id' => [
+                'required',
+                Rule::unique('unite_travailles', 'unite_mesure_id')
+                    ->where(function ($query) {
+                        $query->where('type_of_unite_travaille', request('type_of_unite_travaille'))
+                            ->when(request('article_id'), function ($query, $articleId) {
+                                return $query->where('article_id', $articleId);
+                            });
+                    })
+            ],
+
             // Use 'required_if' rule to make 'article_id' required only when 'type_of_unite_travaille' is 'article'
             "article_id"                => ['required_if:type_of_unite_travaille,article', 'exists:articles,id'],
             'can_be_deleted'            => ['sometimes', 'boolean', 'in:'.true.','.false]

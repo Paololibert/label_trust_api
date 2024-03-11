@@ -83,6 +83,165 @@ COMMENT ON COLUMN public.articles.deleted_at IS 'Soft delete column for marking 
 
 
 --
+-- Name: balance_des_comptes; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.balance_des_comptes (
+    id uuid NOT NULL,
+    solde_debit numeric(12,2) NOT NULL,
+    solde_credit numeric(12,2) NOT NULL,
+    date_report date NOT NULL,
+    date_cloture date,
+    balanceable_type character varying(255) NOT NULL,
+    balanceable_id uuid NOT NULL,
+    exercice_comptable_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.balance_des_comptes OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN balance_des_comptes.solde_debit; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.balance_des_comptes.solde_debit IS 'Total debit balance for the account.';
+
+
+--
+-- Name: COLUMN balance_des_comptes.solde_credit; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.balance_des_comptes.solde_credit IS 'Total credit balance for the account.';
+
+
+--
+-- Name: COLUMN balance_des_comptes.date_report; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.balance_des_comptes.date_report IS 'Indicate when the balance date is report';
+
+
+--
+-- Name: COLUMN balance_des_comptes.date_cloture; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.balance_des_comptes.date_cloture IS 'Indicate when the balance date is end up';
+
+
+--
+-- Name: COLUMN balance_des_comptes.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.balance_des_comptes.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN balance_des_comptes.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.balance_des_comptes.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN balance_des_comptes.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.balance_des_comptes.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN balance_des_comptes.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.balance_des_comptes.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN balance_des_comptes.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.balance_des_comptes.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: categories_de_compte; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.categories_de_compte (
+    id uuid NOT NULL,
+    code character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.categories_de_compte OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN categories_de_compte.code; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.categories_de_compte.code IS 'The unique code of the categorie de compte';
+
+
+--
+-- Name: COLUMN categories_de_compte.name; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.categories_de_compte.name IS 'The unique name of the categorie de compte';
+
+
+--
+-- Name: COLUMN categories_de_compte.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.categories_de_compte.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN categories_de_compte.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.categories_de_compte.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN categories_de_compte.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.categories_de_compte.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN categories_de_compte.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.categories_de_compte.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN categories_de_compte.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.categories_de_compte.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
 -- Name: categories_of_employees; Type: TABLE; Schema: public; Owner: master_db_admin
 --
 
@@ -154,6 +313,133 @@ COMMENT ON COLUMN public.categories_of_employees.deleted_at IS 'Soft delete colu
 
 
 --
+-- Name: category_of_employee_taux; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.category_of_employee_taux (
+    id uuid NOT NULL,
+    est_le_taux_de_base boolean DEFAULT false NOT NULL,
+    category_of_employee_id uuid NOT NULL,
+    taux_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.category_of_employee_taux OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN category_of_employee_taux.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.category_of_employee_taux.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN category_of_employee_taux.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.category_of_employee_taux.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN category_of_employee_taux.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.category_of_employee_taux.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN category_of_employee_taux.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.category_of_employee_taux.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN category_of_employee_taux.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.category_of_employee_taux.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: classes_de_compte; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.classes_de_compte (
+    id uuid NOT NULL,
+    code character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.classes_de_compte OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN classes_de_compte.code; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.classes_de_compte.code IS 'The unique code of the classe de compte';
+
+
+--
+-- Name: COLUMN classes_de_compte.name; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.classes_de_compte.name IS 'The unique name of the classe de compte';
+
+
+--
+-- Name: COLUMN classes_de_compte.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.classes_de_compte.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN classes_de_compte.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.classes_de_compte.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN classes_de_compte.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.classes_de_compte.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN classes_de_compte.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.classes_de_compte.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN classes_de_compte.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.classes_de_compte.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
 -- Name: companies; Type: TABLE; Schema: public; Owner: master_db_admin
 --
 
@@ -162,7 +448,7 @@ CREATE TABLE public.companies (
     name character varying(255) NOT NULL,
     registration_number character varying(255),
     status boolean DEFAULT true NOT NULL,
-    can_be_delete boolean DEFAULT false NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
     created_by uuid,
     created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp(0) without time zone,
@@ -224,6 +510,254 @@ COMMENT ON COLUMN public.companies.deleted_at IS 'Soft delete column for marking
 
 
 --
+-- Name: comptes; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.comptes (
+    id uuid NOT NULL,
+    code character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    type_de_compte character varying(255) DEFAULT 'generale'::character varying NOT NULL,
+    categorie_de_compte_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone,
+    CONSTRAINT comptes_type_de_compte_check CHECK (((type_de_compte)::text = ANY ((ARRAY['generale'::character varying, 'analytique'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.comptes OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN comptes.code; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.comptes.code IS 'The unique code of the classe de compte';
+
+
+--
+-- Name: COLUMN comptes.name; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.comptes.name IS 'The unique name of the classe de compte';
+
+
+--
+-- Name: COLUMN comptes.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.comptes.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN comptes.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.comptes.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN comptes.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.comptes.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN comptes.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.comptes.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN comptes.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.comptes.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: contracts; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.contracts (
+    id uuid NOT NULL,
+    reference character varying(255) NOT NULL,
+    type_contract character varying(255) DEFAULT 'cdd'::character varying NOT NULL,
+    duree double precision NOT NULL,
+    date_debut date NOT NULL,
+    date_fin date,
+    contract_status character varying(255) DEFAULT 'en_cours'::character varying NOT NULL,
+    renouvelable boolean DEFAULT true NOT NULL,
+    est_renouveler boolean DEFAULT false NOT NULL,
+    poste_id uuid NOT NULL,
+    employee_contractuel_id uuid NOT NULL,
+    unite_mesures_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone,
+    contract_id uuid,
+    CONSTRAINT contracts_contract_status_check CHECK (((contract_status)::text = ANY ((ARRAY['en_attente'::character varying, 'en_cours'::character varying, 'terminer'::character varying, 'suspendu'::character varying, 'resilier'::character varying])::text[]))),
+    CONSTRAINT contracts_type_contract_check CHECK (((type_contract)::text = ANY ((ARRAY['cdd'::character varying, 'cdi'::character varying, 'alternance'::character varying, 'ctt'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.contracts OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN contracts.reference; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.reference IS 'The unique reference of the contracts';
+
+
+--
+-- Name: COLUMN contracts.duree; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.duree IS 'The duration of the contracts';
+
+
+--
+-- Name: COLUMN contracts.date_debut; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.date_debut IS 'Indicate when the contracts was created';
+
+
+--
+-- Name: COLUMN contracts.date_fin; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.date_fin IS 'Indicate when the contracts was created';
+
+
+--
+-- Name: COLUMN contracts.renouvelable; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.renouvelable IS 'Indicate if the contract is renouveble';
+
+
+--
+-- Name: COLUMN contracts.est_renouveler; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.est_renouveler IS 'Indicate if the contract is realy renew';
+
+
+--
+-- Name: COLUMN contracts.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN contracts.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN contracts.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN contracts.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN contracts.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contracts.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: contractuelables; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.contractuelables (
+    id uuid NOT NULL,
+    employee_id uuid NOT NULL,
+    contractuelable_type character varying(255) NOT NULL,
+    contractuelable_id uuid NOT NULL,
+    actif boolean DEFAULT true NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.contractuelables OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN contractuelables.actif; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contractuelables.actif IS 'The activity of the employee as contractual or not';
+
+
+--
+-- Name: COLUMN contractuelables.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contractuelables.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN contractuelables.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contractuelables.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN contractuelables.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contractuelables.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN contractuelables.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contractuelables.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN contractuelables.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.contractuelables.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
 -- Name: credentials; Type: TABLE; Schema: public; Owner: master_db_admin
 --
 
@@ -233,6 +767,8 @@ CREATE TABLE public.credentials (
     password character varying(255) NOT NULL,
     user_id uuid NOT NULL,
     created_by uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
     created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp(0) without time zone,
     deleted_at timestamp(0) without time zone
@@ -253,6 +789,22 @@ COMMENT ON COLUMN public.credentials.identifier IS 'Encrypted identifier for the
 --
 
 COMMENT ON COLUMN public.credentials.password IS 'Encrypted password for the user';
+
+
+--
+-- Name: COLUMN credentials.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.credentials.status IS 'Record status: 
+                        - TRUE: Active record or soft delete record
+                        - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN credentials.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.credentials.can_be_delete IS 'Flag indicating whether the record can be deleted';
 
 
 --
@@ -339,6 +891,564 @@ COMMENT ON COLUMN public.departements.deleted_at IS 'Soft delete column for mark
 
 
 --
+-- Name: devises; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.devises (
+    id uuid NOT NULL,
+    code character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    symbol character varying(255) NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.devises OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN devises.code; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.devises.code IS 'The unique code of the currency';
+
+
+--
+-- Name: COLUMN devises.name; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.devises.name IS 'The unique name of the currency';
+
+
+--
+-- Name: COLUMN devises.symbol; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.devises.symbol IS 'The unique symbol of the currency';
+
+
+--
+-- Name: COLUMN devises.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.devises.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN devises.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.devises.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN devises.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.devises.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN devises.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.devises.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN devises.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.devises.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: ecritures_comptable; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.ecritures_comptable (
+    id uuid NOT NULL,
+    libelle character varying(255) NOT NULL,
+    date_ecriture date NOT NULL,
+    total_debit numeric(12,2) NOT NULL,
+    total_credit numeric(12,2) NOT NULL,
+    journal_id uuid NOT NULL,
+    operation_disponible_id uuid,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.ecritures_comptable OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN ecritures_comptable.libelle; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.ecritures_comptable.libelle IS 'Description or label of the accounting entry.';
+
+
+--
+-- Name: COLUMN ecritures_comptable.date_ecriture; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.ecritures_comptable.date_ecriture IS 'Date when the accounting entry is recorded or written.';
+
+
+--
+-- Name: COLUMN ecritures_comptable.total_debit; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.ecritures_comptable.total_debit IS 'Total amount on the debit side.';
+
+
+--
+-- Name: COLUMN ecritures_comptable.total_credit; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.ecritures_comptable.total_credit IS 'Total amount on the credit side.';
+
+
+--
+-- Name: COLUMN ecritures_comptable.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.ecritures_comptable.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN ecritures_comptable.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.ecritures_comptable.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN ecritures_comptable.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.ecritures_comptable.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN ecritures_comptable.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.ecritures_comptable.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN ecritures_comptable.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.ecritures_comptable.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: employee_contractuels; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.employee_contractuels (
+    id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.employee_contractuels OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN employee_contractuels.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_contractuels.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN employee_contractuels.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_contractuels.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN employee_contractuels.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_contractuels.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN employee_contractuels.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_contractuels.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN employee_contractuels.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_contractuels.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: employee_non_contractuels; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.employee_non_contractuels (
+    id uuid NOT NULL,
+    est_convertir boolean DEFAULT false NOT NULL,
+    categories_of_employee_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.employee_non_contractuels OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN employee_non_contractuels.est_convertir; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_non_contractuels.est_convertir IS 'The conversion of the employee to a contractual';
+
+
+--
+-- Name: COLUMN employee_non_contractuels.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_non_contractuels.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN employee_non_contractuels.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_non_contractuels.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN employee_non_contractuels.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_non_contractuels.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN employee_non_contractuels.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_non_contractuels.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN employee_non_contractuels.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employee_non_contractuels.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: employees; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.employees (
+    id uuid NOT NULL,
+    matricule character varying(255) NOT NULL,
+    type_employee character varying(255) DEFAULT 'regulier'::character varying NOT NULL,
+    statut_employee character varying(255) DEFAULT 'en_service'::character varying NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone,
+    CONSTRAINT employees_statut_employee_check CHECK (((statut_employee)::text = ANY ((ARRAY['en_service'::character varying, 'suspendu'::character varying, 'en_conge'::character varying])::text[]))),
+    CONSTRAINT employees_type_employee_check CHECK (((type_employee)::text = ANY ((ARRAY['regulier'::character varying, 'non_regulier'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.employees OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN employees.matricule; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employees.matricule IS 'The unique matricule of the employees';
+
+
+--
+-- Name: COLUMN employees.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employees.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN employees.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employees.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN employees.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employees.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN employees.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employees.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN employees.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.employees.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: exercices_comptable; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.exercices_comptable (
+    id uuid NOT NULL,
+    fiscal_year integer NOT NULL,
+    date_ouverture date NOT NULL,
+    date_fermeture date,
+    status_exercice character varying(255) DEFAULT 'ouvert'::character varying NOT NULL,
+    periode_exercice_id uuid NOT NULL,
+    plan_comptable_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone,
+    CONSTRAINT exercices_comptable_status_exercice_check CHECK (((status_exercice)::text = ANY ((ARRAY['ouvert'::character varying, 'fermer'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.exercices_comptable OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN exercices_comptable.fiscal_year; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.exercices_comptable.fiscal_year IS 'The year of the exerice';
+
+
+--
+-- Name: COLUMN exercices_comptable.date_ouverture; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.exercices_comptable.date_ouverture IS 'Indicate when the exercice start';
+
+
+--
+-- Name: COLUMN exercices_comptable.date_fermeture; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.exercices_comptable.date_fermeture IS 'Indicate when the exercice end up';
+
+
+--
+-- Name: COLUMN exercices_comptable.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.exercices_comptable.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN exercices_comptable.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.exercices_comptable.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN exercices_comptable.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.exercices_comptable.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN exercices_comptable.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.exercices_comptable.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN exercices_comptable.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.exercices_comptable.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: journaux; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.journaux (
+    id uuid NOT NULL,
+    total numeric(12,2) NOT NULL,
+    total_debit numeric(12,2) NOT NULL,
+    total_credit numeric(12,2) NOT NULL,
+    exercice_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.journaux OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN journaux.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.journaux.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN journaux.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.journaux.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN journaux.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.journaux.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN journaux.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.journaux.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN journaux.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.journaux.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: lignes_ecriture_comptable; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.lignes_ecriture_comptable (
+    id uuid NOT NULL,
+    libelle character varying(255),
+    type_ecriture_compte character varying(255) DEFAULT 'debit'::character varying NOT NULL,
+    montant numeric(12,2) NOT NULL,
+    accountable_type character varying(255) NOT NULL,
+    accountable_id uuid NOT NULL,
+    ligneable_type character varying(255) NOT NULL,
+    ligneable_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone,
+    CONSTRAINT lignes_ecriture_comptable_type_ecriture_compte_check CHECK (((type_ecriture_compte)::text = ANY ((ARRAY['debit'::character varying, 'credit'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.lignes_ecriture_comptable OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN lignes_ecriture_comptable.libelle; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.lignes_ecriture_comptable.libelle IS 'Libelle of the ecriture comptable';
+
+
+--
+-- Name: COLUMN lignes_ecriture_comptable.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.lignes_ecriture_comptable.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN lignes_ecriture_comptable.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.lignes_ecriture_comptable.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN lignes_ecriture_comptable.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.lignes_ecriture_comptable.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN lignes_ecriture_comptable.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.lignes_ecriture_comptable.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN lignes_ecriture_comptable.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.lignes_ecriture_comptable.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
 -- Name: migrations; Type: TABLE; Schema: public; Owner: master_db_admin
 --
 
@@ -374,21 +1484,155 @@ ALTER SEQUENCE public.migrations_id_seq OWNED BY public.migrations.id;
 
 
 --
+-- Name: montants; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.montants (
+    id uuid NOT NULL,
+    montant numeric(8,2) NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.montants OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN montants.montant; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.montants.montant IS 'The monetary amount associated with the "montants" entry';
+
+
+--
+-- Name: COLUMN montants.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.montants.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN montants.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.montants.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN montants.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.montants.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN montants.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.montants.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN montants.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.montants.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: non_contractuel_categories; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.non_contractuel_categories (
+    id uuid NOT NULL,
+    date_debut date NOT NULL,
+    date_fin date,
+    employee_non_contractuel_id uuid NOT NULL,
+    categories_of_employee_id uuid NOT NULL,
+    category_of_employee_taux_id uuid,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.non_contractuel_categories OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN non_contractuel_categories.date_debut; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.non_contractuel_categories.date_debut IS 'Indicate when the contract was created';
+
+
+--
+-- Name: COLUMN non_contractuel_categories.date_fin; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.non_contractuel_categories.date_fin IS 'Indicate when the contract was created';
+
+
+--
+-- Name: COLUMN non_contractuel_categories.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.non_contractuel_categories.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN non_contractuel_categories.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.non_contractuel_categories.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN non_contractuel_categories.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.non_contractuel_categories.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN non_contractuel_categories.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.non_contractuel_categories.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN non_contractuel_categories.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.non_contractuel_categories.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
 -- Name: oauth_access_tokens; Type: TABLE; Schema: public; Owner: master_db_admin
 --
 
 CREATE TABLE public.oauth_access_tokens (
-    id uuid NOT NULL,
+    id character varying(100) NOT NULL,
     user_id uuid,
     client_id uuid NOT NULL,
     name character varying(255),
     scopes text,
     revoked boolean NOT NULL,
+    created_at timestamp(0) without time zone,
+    updated_at timestamp(0) without time zone,
     expires_at timestamp(0) without time zone,
     status boolean DEFAULT true NOT NULL,
-    can_be_delete boolean DEFAULT false NOT NULL,
-    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp(0) without time zone,
     deleted_at timestamp(0) without time zone
 );
 
@@ -400,29 +1644,8 @@ ALTER TABLE public.oauth_access_tokens OWNER TO master_db_admin;
 --
 
 COMMENT ON COLUMN public.oauth_access_tokens.status IS 'Record status: 
-                            - TRUE: Active record or soft delete record
-                            - FALSE: permanently Deleted and can be archived in another datastore';
-
-
---
--- Name: COLUMN oauth_access_tokens.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_access_tokens.can_be_delete IS 'Flag indicating whether the record can be deleted';
-
-
---
--- Name: COLUMN oauth_access_tokens.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_access_tokens.created_at IS 'Timestamp indicating when the record was created';
-
-
---
--- Name: COLUMN oauth_access_tokens.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_access_tokens.updated_at IS 'Timestamp indicating the last update of the record';
+                    - TRUE: Active record or soft delete record
+                    - FALSE: permanently Deleted and can be archived in another datastore';
 
 
 --
@@ -437,14 +1660,13 @@ COMMENT ON COLUMN public.oauth_access_tokens.deleted_at IS 'Soft delete column f
 --
 
 CREATE TABLE public.oauth_auth_codes (
-    id uuid NOT NULL,
+    id character varying(100) NOT NULL,
     user_id uuid NOT NULL,
     client_id uuid NOT NULL,
     scopes text,
     revoked boolean NOT NULL,
     expires_at timestamp(0) without time zone,
     status boolean DEFAULT true NOT NULL,
-    can_be_delete boolean DEFAULT false NOT NULL,
     created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp(0) without time zone,
     deleted_at timestamp(0) without time zone
@@ -458,15 +1680,8 @@ ALTER TABLE public.oauth_auth_codes OWNER TO master_db_admin;
 --
 
 COMMENT ON COLUMN public.oauth_auth_codes.status IS 'Record status: 
-                            - TRUE: Active record or soft delete record
-                            - FALSE: permanently Deleted and can be archived in another datastore';
-
-
---
--- Name: COLUMN oauth_auth_codes.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_auth_codes.can_be_delete IS 'Flag indicating whether the record can be deleted';
+                    - TRUE: Active record or soft delete record
+                    - FALSE: permanently Deleted and can be archived in another datastore';
 
 
 --
@@ -504,10 +1719,9 @@ CREATE TABLE public.oauth_clients (
     personal_access_client boolean NOT NULL,
     password_client boolean NOT NULL,
     revoked boolean NOT NULL,
-    status boolean DEFAULT true NOT NULL,
-    can_be_delete boolean DEFAULT false NOT NULL,
-    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_at timestamp(0) without time zone,
     updated_at timestamp(0) without time zone,
+    status boolean DEFAULT true NOT NULL,
     deleted_at timestamp(0) without time zone
 );
 
@@ -519,29 +1733,8 @@ ALTER TABLE public.oauth_clients OWNER TO master_db_admin;
 --
 
 COMMENT ON COLUMN public.oauth_clients.status IS 'Record status: 
-                            - TRUE: Active record or soft delete record
-                            - FALSE: permanently Deleted and can be archived in another datastore';
-
-
---
--- Name: COLUMN oauth_clients.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_clients.can_be_delete IS 'Flag indicating whether the record can be deleted';
-
-
---
--- Name: COLUMN oauth_clients.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_clients.created_at IS 'Timestamp indicating when the record was created';
-
-
---
--- Name: COLUMN oauth_clients.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_clients.updated_at IS 'Timestamp indicating the last update of the record';
+                    - TRUE: Active record or soft delete record
+                    - FALSE: permanently Deleted and can be archived in another datastore';
 
 
 --
@@ -556,12 +1749,11 @@ COMMENT ON COLUMN public.oauth_clients.deleted_at IS 'Soft delete column for mar
 --
 
 CREATE TABLE public.oauth_personal_access_clients (
-    id uuid NOT NULL,
+    id bigint NOT NULL,
     client_id uuid NOT NULL,
-    status boolean DEFAULT true NOT NULL,
-    can_be_delete boolean DEFAULT false NOT NULL,
-    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_at timestamp(0) without time zone,
     updated_at timestamp(0) without time zone,
+    status boolean DEFAULT true NOT NULL,
     deleted_at timestamp(0) without time zone
 );
 
@@ -573,29 +1765,8 @@ ALTER TABLE public.oauth_personal_access_clients OWNER TO master_db_admin;
 --
 
 COMMENT ON COLUMN public.oauth_personal_access_clients.status IS 'Record status: 
-                            - TRUE: Active record or soft delete record
-                            - FALSE: permanently Deleted and can be archived in another datastore';
-
-
---
--- Name: COLUMN oauth_personal_access_clients.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_personal_access_clients.can_be_delete IS 'Flag indicating whether the record can be deleted';
-
-
---
--- Name: COLUMN oauth_personal_access_clients.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_personal_access_clients.created_at IS 'Timestamp indicating when the record was created';
-
-
---
--- Name: COLUMN oauth_personal_access_clients.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_personal_access_clients.updated_at IS 'Timestamp indicating the last update of the record';
+                    - TRUE: Active record or soft delete record
+                    - FALSE: permanently Deleted and can be archived in another datastore';
 
 
 --
@@ -606,16 +1777,36 @@ COMMENT ON COLUMN public.oauth_personal_access_clients.deleted_at IS 'Soft delet
 
 
 --
+-- Name: oauth_personal_access_clients_id_seq; Type: SEQUENCE; Schema: public; Owner: master_db_admin
+--
+
+CREATE SEQUENCE public.oauth_personal_access_clients_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.oauth_personal_access_clients_id_seq OWNER TO master_db_admin;
+
+--
+-- Name: oauth_personal_access_clients_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: master_db_admin
+--
+
+ALTER SEQUENCE public.oauth_personal_access_clients_id_seq OWNED BY public.oauth_personal_access_clients.id;
+
+
+--
 -- Name: oauth_refresh_tokens; Type: TABLE; Schema: public; Owner: master_db_admin
 --
 
 CREATE TABLE public.oauth_refresh_tokens (
-    id uuid NOT NULL,
-    access_token_id uuid NOT NULL,
+    id character varying(100) NOT NULL,
+    access_token_id character varying(100) NOT NULL,
     revoked boolean NOT NULL,
     expires_at timestamp(0) without time zone,
     status boolean DEFAULT true NOT NULL,
-    can_be_delete boolean DEFAULT false NOT NULL,
     created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp(0) without time zone,
     deleted_at timestamp(0) without time zone
@@ -629,15 +1820,8 @@ ALTER TABLE public.oauth_refresh_tokens OWNER TO master_db_admin;
 --
 
 COMMENT ON COLUMN public.oauth_refresh_tokens.status IS 'Record status: 
-                            - TRUE: Active record or soft delete record
-                            - FALSE: permanently Deleted and can be archived in another datastore';
-
-
---
--- Name: COLUMN oauth_refresh_tokens.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.oauth_refresh_tokens.can_be_delete IS 'Flag indicating whether the record can be deleted';
+                    - TRUE: Active record or soft delete record
+                    - FALSE: permanently Deleted and can be archived in another datastore';
 
 
 --
@@ -662,6 +1846,94 @@ COMMENT ON COLUMN public.oauth_refresh_tokens.deleted_at IS 'Soft delete column 
 
 
 --
+-- Name: operations_comptable; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.operations_comptable (
+    id uuid NOT NULL,
+    libelle character varying(255) NOT NULL,
+    date_ecriture date NOT NULL,
+    total_debit numeric(12,2) NOT NULL,
+    total_credit numeric(12,2) NOT NULL,
+    status_operation character varying(255) DEFAULT 'en_attente'::character varying NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone,
+    CONSTRAINT operations_comptable_status_operation_check CHECK (((status_operation)::text = ANY ((ARRAY['en_attente'::character varying, 'valider'::character varying, 'rejeter'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.operations_comptable OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN operations_comptable.libelle; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.operations_comptable.libelle IS 'Description or label of the accounting entry.';
+
+
+--
+-- Name: COLUMN operations_comptable.date_ecriture; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.operations_comptable.date_ecriture IS 'Date when the accounting entry is recorded or written.';
+
+
+--
+-- Name: COLUMN operations_comptable.total_debit; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.operations_comptable.total_debit IS 'Total debit amount for the account.';
+
+
+--
+-- Name: COLUMN operations_comptable.total_credit; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.operations_comptable.total_credit IS 'Total credit amount for the account.';
+
+
+--
+-- Name: COLUMN operations_comptable.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.operations_comptable.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN operations_comptable.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.operations_comptable.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN operations_comptable.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.operations_comptable.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN operations_comptable.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.operations_comptable.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN operations_comptable.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.operations_comptable.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
 -- Name: people; Type: TABLE; Schema: public; Owner: master_db_admin
 --
 
@@ -677,7 +1949,7 @@ CREATE TABLE public.people (
     ifu bigint,
     nationality character varying(255),
     status boolean DEFAULT true NOT NULL,
-    can_be_delete boolean DEFAULT false NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
     created_by uuid,
     created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp(0) without time zone,
@@ -724,6 +1996,84 @@ COMMENT ON COLUMN public.people.updated_at IS 'Timestamp indicating the last upd
 --
 
 COMMENT ON COLUMN public.people.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: periodes_exercice; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.periodes_exercice (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    date_debut_periode date NOT NULL,
+    date_fin_periode date NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.periodes_exercice OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN periodes_exercice.name; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.periodes_exercice.name IS 'The unique name of the periode name';
+
+
+--
+-- Name: COLUMN periodes_exercice.date_debut_periode; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.periodes_exercice.date_debut_periode IS 'Indicate when an exercice comptable should start';
+
+
+--
+-- Name: COLUMN periodes_exercice.date_fin_periode; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.periodes_exercice.date_fin_periode IS 'Indicate when an exercice comptable will end';
+
+
+--
+-- Name: COLUMN periodes_exercice.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.periodes_exercice.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN periodes_exercice.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.periodes_exercice.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN periodes_exercice.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.periodes_exercice.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN periodes_exercice.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.periodes_exercice.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN periodes_exercice.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.periodes_exercice.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
 
 
 --
@@ -850,6 +2200,271 @@ ALTER TABLE public.personal_access_tokens_id_seq OWNER TO master_db_admin;
 --
 
 ALTER SEQUENCE public.personal_access_tokens_id_seq OWNED BY public.personal_access_tokens.id;
+
+
+--
+-- Name: plan_comptable_compte_sous_comptes; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.plan_comptable_compte_sous_comptes (
+    id uuid NOT NULL,
+    account_number character varying(255) NOT NULL,
+    plan_comptable_compte_id uuid NOT NULL,
+    sous_compte_id uuid NOT NULL,
+    sub_division_id uuid,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.plan_comptable_compte_sous_comptes OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN plan_comptable_compte_sous_comptes.account_number; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_compte_sous_comptes.account_number IS 'The unique account number';
+
+
+--
+-- Name: COLUMN plan_comptable_compte_sous_comptes.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_compte_sous_comptes.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN plan_comptable_compte_sous_comptes.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_compte_sous_comptes.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN plan_comptable_compte_sous_comptes.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_compte_sous_comptes.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN plan_comptable_compte_sous_comptes.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_compte_sous_comptes.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN plan_comptable_compte_sous_comptes.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_compte_sous_comptes.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: plan_comptable_comptes; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.plan_comptable_comptes (
+    id uuid NOT NULL,
+    account_number character varying(255) NOT NULL,
+    classe_id uuid NOT NULL,
+    plan_comptable_id uuid NOT NULL,
+    compte_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.plan_comptable_comptes OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN plan_comptable_comptes.account_number; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_comptes.account_number IS 'The unique account number';
+
+
+--
+-- Name: COLUMN plan_comptable_comptes.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_comptes.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN plan_comptable_comptes.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_comptes.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN plan_comptable_comptes.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_comptes.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN plan_comptable_comptes.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_comptes.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN plan_comptable_comptes.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plan_comptable_comptes.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: plans_comptable; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.plans_comptable (
+    id uuid NOT NULL,
+    code character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    description text,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.plans_comptable OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN plans_comptable.code; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plans_comptable.code IS 'The unique code of the plan comptable';
+
+
+--
+-- Name: COLUMN plans_comptable.name; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plans_comptable.name IS 'The unique name of the plan comptable';
+
+
+--
+-- Name: COLUMN plans_comptable.description; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plans_comptable.description IS 'Description of the plan comptable';
+
+
+--
+-- Name: COLUMN plans_comptable.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plans_comptable.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN plans_comptable.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plans_comptable.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN plans_comptable.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plans_comptable.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN plans_comptable.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plans_comptable.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN plans_comptable.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.plans_comptable.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: poste_salaries; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.poste_salaries (
+    id uuid NOT NULL,
+    est_le_salaire_de_base boolean DEFAULT false NOT NULL,
+    poste_id uuid NOT NULL,
+    salary_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.poste_salaries OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN poste_salaries.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.poste_salaries.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN poste_salaries.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.poste_salaries.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN poste_salaries.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.poste_salaries.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN poste_salaries.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.poste_salaries.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN poste_salaries.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.poste_salaries.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
 
 
 --
@@ -1057,6 +2672,145 @@ COMMENT ON COLUMN public.roles.deleted_at IS 'Soft delete column for marking rec
 
 
 --
+-- Name: salaires; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.salaires (
+    id uuid NOT NULL,
+    montant numeric(10,2) NOT NULL,
+    date_debut date NOT NULL,
+    date_fin date,
+    est_valide boolean DEFAULT true NOT NULL,
+    contract_id uuid NOT NULL,
+    poste_salarie_id uuid,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.salaires OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN salaires.date_debut; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.salaires.date_debut IS 'Indicate when the contract was created';
+
+
+--
+-- Name: COLUMN salaires.date_fin; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.salaires.date_fin IS 'Indicate when the contract was created';
+
+
+--
+-- Name: COLUMN salaires.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.salaires.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN salaires.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.salaires.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN salaires.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.salaires.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN salaires.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.salaires.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN salaires.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.salaires.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
+-- Name: taux_and_salaries; Type: TABLE; Schema: public; Owner: master_db_admin
+--
+
+CREATE TABLE public.taux_and_salaries (
+    id uuid NOT NULL,
+    montant_id uuid NOT NULL,
+    unite_mesure_id uuid,
+    hint numeric(8,2) NOT NULL,
+    unite_travaille_id uuid NOT NULL,
+    status boolean DEFAULT true NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
+    created_by uuid NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone,
+    deleted_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.taux_and_salaries OWNER TO master_db_admin;
+
+--
+-- Name: COLUMN taux_and_salaries.hint; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.taux_and_salaries.hint IS 'The hint of the taux';
+
+
+--
+-- Name: COLUMN taux_and_salaries.status; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.taux_and_salaries.status IS 'Record status: 
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
+
+
+--
+-- Name: COLUMN taux_and_salaries.can_be_delete; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.taux_and_salaries.can_be_delete IS 'Flag indicating whether the record can be deleted';
+
+
+--
+-- Name: COLUMN taux_and_salaries.created_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.taux_and_salaries.created_at IS 'Timestamp indicating when the record was created';
+
+
+--
+-- Name: COLUMN taux_and_salaries.updated_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.taux_and_salaries.updated_at IS 'Timestamp indicating the last update of the record';
+
+
+--
+-- Name: COLUMN taux_and_salaries.deleted_at; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.taux_and_salaries.deleted_at IS 'Soft delete column for marking records as deleted without permanent removal';
+
+
+--
 -- Name: unite_mesures; Type: TABLE; Schema: public; Owner: master_db_admin
 --
 
@@ -1132,15 +2886,12 @@ COMMENT ON COLUMN public.unite_mesures.deleted_at IS 'Soft delete column for mar
 
 CREATE TABLE public.unite_travailles (
     id uuid NOT NULL,
-    name character varying(255) NOT NULL,
-    hint numeric(8,2) NOT NULL,
-    rate numeric(8,2) NOT NULL,
     type_of_unite_travaille character varying(255) DEFAULT 'article'::character varying NOT NULL,
+    unite_mesure_id uuid NOT NULL,
+    article_id uuid,
     status boolean DEFAULT true NOT NULL,
     can_be_delete boolean DEFAULT true NOT NULL,
     created_by uuid NOT NULL,
-    unite_mesure_id uuid NOT NULL,
-    article_id uuid,
     created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp(0) without time zone,
     deleted_at timestamp(0) without time zone,
@@ -1149,27 +2900,6 @@ CREATE TABLE public.unite_travailles (
 
 
 ALTER TABLE public.unite_travailles OWNER TO master_db_admin;
-
---
--- Name: COLUMN unite_travailles.name; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.unite_travailles.name IS 'The unique name of the unite_travailles';
-
-
---
--- Name: COLUMN unite_travailles.hint; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.unite_travailles.hint IS 'The hint of the unite_travailles';
-
-
---
--- Name: COLUMN unite_travailles.rate; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.unite_travailles.rate IS 'The rate of the unite_travailles';
-
 
 --
 -- Name: COLUMN unite_travailles.status; Type: COMMENT; Schema: public; Owner: master_db_admin
@@ -1272,11 +3002,16 @@ CREATE TABLE public.users (
     id uuid NOT NULL,
     type_of_account character varying(255) DEFAULT 'personal'::character varying NOT NULL,
     username character varying(255),
+    login_channel character varying(255) DEFAULT 'email'::character varying NOT NULL,
     phone_number jsonb NOT NULL,
     address jsonb,
     email character varying(255),
+    identifier character varying(255) NOT NULL,
+    password character varying(255) NOT NULL,
     userable_type character varying(255) NOT NULL,
     userable_id uuid NOT NULL,
+    profilable_type character varying(255),
+    profilable_id uuid,
     email_verified_at timestamp(0) without time zone,
     email_verified boolean DEFAULT false NOT NULL,
     account_activated boolean DEFAULT false NOT NULL,
@@ -1284,14 +3019,16 @@ CREATE TABLE public.users (
     account_verified boolean DEFAULT false NOT NULL,
     account_verified_at timestamp(0) without time zone,
     email_verification_token character varying(255),
+    first_login boolean DEFAULT true NOT NULL,
     status boolean DEFAULT true NOT NULL,
-    can_be_delete boolean DEFAULT false NOT NULL,
+    can_be_delete boolean DEFAULT true NOT NULL,
     account_status character varying(255) DEFAULT 'pending_activation'::character varying NOT NULL,
     created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp(0) without time zone,
     deleted_at timestamp(0) without time zone,
     created_by uuid NOT NULL,
     CONSTRAINT users_account_status_check CHECK (((account_status)::text = ANY ((ARRAY['pending_activation'::character varying, 'pending_verification'::character varying, 'pending_password_reset'::character varying, 'active'::character varying, 'suspended'::character varying, 'disabled'::character varying, 'closed'::character varying, 'inactive'::character varying, 'banned'::character varying, 'locked'::character varying])::text[]))),
+    CONSTRAINT users_login_channel_check CHECK (((login_channel)::text = ANY ((ARRAY['email'::character varying, 'phone_number'::character varying])::text[]))),
     CONSTRAINT users_type_of_account_check CHECK (((type_of_account)::text = ANY ((ARRAY['personal'::character varying, 'moral'::character varying])::text[])))
 );
 
@@ -1324,6 +3061,20 @@ COMMENT ON COLUMN public.users.address IS 'Address of the user';
 --
 
 COMMENT ON COLUMN public.users.email IS 'Email address of the user';
+
+
+--
+-- Name: COLUMN users.identifier; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.users.identifier IS 'Encrypted identifier for the user';
+
+
+--
+-- Name: COLUMN users.password; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.users.password IS 'Encrypted password for the user';
 
 
 --
@@ -1376,12 +3127,19 @@ COMMENT ON COLUMN public.users.email_verification_token IS 'Token for email veri
 
 
 --
+-- Name: COLUMN users.first_login; Type: COMMENT; Schema: public; Owner: master_db_admin
+--
+
+COMMENT ON COLUMN public.users.first_login IS 'First connexion';
+
+
+--
 -- Name: COLUMN users.status; Type: COMMENT; Schema: public; Owner: master_db_admin
 --
 
 COMMENT ON COLUMN public.users.status IS 'Record status: 
-                        - TRUE: Active record or soft delete record
-                        - FALSE: permanently Deleted and can be archived in another datastore';
+                            - TRUE: Active record or soft delete record
+                            - FALSE: permanently Deleted and can be archived in another datastore';
 
 
 --
@@ -1420,6 +3178,13 @@ ALTER TABLE ONLY public.migrations ALTER COLUMN id SET DEFAULT nextval('public.m
 
 
 --
+-- Name: oauth_personal_access_clients id; Type: DEFAULT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.oauth_personal_access_clients ALTER COLUMN id SET DEFAULT nextval('public.oauth_personal_access_clients_id_seq'::regclass);
+
+
+--
 -- Name: personal_access_tokens id; Type: DEFAULT; Schema: public; Owner: master_db_admin
 --
 
@@ -1435,10 +3200,42 @@ COPY public.articles (id, name, status, can_be_delete, created_by, created_at, u
 
 
 --
+-- Data for Name: balance_des_comptes; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.balance_des_comptes (id, solde_debit, solde_credit, date_report, date_cloture, balanceable_type, balanceable_id, exercice_comptable_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: categories_de_compte; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.categories_de_compte (id, code, name, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
 -- Data for Name: categories_of_employees; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
 COPY public.categories_of_employees (id, name, description, status, can_be_delete, created_by, created_at, updated_at, deleted_at, category_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: category_of_employee_taux; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.category_of_employee_taux (id, est_le_taux_de_base, category_of_employee_id, taux_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: classes_de_compte; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.classes_de_compte (id, code, name, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
 \.
 
 
@@ -1451,10 +3248,35 @@ COPY public.companies (id, name, registration_number, status, can_be_delete, cre
 
 
 --
+-- Data for Name: comptes; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.comptes (id, code, name, type_de_compte, categorie_de_compte_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: contracts; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.contracts (id, reference, type_contract, duree, date_debut, date_fin, contract_status, renouvelable, est_renouveler, poste_id, employee_contractuel_id, unite_mesures_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at, contract_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: contractuelables; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.contractuelables (id, employee_id, contractuelable_type, contractuelable_id, actif, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
 -- Data for Name: credentials; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
-COPY public.credentials (id, identifier, password, user_id, created_by, created_at, updated_at, deleted_at) FROM stdin;
+COPY public.credentials (id, identifier, password, user_id, created_by, status, can_be_delete, created_at, updated_at, deleted_at) FROM stdin;
+9b89b372-b740-4fef-9ca5-7f3cf36b0f85	johndoe@gmail.com	$2y$12$ls3JIl8/pLYRQUnJt8yF6.aElQEdamPoSxEtnTPbBi9PsEHZU2ayy	9b89b371-f854-463e-a4ab-224c41d39aa8	9b89b371-f854-463e-a4ab-224c41d39aa8	t	t	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
 \.
 
 
@@ -1463,6 +3285,73 @@ COPY public.credentials (id, identifier, password, user_id, created_by, created_
 --
 
 COPY public.departements (id, name, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+9b89b372-f1b8-402b-b799-89ba1822127c	production	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
+9b89b372-fbac-452a-b575-25f56b6e3694	finance	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
+9b89b373-00b3-4ae5-a07b-67befd1eb41b	vente	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
+\.
+
+
+--
+-- Data for Name: devises; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.devises (id, code, name, symbol, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ecritures_comptable; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.ecritures_comptable (id, libelle, date_ecriture, total_debit, total_credit, journal_id, operation_disponible_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: employee_contractuels; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.employee_contractuels (id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: employee_non_contractuels; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.employee_non_contractuels (id, est_convertir, categories_of_employee_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: employees; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.employees (id, matricule, type_employee, statut_employee, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: exercices_comptable; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.exercices_comptable (id, fiscal_year, date_ouverture, date_fermeture, status_exercice, periode_exercice_id, plan_comptable_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: journaux; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.journaux (id, total, total_debit, total_credit, exercice_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: lignes_ecriture_comptable; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.lignes_ecriture_comptable (id, libelle, type_ecriture_compte, montant, accountable_type, accountable_id, ligneable_type, ligneable_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
 \.
 
 
@@ -1471,27 +3360,68 @@ COPY public.departements (id, name, status, can_be_delete, created_by, created_a
 --
 
 COPY public.migrations (id, migration, batch) FROM stdin;
-1	2019_12_14_000001_create_personal_access_tokens_table	1
-2	2024_02_29_145920_create_permissions_table	1
-3	2024_02_29_145925_create_roles_table	1
-4	2024_02_29_145937_create_role_has_permissions_table	1
-5	2024_02_29_150003_create_users_table	1
-6	2024_02_29_150017_create_people_table	1
-7	2024_02_29_150024_create_companies_table	1
-8	2024_02_29_150030_create_credentials_table	1
-9	2024_03_04_022358_create_user_has_roles_table	1
-10	2024_03_05_143455_create_articles_table	1
-11	2024_03_05_150547_create_unite_mesures_table	1
-12	2024_03_05_150620_create_unite_travailles_table	1
-13	2024_03_05_160539_create_departements_table	1
-14	2024_03_05_165304_create_postes_table	1
-15	2024_03_06_034927_create_categories_of_employees_table	1
-16	2024_06_01_000000_create_oauth_clients_table	1
-17	2024_06_01_000001_create_oauth_auth_codes_table	1
-18	2024_06_01_000002_create_oauth_access_tokens_table	1
-19	2024_06_01_000003_create_oauth_refresh_tokens_table	1
-20	2024_06_01_000005_create_oauth_personal_access_clients_table	1
-21	2024_06_01_121929_add_new_columns_to_tables	1
+1	2016_06_01_000001_create_oauth_auth_codes_table	1
+2	2016_06_01_000002_create_oauth_access_tokens_table	1
+3	2016_06_01_000003_create_oauth_refresh_tokens_table	1
+4	2016_06_01_000004_create_oauth_clients_table	1
+5	2016_06_01_000005_create_oauth_personal_access_clients_table	1
+6	2019_12_14_000001_create_personal_access_tokens_table	1
+7	2024_02_29_145920_create_permissions_table	1
+8	2024_02_29_145925_create_roles_table	1
+9	2024_02_29_145937_create_role_has_permissions_table	1
+10	2024_02_29_150003_create_users_table	1
+11	2024_02_29_150017_create_people_table	1
+12	2024_02_29_150024_create_companies_table	1
+13	2024_02_29_150030_create_credentials_table	1
+14	2024_03_04_022358_create_user_has_roles_table	1
+15	2024_03_05_143455_create_articles_table	1
+16	2024_03_05_150547_create_unite_mesures_table	1
+17	2024_03_05_150620_create_unite_travailles_table	1
+18	2024_03_05_160539_create_departements_table	1
+19	2024_03_05_165304_create_postes_table	1
+20	2024_03_06_034927_create_categories_of_employees_table	1
+21	2024_03_06_160654_create_employees_table	1
+22	2024_03_07_053825_create_montants_table	1
+23	2024_03_07_053849_create_taux_and_salaries_table	1
+24	2024_03_07_055329_create_category_of_employee_taux_table	1
+25	2024_03_07_060144_create_poste_salaries_table	1
+26	2024_03_07_195248_create_contractuelables_table	1
+27	2024_03_07_200823_create_employee_contractuels_table	1
+28	2024_03_07_200835_create_employee_non_contractuels_table	1
+29	2024_03_07_202233_create_contracts_table	1
+30	2024_03_07_205743_create_salaires_table	1
+31	2024_03_07_212241_create_non_contractuel_categories_table	1
+32	2024_03_08_085433_create_devises_table	1
+33	2024_03_08_085548_create_periodes_exercice_table	1
+34	2024_03_08_085720_create_plans_comptable_table	1
+35	2024_03_08_085756_create_categories_de_compte_table	1
+36	2024_03_08_085812_create_classes_de_compte_table	1
+37	2024_03_08_085814_create_comptes_table	1
+38	2024_03_08_095315_create_plan_comptable_comptes_table	1
+39	2024_03_08_100412_create_plan_comptable_compte_sous_comptes_table	1
+40	2024_03_08_100904_create_exercices_comptable_table	1
+41	2024_03_08_101639_create_balance_des_comptes_table	1
+42	2024_03_08_104620_create_journaux_table	1
+43	2024_03_08_105855_create_operations_comptable_table	1
+44	2024_03_08_105912_create_ecritures_comptable_table	1
+45	2024_03_08_111350_create_lignes_ecriture_comptable_table	1
+46	2024_06_01_121929_add_new_columns_to_tables	1
+\.
+
+
+--
+-- Data for Name: montants; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.montants (id, montant, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: non_contractuel_categories; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.non_contractuel_categories (id, date_debut, date_fin, employee_non_contractuel_id, categories_of_employee_id, category_of_employee_taux_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
 \.
 
 
@@ -1499,7 +3429,13 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 -- Data for Name: oauth_access_tokens; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
-COPY public.oauth_access_tokens (id, user_id, client_id, name, scopes, revoked, expires_at, status, can_be_delete, created_at, updated_at, deleted_at) FROM stdin;
+COPY public.oauth_access_tokens (id, user_id, client_id, name, scopes, revoked, created_at, updated_at, expires_at, status, deleted_at) FROM stdin;
+e296eb5b14a8dd573d7951ff1b7809d6ca9b725864c00fc11c294771ab873aff834a401c24fba36d	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b395-bf13-460a-8446-1947b9dee3bb	appToken	[]	t	2024-03-11 11:41:50	2024-03-11 11:45:55	2025-03-11 11:41:50	t	\N
+e031219d63f53b87af7efa727962586abc66aaa81dbcfd3388c1846e507d51b08e81cc12c86141b8	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b395-bf13-460a-8446-1947b9dee3bb	appToken	[]	f	2024-03-11 11:46:26	2024-03-11 11:46:26	2025-03-11 11:46:26	t	\N
+ed618e4fe3a7419dab55246b929c0987812c6bf4ae90f6696cb6db0ddee4d40d8eb16ccf3aa0a765	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b395-bf13-460a-8446-1947b9dee3bb	johndoe@gmail.com	[]	f	2024-03-11 11:47:36	2024-03-11 11:47:36	2025-03-11 11:47:36	t	\N
+f337368681c81beb6242264c673d8c57d40ea072d7c0f93b98066828a330209fa1029597229dab11	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b372-bb08-4d8c-9436-bbdc8785f0a9	\N	["*"]	f	2024-03-11 12:03:13	2024-03-11 12:03:13	2024-03-26 12:03:13	t	\N
+ececad56ff7b174b09b2767d3be048a0f4a5bd4440589cdcd4797b2371d71d023e4a91c03a21a697	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b372-bb08-4d8c-9436-bbdc8785f0a9	\N	["*"]	f	2024-03-11 12:04:02	2024-03-11 12:04:02	2024-03-26 12:04:02	t	\N
+a1529d6a4599b323da1d90372c8899ba4529bb27754c659ac148509f0f77437a6ddc24a5189a2286	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b372-bb08-4d8c-9436-bbdc8785f0a9	\N	["*"]	f	2024-03-11 12:07:30	2024-03-11 12:07:30	2024-03-26 12:07:30	t	\N
 \.
 
 
@@ -1507,7 +3443,7 @@ COPY public.oauth_access_tokens (id, user_id, client_id, name, scopes, revoked, 
 -- Data for Name: oauth_auth_codes; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
-COPY public.oauth_auth_codes (id, user_id, client_id, scopes, revoked, expires_at, status, can_be_delete, created_at, updated_at, deleted_at) FROM stdin;
+COPY public.oauth_auth_codes (id, user_id, client_id, scopes, revoked, expires_at, status, created_at, updated_at, deleted_at) FROM stdin;
 \.
 
 
@@ -1515,7 +3451,10 @@ COPY public.oauth_auth_codes (id, user_id, client_id, scopes, revoked, expires_a
 -- Data for Name: oauth_clients; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
-COPY public.oauth_clients (id, user_id, name, secret, provider, redirect, personal_access_client, password_client, revoked, status, can_be_delete, created_at, updated_at, deleted_at) FROM stdin;
+COPY public.oauth_clients (id, user_id, name, secret, provider, redirect, personal_access_client, password_client, revoked, created_at, updated_at, status, deleted_at) FROM stdin;
+9b89b372-bb08-4d8c-9436-bbdc8785f0a9	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	Password Grant 	51baa8deba17045479e964812fc208779936e7ea5504464800ac4d876f0edc58	\N	http://localhost	f	t	f	2024-03-11 11:40:34	2024-03-11 11:40:34	t	\N
+9b89b395-bf13-460a-8446-1947b9dee3bb	\N	Laravel Personal Access Client	vmAgyHKELqYpbiWJRVroutpidi9XuUIg5hwme8eF	\N	http://localhost	t	f	f	2024-03-11 11:40:57	2024-03-11 11:40:57	t	\N
+9b89b395-dc90-45bd-9d25-11a11fa45739	\N	Laravel Password Grant Client	zHSlgrUCMVPPeRxOEDTgp0l0I1CuBFU6toByCDbq	users	http://localhost	f	t	f	2024-03-11 11:40:57	2024-03-11 11:40:57	t	\N
 \.
 
 
@@ -1523,7 +3462,8 @@ COPY public.oauth_clients (id, user_id, name, secret, provider, redirect, person
 -- Data for Name: oauth_personal_access_clients; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
-COPY public.oauth_personal_access_clients (id, client_id, status, can_be_delete, created_at, updated_at, deleted_at) FROM stdin;
+COPY public.oauth_personal_access_clients (id, client_id, created_at, updated_at, status, deleted_at) FROM stdin;
+1	9b89b395-bf13-460a-8446-1947b9dee3bb	2024-03-11 11:40:57	2024-03-11 11:40:57	t	\N
 \.
 
 
@@ -1531,7 +3471,18 @@ COPY public.oauth_personal_access_clients (id, client_id, status, can_be_delete,
 -- Data for Name: oauth_refresh_tokens; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
-COPY public.oauth_refresh_tokens (id, access_token_id, revoked, expires_at, status, can_be_delete, created_at, updated_at, deleted_at) FROM stdin;
+COPY public.oauth_refresh_tokens (id, access_token_id, revoked, expires_at, status, created_at, updated_at, deleted_at) FROM stdin;
+42d1e0cd67254211986508c0bf4eef35654d36491588b77428abe37b81fb7b0d8581408d84943bd8	f337368681c81beb6242264c673d8c57d40ea072d7c0f93b98066828a330209fa1029597229dab11	f	2024-04-10 12:03:13	t	2024-03-11 05:03:14	\N	\N
+6222545c5fd382c917ace07ede9565e1445a6a6265e0d80cda8e23b081a9c7b0aa2a89f9b1641fe3	ececad56ff7b174b09b2767d3be048a0f4a5bd4440589cdcd4797b2371d71d023e4a91c03a21a697	f	2024-04-10 12:04:02	t	2024-03-11 05:04:02	\N	\N
+11734c34b2059a3bdd55578fe813292e499986830ccad3e248378b90c5ed66df2bccd53c22ea435b	a1529d6a4599b323da1d90372c8899ba4529bb27754c659ac148509f0f77437a6ddc24a5189a2286	f	2024-04-10 12:07:30	t	2024-03-11 05:07:31	\N	\N
+\.
+
+
+--
+-- Data for Name: operations_comptable; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.operations_comptable (id, libelle, date_ecriture, total_debit, total_credit, status_operation, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
 \.
 
 
@@ -1540,6 +3491,15 @@ COPY public.oauth_refresh_tokens (id, access_token_id, revoked, expires_at, stat
 --
 
 COPY public.people (id, last_name, first_name, middle_name, sex, marital_status, birth_date, nip, ifu, nationality, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+9b89b371-5ad6-49e0-9c5d-8e5a43170a91	DOE	john	["Phillipe"]	male	single	\N	\N	\N	\N	t	t	\N	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+\.
+
+
+--
+-- Data for Name: periodes_exercice; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.periodes_exercice (id, name, date_debut_periode, date_fin_periode, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
 \.
 
 
@@ -1548,16 +3508,16 @@ COPY public.people (id, last_name, first_name, middle_name, sex, marital_status,
 --
 
 COPY public.permissions (id, name, key, slug, description, status, can_be_delete, created_at, updated_at, deleted_at) FROM stdin;
-9b831c15-e59b-41bd-8989-7664e94e5857	View Users	view_users	view-users	Permission to view users	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N
-9b831c15-f536-468d-84c4-5cb426cebebc	Create Users	create_users	create-users	Permission to create new users	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N
-9b831c15-f8dd-4f1e-b524-346c1b341464	Edit Users	edit_users	edit-users	Permission to edit existing users	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N
-9b831c15-fc82-4319-9e63-462ff7c17a99	Delete Users	delete_users	delete-users	Permission to delete users	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N
-9b831c16-0023-40bc-8fcb-e8f8e6910664	View Roles	view_roles	view-roles	Permission to view roles	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N
-9b831c16-03b3-4112-9f07-5445531f92dd	Edit Roles	edit_roles	edit-roles	Permission to edit roles	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N
-9b831c16-076a-4cca-9b4a-c8b979102e14	Delete Roles	delete_roles	delete-roles	Permission to delete roles	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N
-9b831c16-0b74-4c04-97d1-d848e50bd183	View Permissions	view_permissions	view-permissions	Permission to view permissions	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N
-9b831c16-0fa3-4945-9052-f94141cc0018	Edit Permissions	edit_permissions	edit-permissions	Permission to edit permissions	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N
-9b831c16-143c-4443-b110-666b2631f1aa	Delete Permissions	delete_permissions	delete-permissions	Permission to delete permissions	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N
+9b89b371-03f6-499a-8961-c1f231fce4bf	View Users	view_users	view-users	Permission to view users	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b89b371-16dc-423b-8513-59dc4ecdbbcb	Create Users	create_users	create-users	Permission to create new users	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b89b371-1c3d-4617-b80d-7fd502fe3053	Edit Users	edit_users	edit-users	Permission to edit existing users	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b89b371-207f-4efa-95f2-9a09f8101e53	Delete Users	delete_users	delete-users	Permission to delete users	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b89b371-2502-474c-a680-492d901708f4	View Roles	view_roles	view-roles	Permission to view roles	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b89b371-28e7-4e2b-a3c1-5067f1cecd4e	Edit Roles	edit_roles	edit-roles	Permission to edit roles	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b89b371-2d39-4f78-807a-9b8b01536c48	Delete Roles	delete_roles	delete-roles	Permission to delete roles	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b89b371-3141-4fd2-986e-bed6691f3aee	View Permissions	view_permissions	view-permissions	Permission to view permissions	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b89b371-3572-44f1-b749-629d9a9a3af2	Edit Permissions	edit_permissions	edit-permissions	Permission to edit permissions	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b89b371-399a-4c9f-9a36-2ef4efa38ca7	Delete Permissions	delete_permissions	delete-permissions	Permission to delete permissions	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
 \.
 
 
@@ -1566,6 +3526,38 @@ COPY public.permissions (id, name, key, slug, description, status, can_be_delete
 --
 
 COPY public.personal_access_tokens (id, tokenable_type, tokenable_id, name, token, abilities, last_used_at, expires_at, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: plan_comptable_compte_sous_comptes; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.plan_comptable_compte_sous_comptes (id, account_number, plan_comptable_compte_id, sous_compte_id, sub_division_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: plan_comptable_comptes; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.plan_comptable_comptes (id, account_number, classe_id, plan_comptable_id, compte_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: plans_comptable; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.plans_comptable (id, code, name, description, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: poste_salaries; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.poste_salaries (id, est_le_salaire_de_base, poste_id, salary_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
 \.
 
 
@@ -1590,10 +3582,26 @@ COPY public.role_has_permissions (id, role_id, permission_id, status, can_be_det
 --
 
 COPY public.roles (id, name, key, slug, description, status, can_be_delete, created_at, updated_at, deleted_at, created_by) FROM stdin;
-9b831c16-1bb9-4bca-bddb-fe8b28fd83dc	super administrateur	super_administrateur	super-administrateur	Super Administrator Role	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N	\N
-9b831c16-21bb-46c9-bba4-28e33cc3b7dc	administrateur	administrateur	administrateur	Role	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N	\N
-9b831c16-26be-4880-bbc9-98ebf78338b4	employer	employer	Employer	Role	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N	\N
-9b831c16-2a55-469a-87bc-86f1492d6d73	partenaire	partenaire	partenaire	Role	t	f	2024-03-08 05:02:22	2024-03-08 05:02:22	\N	\N
+9b89b371-4033-4d25-af33-d1978eff4a48	super administrateur	super_administrateur	super-administrateur	Super Administrator Role	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N	\N
+9b89b371-4513-4ce0-bacb-95286d497bd9	administrateur	administrateur	administrateur	Role	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N	\N
+9b89b371-4a04-472a-a816-67c7efaf4c6a	employer	employer	Employer	Role	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N	\N
+9b89b371-515c-435b-a987-d65f757d819e	partenaire	partenaire	partenaire	Role	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N	\N
+\.
+
+
+--
+-- Data for Name: salaires; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.salaires (id, montant, date_debut, date_fin, est_valide, contract_id, poste_salarie_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: taux_and_salaries; Type: TABLE DATA; Schema: public; Owner: master_db_admin
+--
+
+COPY public.taux_and_salaries (id, montant_id, unite_mesure_id, hint, unite_travaille_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
 \.
 
 
@@ -1602,6 +3610,9 @@ COPY public.roles (id, name, key, slug, description, status, can_be_delete, crea
 --
 
 COPY public.unite_mesures (id, name, symbol, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+9b89b372-c992-42a0-9fcf-778920406f16	mois	m	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
+9b89b372-d624-4587-a9d6-9bd718b9bb79	jour	j	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
+9b89b372-e202-49b7-be65-60cd41a43d99	heure	h	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
 \.
 
 
@@ -1609,7 +3620,7 @@ COPY public.unite_mesures (id, name, symbol, status, can_be_delete, created_by, 
 -- Data for Name: unite_travailles; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
-COPY public.unite_travailles (id, name, hint, rate, type_of_unite_travaille, status, can_be_delete, created_by, unite_mesure_id, article_id, created_at, updated_at, deleted_at) FROM stdin;
+COPY public.unite_travailles (id, type_of_unite_travaille, unite_mesure_id, article_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
 \.
 
 
@@ -1618,6 +3629,7 @@ COPY public.unite_travailles (id, name, hint, rate, type_of_unite_travaille, sta
 --
 
 COPY public.user_has_roles (id, user_id, role_id, attached_by, status, can_be_detach, created_at, updated_at, deleted_at) FROM stdin;
+9b89b372-0b85-4e53-92e4-d60815aee5c0	9b89b371-f854-463e-a4ab-224c41d39aa8	9b89b371-4033-4d25-af33-d1978eff4a48	9b89b371-f854-463e-a4ab-224c41d39aa8	t	f	2024-03-11 04:40:34	\N	\N
 \.
 
 
@@ -1625,7 +3637,8 @@ COPY public.user_has_roles (id, user_id, role_id, attached_by, status, can_be_de
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
-COPY public.users (id, type_of_account, username, phone_number, address, email, userable_type, userable_id, email_verified_at, email_verified, account_activated, account_activated_at, account_verified, account_verified_at, email_verification_token, status, can_be_delete, account_status, created_at, updated_at, deleted_at, created_by) FROM stdin;
+COPY public.users (id, type_of_account, username, login_channel, phone_number, address, email, identifier, password, userable_type, userable_id, profilable_type, profilable_id, email_verified_at, email_verified, account_activated, account_activated_at, account_verified, account_verified_at, email_verification_token, first_login, status, can_be_delete, account_status, created_at, updated_at, deleted_at, created_by) FROM stdin;
+9b89b371-f854-463e-a4ab-224c41d39aa8	personal	doe.john	email	{"number": 87321067, "area_code": null, "country_code": 229}	\N	johndoe@gmail.com	johndoe@gmail.com	$2y$12$BvQIpQWCDa5nTAS22edAou6gnHI/dqJUE/UcTxipv6l2EEgbIA1t2	App\\Models\\Person	9b89b371-5ad6-49e0-9c5d-8e5a43170a91	\N	\N	\N	f	f	\N	f	\N	\N	t	t	t	pending_activation	2024-03-11 11:40:34	2024-03-11 11:40:34	\N	9b89b371-f854-463e-a4ab-224c41d39aa8
 \.
 
 
@@ -1633,7 +3646,14 @@ COPY public.users (id, type_of_account, username, phone_number, address, email, 
 -- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: master_db_admin
 --
 
-SELECT pg_catalog.setval('public.migrations_id_seq', 21, true);
+SELECT pg_catalog.setval('public.migrations_id_seq', 46, true);
+
+
+--
+-- Name: oauth_personal_access_clients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: master_db_admin
+--
+
+SELECT pg_catalog.setval('public.oauth_personal_access_clients_id_seq', 1, true);
 
 
 --
@@ -1660,6 +3680,38 @@ ALTER TABLE ONLY public.articles
 
 
 --
+-- Name: balance_des_comptes balance_des_comptes_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.balance_des_comptes
+    ADD CONSTRAINT balance_des_comptes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: categories_de_compte categories_de_compte_code_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.categories_de_compte
+    ADD CONSTRAINT categories_de_compte_code_unique UNIQUE (code);
+
+
+--
+-- Name: categories_de_compte categories_de_compte_name_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.categories_de_compte
+    ADD CONSTRAINT categories_de_compte_name_unique UNIQUE (name);
+
+
+--
+-- Name: categories_de_compte categories_de_compte_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.categories_de_compte
+    ADD CONSTRAINT categories_de_compte_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: categories_of_employees categories_of_employees_name_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
@@ -1676,6 +3728,38 @@ ALTER TABLE ONLY public.categories_of_employees
 
 
 --
+-- Name: category_of_employee_taux category_of_employee_taux_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.category_of_employee_taux
+    ADD CONSTRAINT category_of_employee_taux_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: classes_de_compte classes_de_compte_code_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.classes_de_compte
+    ADD CONSTRAINT classes_de_compte_code_unique UNIQUE (code);
+
+
+--
+-- Name: classes_de_compte classes_de_compte_name_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.classes_de_compte
+    ADD CONSTRAINT classes_de_compte_name_unique UNIQUE (name);
+
+
+--
+-- Name: classes_de_compte classes_de_compte_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.classes_de_compte
+    ADD CONSTRAINT classes_de_compte_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: companies companies_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
@@ -1689,6 +3773,54 @@ ALTER TABLE ONLY public.companies
 
 ALTER TABLE ONLY public.companies
     ADD CONSTRAINT companies_registration_number_unique UNIQUE (registration_number);
+
+
+--
+-- Name: comptes comptes_code_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.comptes
+    ADD CONSTRAINT comptes_code_unique UNIQUE (code);
+
+
+--
+-- Name: comptes comptes_name_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.comptes
+    ADD CONSTRAINT comptes_name_unique UNIQUE (name);
+
+
+--
+-- Name: comptes comptes_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.comptes
+    ADD CONSTRAINT comptes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contracts contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT contracts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contracts contracts_reference_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT contracts_reference_unique UNIQUE (reference);
+
+
+--
+-- Name: contractuelables contractuelables_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.contractuelables
+    ADD CONSTRAINT contractuelables_pkey PRIMARY KEY (id);
 
 
 --
@@ -1716,11 +3848,123 @@ ALTER TABLE ONLY public.departements
 
 
 --
+-- Name: devises devises_code_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.devises
+    ADD CONSTRAINT devises_code_unique UNIQUE (code);
+
+
+--
+-- Name: devises devises_name_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.devises
+    ADD CONSTRAINT devises_name_unique UNIQUE (name);
+
+
+--
+-- Name: devises devises_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.devises
+    ADD CONSTRAINT devises_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: devises devises_symbol_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.devises
+    ADD CONSTRAINT devises_symbol_unique UNIQUE (symbol);
+
+
+--
+-- Name: ecritures_comptable ecritures_comptable_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.ecritures_comptable
+    ADD CONSTRAINT ecritures_comptable_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: employee_contractuels employee_contractuels_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.employee_contractuels
+    ADD CONSTRAINT employee_contractuels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: employee_non_contractuels employee_non_contractuels_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.employee_non_contractuels
+    ADD CONSTRAINT employee_non_contractuels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: employees employees_matricule_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.employees
+    ADD CONSTRAINT employees_matricule_unique UNIQUE (matricule);
+
+
+--
+-- Name: employees employees_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.employees
+    ADD CONSTRAINT employees_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: exercices_comptable exercices_comptable_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.exercices_comptable
+    ADD CONSTRAINT exercices_comptable_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: journaux journaux_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.journaux
+    ADD CONSTRAINT journaux_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lignes_ecriture_comptable lignes_ecriture_comptable_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.lignes_ecriture_comptable
+    ADD CONSTRAINT lignes_ecriture_comptable_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
 ALTER TABLE ONLY public.migrations
     ADD CONSTRAINT migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: montants montants_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.montants
+    ADD CONSTRAINT montants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: non_contractuel_categories non_contractuel_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.non_contractuel_categories
+    ADD CONSTRAINT non_contractuel_categories_pkey PRIMARY KEY (id);
 
 
 --
@@ -1764,6 +4008,14 @@ ALTER TABLE ONLY public.oauth_refresh_tokens
 
 
 --
+-- Name: operations_comptable operations_comptable_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.operations_comptable
+    ADD CONSTRAINT operations_comptable_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: people people_ifu_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
@@ -1785,6 +4037,22 @@ ALTER TABLE ONLY public.people
 
 ALTER TABLE ONLY public.people
     ADD CONSTRAINT people_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: periodes_exercice periodes_exercice_name_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.periodes_exercice
+    ADD CONSTRAINT periodes_exercice_name_unique UNIQUE (name);
+
+
+--
+-- Name: periodes_exercice periodes_exercice_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.periodes_exercice
+    ADD CONSTRAINT periodes_exercice_pkey PRIMARY KEY (id);
 
 
 --
@@ -1833,6 +4101,70 @@ ALTER TABLE ONLY public.personal_access_tokens
 
 ALTER TABLE ONLY public.personal_access_tokens
     ADD CONSTRAINT personal_access_tokens_token_unique UNIQUE (token);
+
+
+--
+-- Name: plan_comptable_compte_sous_comptes plan_comptable_compte_sous_comptes_account_number_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_compte_sous_comptes
+    ADD CONSTRAINT plan_comptable_compte_sous_comptes_account_number_unique UNIQUE (account_number);
+
+
+--
+-- Name: plan_comptable_compte_sous_comptes plan_comptable_compte_sous_comptes_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_compte_sous_comptes
+    ADD CONSTRAINT plan_comptable_compte_sous_comptes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plan_comptable_comptes plan_comptable_comptes_account_number_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_comptes
+    ADD CONSTRAINT plan_comptable_comptes_account_number_unique UNIQUE (account_number);
+
+
+--
+-- Name: plan_comptable_comptes plan_comptable_comptes_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_comptes
+    ADD CONSTRAINT plan_comptable_comptes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plans_comptable plans_comptable_code_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plans_comptable
+    ADD CONSTRAINT plans_comptable_code_unique UNIQUE (code);
+
+
+--
+-- Name: plans_comptable plans_comptable_name_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plans_comptable
+    ADD CONSTRAINT plans_comptable_name_unique UNIQUE (name);
+
+
+--
+-- Name: plans_comptable plans_comptable_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plans_comptable
+    ADD CONSTRAINT plans_comptable_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: poste_salaries poste_salaries_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.poste_salaries
+    ADD CONSTRAINT poste_salaries_pkey PRIMARY KEY (id);
 
 
 --
@@ -1892,6 +4224,22 @@ ALTER TABLE ONLY public.roles
 
 
 --
+-- Name: salaires salaires_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.salaires
+    ADD CONSTRAINT salaires_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: taux_and_salaries taux_and_salaries_pkey; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.taux_and_salaries
+    ADD CONSTRAINT taux_and_salaries_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: unite_mesures unite_mesures_name_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
@@ -1905,14 +4253,6 @@ ALTER TABLE ONLY public.unite_mesures
 
 ALTER TABLE ONLY public.unite_mesures
     ADD CONSTRAINT unite_mesures_pkey PRIMARY KEY (id);
-
-
---
--- Name: unite_travailles unite_travailles_name_unique; Type: CONSTRAINT; Schema: public; Owner: master_db_admin
---
-
-ALTER TABLE ONLY public.unite_travailles
-    ADD CONSTRAINT unite_travailles_name_unique UNIQUE (name);
 
 
 --
@@ -1971,10 +4311,45 @@ CREATE INDEX articles_name_status_can_be_delete_index ON public.articles USING b
 
 
 --
+-- Name: balance_des_comptes_balanceable_type_balanceable_id_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX balance_des_comptes_balanceable_type_balanceable_id_index ON public.balance_des_comptes USING btree (balanceable_type, balanceable_id);
+
+
+--
+-- Name: balance_des_comptes_solde_debit_solde_credit_date_report_date_c; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX balance_des_comptes_solde_debit_solde_credit_date_report_date_c ON public.balance_des_comptes USING btree (solde_debit, solde_credit, date_report, date_cloture, status, can_be_delete);
+
+
+--
+-- Name: categories_de_compte_code_name_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX categories_de_compte_code_name_status_can_be_delete_index ON public.categories_de_compte USING btree (code, name, status, can_be_delete);
+
+
+--
 -- Name: categories_of_employees_name_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
 --
 
 CREATE INDEX categories_of_employees_name_status_can_be_delete_index ON public.categories_of_employees USING btree (name, status, can_be_delete);
+
+
+--
+-- Name: category_of_employee_taux_est_le_taux_de_base_status_can_be_del; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX category_of_employee_taux_est_le_taux_de_base_status_can_be_del ON public.category_of_employee_taux USING btree (est_le_taux_de_base, status, can_be_delete);
+
+
+--
+-- Name: classes_de_compte_code_name_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX classes_de_compte_code_name_status_can_be_delete_index ON public.classes_de_compte USING btree (code, name, status, can_be_delete);
 
 
 --
@@ -1985,6 +4360,34 @@ CREATE INDEX companies_name_created_by_status_can_be_delete_index ON public.comp
 
 
 --
+-- Name: comptes_code_name_type_de_compte_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX comptes_code_name_type_de_compte_status_can_be_delete_index ON public.comptes USING btree (code, name, type_de_compte, status, can_be_delete);
+
+
+--
+-- Name: contracts_reference_type_contract_contract_status_status_can_be; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX contracts_reference_type_contract_contract_status_status_can_be ON public.contracts USING btree (reference, type_contract, contract_status, status, can_be_delete);
+
+
+--
+-- Name: contractuelables_contractuelable_type_contractuelable_id_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX contractuelables_contractuelable_type_contractuelable_id_index ON public.contractuelables USING btree (contractuelable_type, contractuelable_id);
+
+
+--
+-- Name: contractuelables_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX contractuelables_status_can_be_delete_index ON public.contractuelables USING btree (status, can_be_delete);
+
+
+--
 -- Name: departements_name_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
 --
 
@@ -1992,38 +4395,122 @@ CREATE INDEX departements_name_status_can_be_delete_index ON public.departements
 
 
 --
--- Name: oauth_access_tokens_user_id_client_id_scopes_status_can_be_dele; Type: INDEX; Schema: public; Owner: master_db_admin
+-- Name: devises_code_name_symbol_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
 --
 
-CREATE INDEX oauth_access_tokens_user_id_client_id_scopes_status_can_be_dele ON public.oauth_access_tokens USING btree (user_id, client_id, scopes, status, can_be_delete);
-
-
---
--- Name: oauth_auth_codes_user_id_client_id_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
---
-
-CREATE INDEX oauth_auth_codes_user_id_client_id_status_can_be_delete_index ON public.oauth_auth_codes USING btree (user_id, client_id, status, can_be_delete);
+CREATE INDEX devises_code_name_symbol_status_can_be_delete_index ON public.devises USING btree (code, name, symbol, status, can_be_delete);
 
 
 --
--- Name: oauth_clients_user_id_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+-- Name: ecritures_comptable_date_ecriture_total_debit_total_credit_stat; Type: INDEX; Schema: public; Owner: master_db_admin
 --
 
-CREATE INDEX oauth_clients_user_id_status_can_be_delete_index ON public.oauth_clients USING btree (user_id, status, can_be_delete);
-
-
---
--- Name: oauth_personal_access_clients_client_id_status_can_be_delete_in; Type: INDEX; Schema: public; Owner: master_db_admin
---
-
-CREATE INDEX oauth_personal_access_clients_client_id_status_can_be_delete_in ON public.oauth_personal_access_clients USING btree (client_id, status, can_be_delete);
+CREATE INDEX ecritures_comptable_date_ecriture_total_debit_total_credit_stat ON public.ecritures_comptable USING btree (date_ecriture, total_debit, total_credit, status, can_be_delete);
 
 
 --
--- Name: oauth_refresh_tokens_access_token_id_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+-- Name: employee_contractuels_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
 --
 
-CREATE INDEX oauth_refresh_tokens_access_token_id_status_can_be_delete_index ON public.oauth_refresh_tokens USING btree (access_token_id, status, can_be_delete);
+CREATE INDEX employee_contractuels_status_can_be_delete_index ON public.employee_contractuels USING btree (status, can_be_delete);
+
+
+--
+-- Name: employee_non_contractuels_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX employee_non_contractuels_status_can_be_delete_index ON public.employee_non_contractuels USING btree (status, can_be_delete);
+
+
+--
+-- Name: employees_matricule_type_employee_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX employees_matricule_type_employee_status_can_be_delete_index ON public.employees USING btree (matricule, type_employee, status, can_be_delete);
+
+
+--
+-- Name: exercices_comptable_fiscal_year_date_ouverture_date_fermeture_s; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX exercices_comptable_fiscal_year_date_ouverture_date_fermeture_s ON public.exercices_comptable USING btree (fiscal_year, date_ouverture, date_fermeture, status_exercice, status, can_be_delete);
+
+
+--
+-- Name: journaux_total_total_debit_total_credit_status_can_be_delete_in; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX journaux_total_total_debit_total_credit_status_can_be_delete_in ON public.journaux USING btree (total, total_debit, total_credit, status, can_be_delete);
+
+
+--
+-- Name: lignes_ecriture_comptable_accountable_type_accountable_id_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX lignes_ecriture_comptable_accountable_type_accountable_id_index ON public.lignes_ecriture_comptable USING btree (accountable_type, accountable_id);
+
+
+--
+-- Name: lignes_ecriture_comptable_ligneable_type_ligneable_id_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX lignes_ecriture_comptable_ligneable_type_ligneable_id_index ON public.lignes_ecriture_comptable USING btree (ligneable_type, ligneable_id);
+
+
+--
+-- Name: lignes_ecriture_comptable_montant_ligneable_id_ligneable_type_s; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX lignes_ecriture_comptable_montant_ligneable_id_ligneable_type_s ON public.lignes_ecriture_comptable USING btree (montant, ligneable_id, ligneable_type, status, can_be_delete);
+
+
+--
+-- Name: montants_montant_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX montants_montant_status_can_be_delete_index ON public.montants USING btree (montant, status, can_be_delete);
+
+
+--
+-- Name: non_contractuel_categories_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX non_contractuel_categories_status_can_be_delete_index ON public.non_contractuel_categories USING btree (status, can_be_delete);
+
+
+--
+-- Name: oauth_access_tokens_user_id_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX oauth_access_tokens_user_id_index ON public.oauth_access_tokens USING btree (user_id);
+
+
+--
+-- Name: oauth_auth_codes_user_id_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX oauth_auth_codes_user_id_index ON public.oauth_auth_codes USING btree (user_id);
+
+
+--
+-- Name: oauth_clients_user_id_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX oauth_clients_user_id_index ON public.oauth_clients USING btree (user_id);
+
+
+--
+-- Name: oauth_refresh_tokens_access_token_id_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX oauth_refresh_tokens_access_token_id_index ON public.oauth_refresh_tokens USING btree (access_token_id);
+
+
+--
+-- Name: operations_comptable_date_ecriture_total_debit_total_credit_sta; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX operations_comptable_date_ecriture_total_debit_total_credit_sta ON public.operations_comptable USING btree (date_ecriture, total_debit, total_credit, status, can_be_delete);
 
 
 --
@@ -2031,6 +4518,13 @@ CREATE INDEX oauth_refresh_tokens_access_token_id_status_can_be_delete_index ON 
 --
 
 CREATE INDEX people_last_name_first_name_middle_name_sex_marital_status_crea ON public.people USING btree (last_name, first_name, middle_name, sex, marital_status, created_by, status, can_be_delete);
+
+
+--
+-- Name: periodes_exercice_name_date_debut_periode_date_fin_periode_stat; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX periodes_exercice_name_date_debut_periode_date_fin_periode_stat ON public.periodes_exercice USING btree (name, date_debut_periode, date_fin_periode, status, can_be_delete);
 
 
 --
@@ -2045,6 +4539,34 @@ CREATE INDEX permissions_name_slug_status_can_be_delete_index ON public.permissi
 --
 
 CREATE INDEX personal_access_tokens_tokenable_type_tokenable_id_index ON public.personal_access_tokens USING btree (tokenable_type, tokenable_id);
+
+
+--
+-- Name: plan_comptable_compte_sous_comptes_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX plan_comptable_compte_sous_comptes_status_can_be_delete_index ON public.plan_comptable_compte_sous_comptes USING btree (status, can_be_delete);
+
+
+--
+-- Name: plan_comptable_comptes_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX plan_comptable_comptes_status_can_be_delete_index ON public.plan_comptable_comptes USING btree (status, can_be_delete);
+
+
+--
+-- Name: plans_comptable_code_name_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX plans_comptable_code_name_status_can_be_delete_index ON public.plans_comptable USING btree (code, name, status, can_be_delete);
+
+
+--
+-- Name: poste_salaries_est_le_salaire_de_base_status_can_be_delete_inde; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX poste_salaries_est_le_salaire_de_base_status_can_be_delete_inde ON public.poste_salaries USING btree (est_le_salaire_de_base, status, can_be_delete);
 
 
 --
@@ -2076,6 +4598,20 @@ CREATE INDEX roles_name_slug_key_status_can_be_delete_index ON public.roles USIN
 
 
 --
+-- Name: salaires_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX salaires_status_can_be_delete_index ON public.salaires USING btree (status, can_be_delete);
+
+
+--
+-- Name: taux_and_salaries_montant_id_unite_travaille_id_hint_status_can; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX taux_and_salaries_montant_id_unite_travaille_id_hint_status_can ON public.taux_and_salaries USING btree (montant_id, unite_travaille_id, hint, status, can_be_delete);
+
+
+--
 -- Name: unite_mesures_name_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
 --
 
@@ -2083,10 +4619,10 @@ CREATE INDEX unite_mesures_name_status_can_be_delete_index ON public.unite_mesur
 
 
 --
--- Name: unite_travailles_name_status_can_be_delete_index; Type: INDEX; Schema: public; Owner: master_db_admin
+-- Name: unite_travailles_type_of_unite_travaille_unite_mesure_id_status; Type: INDEX; Schema: public; Owner: master_db_admin
 --
 
-CREATE INDEX unite_travailles_name_status_can_be_delete_index ON public.unite_travailles USING btree (name, status, can_be_delete);
+CREATE INDEX unite_travailles_type_of_unite_travaille_unite_mesure_id_status ON public.unite_travailles USING btree (type_of_unite_travaille, unite_mesure_id, status, can_be_delete);
 
 
 --
@@ -2104,10 +4640,10 @@ CREATE INDEX users_created_by_index ON public.users USING btree (created_by);
 
 
 --
--- Name: users_type_of_account_phone_number_email_status_can_be_delete_i; Type: INDEX; Schema: public; Owner: master_db_admin
+-- Name: users_profilable_type_profilable_id_index; Type: INDEX; Schema: public; Owner: master_db_admin
 --
 
-CREATE INDEX users_type_of_account_phone_number_email_status_can_be_delete_i ON public.users USING btree (type_of_account, phone_number, email, status, can_be_delete);
+CREATE INDEX users_profilable_type_profilable_id_index ON public.users USING btree (profilable_type, profilable_id);
 
 
 --
@@ -2118,11 +4654,42 @@ CREATE INDEX users_userable_type_userable_id_index ON public.users USING btree (
 
 
 --
+-- Name: users_username_type_of_account_phone_number_email_status_can_be; Type: INDEX; Schema: public; Owner: master_db_admin
+--
+
+CREATE INDEX users_username_type_of_account_phone_number_email_status_can_be ON public.users USING btree (username, type_of_account, phone_number, email, status, can_be_delete);
+
+
+--
 -- Name: articles articles_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
 ALTER TABLE ONLY public.articles
     ADD CONSTRAINT articles_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: balance_des_comptes balance_des_comptes_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.balance_des_comptes
+    ADD CONSTRAINT balance_des_comptes_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: balance_des_comptes balance_des_comptes_exercice_comptable_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.balance_des_comptes
+    ADD CONSTRAINT balance_des_comptes_exercice_comptable_id_foreign FOREIGN KEY (exercice_comptable_id) REFERENCES public.exercices_comptable(id) ON DELETE CASCADE;
+
+
+--
+-- Name: categories_de_compte categories_de_compte_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.categories_de_compte
+    ADD CONSTRAINT categories_de_compte_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
@@ -2142,11 +4709,115 @@ ALTER TABLE ONLY public.categories_of_employees
 
 
 --
+-- Name: category_of_employee_taux category_of_employee_taux_category_of_employee_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.category_of_employee_taux
+    ADD CONSTRAINT category_of_employee_taux_category_of_employee_id_foreign FOREIGN KEY (category_of_employee_id) REFERENCES public.categories_of_employees(id) ON DELETE CASCADE;
+
+
+--
+-- Name: category_of_employee_taux category_of_employee_taux_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.category_of_employee_taux
+    ADD CONSTRAINT category_of_employee_taux_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: category_of_employee_taux category_of_employee_taux_taux_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.category_of_employee_taux
+    ADD CONSTRAINT category_of_employee_taux_taux_id_foreign FOREIGN KEY (taux_id) REFERENCES public.taux_and_salaries(id) ON DELETE CASCADE;
+
+
+--
+-- Name: classes_de_compte classes_de_compte_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.classes_de_compte
+    ADD CONSTRAINT classes_de_compte_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
 -- Name: companies companies_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
 ALTER TABLE ONLY public.companies
     ADD CONSTRAINT companies_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: comptes comptes_categorie_de_compte_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.comptes
+    ADD CONSTRAINT comptes_categorie_de_compte_id_foreign FOREIGN KEY (categorie_de_compte_id) REFERENCES public.categories_de_compte(id) ON DELETE CASCADE;
+
+
+--
+-- Name: comptes comptes_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.comptes
+    ADD CONSTRAINT comptes_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: contracts contracts_contract_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT contracts_contract_id_foreign FOREIGN KEY (contract_id) REFERENCES public.contracts(id) ON DELETE CASCADE;
+
+
+--
+-- Name: contracts contracts_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT contracts_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: contracts contracts_employee_contractuel_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT contracts_employee_contractuel_id_foreign FOREIGN KEY (employee_contractuel_id) REFERENCES public.employee_contractuels(id) ON DELETE CASCADE;
+
+
+--
+-- Name: contracts contracts_poste_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT contracts_poste_id_foreign FOREIGN KEY (poste_id) REFERENCES public.postes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: contracts contracts_unite_mesures_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT contracts_unite_mesures_id_foreign FOREIGN KEY (unite_mesures_id) REFERENCES public.unite_mesures(id) ON DELETE CASCADE;
+
+
+--
+-- Name: contractuelables contractuelables_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.contractuelables
+    ADD CONSTRAINT contractuelables_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: contractuelables contractuelables_employee_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.contractuelables
+    ADD CONSTRAINT contractuelables_employee_id_foreign FOREIGN KEY (employee_id) REFERENCES public.employees(id) ON DELETE CASCADE;
 
 
 --
@@ -2174,59 +4845,163 @@ ALTER TABLE ONLY public.departements
 
 
 --
--- Name: oauth_access_tokens oauth_access_tokens_client_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+-- Name: devises devises_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
-ALTER TABLE ONLY public.oauth_access_tokens
-    ADD CONSTRAINT oauth_access_tokens_client_id_foreign FOREIGN KEY (client_id) REFERENCES public.oauth_clients(id) ON DELETE CASCADE;
-
-
---
--- Name: oauth_access_tokens oauth_access_tokens_user_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
---
-
-ALTER TABLE ONLY public.oauth_access_tokens
-    ADD CONSTRAINT oauth_access_tokens_user_id_foreign FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.devises
+    ADD CONSTRAINT devises_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
--- Name: oauth_auth_codes oauth_auth_codes_client_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+-- Name: ecritures_comptable ecritures_comptable_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
-ALTER TABLE ONLY public.oauth_auth_codes
-    ADD CONSTRAINT oauth_auth_codes_client_id_foreign FOREIGN KEY (client_id) REFERENCES public.oauth_clients(id) ON DELETE CASCADE;
-
-
---
--- Name: oauth_auth_codes oauth_auth_codes_user_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
---
-
-ALTER TABLE ONLY public.oauth_auth_codes
-    ADD CONSTRAINT oauth_auth_codes_user_id_foreign FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.ecritures_comptable
+    ADD CONSTRAINT ecritures_comptable_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
--- Name: oauth_clients oauth_clients_user_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+-- Name: ecritures_comptable ecritures_comptable_journal_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
-ALTER TABLE ONLY public.oauth_clients
-    ADD CONSTRAINT oauth_clients_user_id_foreign FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
-
-
---
--- Name: oauth_personal_access_clients oauth_personal_access_clients_client_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
---
-
-ALTER TABLE ONLY public.oauth_personal_access_clients
-    ADD CONSTRAINT oauth_personal_access_clients_client_id_foreign FOREIGN KEY (client_id) REFERENCES public.oauth_clients(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.ecritures_comptable
+    ADD CONSTRAINT ecritures_comptable_journal_id_foreign FOREIGN KEY (journal_id) REFERENCES public.journaux(id) ON DELETE CASCADE;
 
 
 --
--- Name: oauth_refresh_tokens oauth_refresh_tokens_access_token_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+-- Name: ecritures_comptable ecritures_comptable_operation_disponible_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
-ALTER TABLE ONLY public.oauth_refresh_tokens
-    ADD CONSTRAINT oauth_refresh_tokens_access_token_id_foreign FOREIGN KEY (access_token_id) REFERENCES public.oauth_access_tokens(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.ecritures_comptable
+    ADD CONSTRAINT ecritures_comptable_operation_disponible_id_foreign FOREIGN KEY (operation_disponible_id) REFERENCES public.operations_comptable(id) ON DELETE CASCADE;
+
+
+--
+-- Name: employee_contractuels employee_contractuels_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.employee_contractuels
+    ADD CONSTRAINT employee_contractuels_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: employee_non_contractuels employee_non_contractuels_categories_of_employee_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.employee_non_contractuels
+    ADD CONSTRAINT employee_non_contractuels_categories_of_employee_id_foreign FOREIGN KEY (categories_of_employee_id) REFERENCES public.categories_of_employees(id) ON DELETE CASCADE;
+
+
+--
+-- Name: employee_non_contractuels employee_non_contractuels_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.employee_non_contractuels
+    ADD CONSTRAINT employee_non_contractuels_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: employees employees_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.employees
+    ADD CONSTRAINT employees_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: exercices_comptable exercices_comptable_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.exercices_comptable
+    ADD CONSTRAINT exercices_comptable_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: exercices_comptable exercices_comptable_periode_exercice_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.exercices_comptable
+    ADD CONSTRAINT exercices_comptable_periode_exercice_id_foreign FOREIGN KEY (periode_exercice_id) REFERENCES public.periodes_exercice(id) ON DELETE CASCADE;
+
+
+--
+-- Name: exercices_comptable exercices_comptable_plan_comptable_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.exercices_comptable
+    ADD CONSTRAINT exercices_comptable_plan_comptable_id_foreign FOREIGN KEY (plan_comptable_id) REFERENCES public.plans_comptable(id) ON DELETE CASCADE;
+
+
+--
+-- Name: journaux journaux_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.journaux
+    ADD CONSTRAINT journaux_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: journaux journaux_exercice_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.journaux
+    ADD CONSTRAINT journaux_exercice_id_foreign FOREIGN KEY (exercice_id) REFERENCES public.exercices_comptable(id) ON DELETE CASCADE;
+
+
+--
+-- Name: lignes_ecriture_comptable lignes_ecriture_comptable_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.lignes_ecriture_comptable
+    ADD CONSTRAINT lignes_ecriture_comptable_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: montants montants_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.montants
+    ADD CONSTRAINT montants_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: non_contractuel_categories non_contractuel_categories_categories_of_employee_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.non_contractuel_categories
+    ADD CONSTRAINT non_contractuel_categories_categories_of_employee_id_foreign FOREIGN KEY (categories_of_employee_id) REFERENCES public.categories_of_employees(id) ON DELETE CASCADE;
+
+
+--
+-- Name: non_contractuel_categories non_contractuel_categories_category_of_employee_taux_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.non_contractuel_categories
+    ADD CONSTRAINT non_contractuel_categories_category_of_employee_taux_id_foreign FOREIGN KEY (category_of_employee_taux_id) REFERENCES public.category_of_employee_taux(id) ON DELETE CASCADE;
+
+
+--
+-- Name: non_contractuel_categories non_contractuel_categories_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.non_contractuel_categories
+    ADD CONSTRAINT non_contractuel_categories_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: non_contractuel_categories non_contractuel_categories_employee_non_contractuel_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.non_contractuel_categories
+    ADD CONSTRAINT non_contractuel_categories_employee_non_contractuel_id_foreign FOREIGN KEY (employee_non_contractuel_id) REFERENCES public.employee_non_contractuels(id) ON DELETE CASCADE;
+
+
+--
+-- Name: operations_comptable operations_comptable_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.operations_comptable
+    ADD CONSTRAINT operations_comptable_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
@@ -2235,6 +5010,110 @@ ALTER TABLE ONLY public.oauth_refresh_tokens
 
 ALTER TABLE ONLY public.people
     ADD CONSTRAINT people_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: periodes_exercice periodes_exercice_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.periodes_exercice
+    ADD CONSTRAINT periodes_exercice_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: plan_comptable_compte_sous_comptes plan_comptable_compte_sous_comptes_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_compte_sous_comptes
+    ADD CONSTRAINT plan_comptable_compte_sous_comptes_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: plan_comptable_compte_sous_comptes plan_comptable_compte_sous_comptes_plan_comptable_compte_id_for; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_compte_sous_comptes
+    ADD CONSTRAINT plan_comptable_compte_sous_comptes_plan_comptable_compte_id_for FOREIGN KEY (plan_comptable_compte_id) REFERENCES public.plan_comptable_comptes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: plan_comptable_compte_sous_comptes plan_comptable_compte_sous_comptes_sous_compte_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_compte_sous_comptes
+    ADD CONSTRAINT plan_comptable_compte_sous_comptes_sous_compte_id_foreign FOREIGN KEY (sous_compte_id) REFERENCES public.comptes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: plan_comptable_compte_sous_comptes plan_comptable_compte_sous_comptes_sub_division_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_compte_sous_comptes
+    ADD CONSTRAINT plan_comptable_compte_sous_comptes_sub_division_id_foreign FOREIGN KEY (sub_division_id) REFERENCES public.comptes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: plan_comptable_comptes plan_comptable_comptes_classe_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_comptes
+    ADD CONSTRAINT plan_comptable_comptes_classe_id_foreign FOREIGN KEY (classe_id) REFERENCES public.classes_de_compte(id) ON DELETE CASCADE;
+
+
+--
+-- Name: plan_comptable_comptes plan_comptable_comptes_compte_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_comptes
+    ADD CONSTRAINT plan_comptable_comptes_compte_id_foreign FOREIGN KEY (compte_id) REFERENCES public.comptes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: plan_comptable_comptes plan_comptable_comptes_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_comptes
+    ADD CONSTRAINT plan_comptable_comptes_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: plan_comptable_comptes plan_comptable_comptes_plan_comptable_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plan_comptable_comptes
+    ADD CONSTRAINT plan_comptable_comptes_plan_comptable_id_foreign FOREIGN KEY (plan_comptable_id) REFERENCES public.plans_comptable(id) ON DELETE CASCADE;
+
+
+--
+-- Name: plans_comptable plans_comptable_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.plans_comptable
+    ADD CONSTRAINT plans_comptable_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: poste_salaries poste_salaries_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.poste_salaries
+    ADD CONSTRAINT poste_salaries_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: poste_salaries poste_salaries_poste_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.poste_salaries
+    ADD CONSTRAINT poste_salaries_poste_id_foreign FOREIGN KEY (poste_id) REFERENCES public.postes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: poste_salaries poste_salaries_salary_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.poste_salaries
+    ADD CONSTRAINT poste_salaries_salary_id_foreign FOREIGN KEY (salary_id) REFERENCES public.taux_and_salaries(id) ON DELETE CASCADE;
 
 
 --
@@ -2275,6 +5154,62 @@ ALTER TABLE ONLY public.role_has_permissions
 
 ALTER TABLE ONLY public.roles
     ADD CONSTRAINT roles_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: salaires salaires_contract_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.salaires
+    ADD CONSTRAINT salaires_contract_id_foreign FOREIGN KEY (contract_id) REFERENCES public.contracts(id) ON DELETE CASCADE;
+
+
+--
+-- Name: salaires salaires_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.salaires
+    ADD CONSTRAINT salaires_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: salaires salaires_poste_salarie_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.salaires
+    ADD CONSTRAINT salaires_poste_salarie_id_foreign FOREIGN KEY (poste_salarie_id) REFERENCES public.poste_salaries(id) ON DELETE CASCADE;
+
+
+--
+-- Name: taux_and_salaries taux_and_salaries_created_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.taux_and_salaries
+    ADD CONSTRAINT taux_and_salaries_created_by_foreign FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: taux_and_salaries taux_and_salaries_montant_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.taux_and_salaries
+    ADD CONSTRAINT taux_and_salaries_montant_id_foreign FOREIGN KEY (montant_id) REFERENCES public.montants(id) ON DELETE CASCADE;
+
+
+--
+-- Name: taux_and_salaries taux_and_salaries_unite_mesure_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.taux_and_salaries
+    ADD CONSTRAINT taux_and_salaries_unite_mesure_id_foreign FOREIGN KEY (unite_mesure_id) REFERENCES public.unite_mesures(id) ON DELETE CASCADE;
+
+
+--
+-- Name: taux_and_salaries taux_and_salaries_unite_travaille_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+--
+
+ALTER TABLE ONLY public.taux_and_salaries
+    ADD CONSTRAINT taux_and_salaries_unite_travaille_id_foreign FOREIGN KEY (unite_travaille_id) REFERENCES public.unite_travailles(id) ON DELETE CASCADE;
 
 
 --

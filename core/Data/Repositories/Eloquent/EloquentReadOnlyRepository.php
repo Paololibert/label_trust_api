@@ -92,7 +92,7 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
     public function first(array $conditions, array $columns = ['*']): ?Model
     {
         try {
-            return $this->model->select($columns)->where($conditions)->first()->fresh();
+            return $this->model->select($columns)->where($conditions)->first()?->fresh();
         } catch (QueryException $exception) {
             throw new QueryException(message: "Error while retrieving the record.", previous: $exception);
         } catch (Throwable $exception) {

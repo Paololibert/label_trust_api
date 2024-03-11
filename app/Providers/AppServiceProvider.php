@@ -2,11 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Controllers\API\RESTful\Contracts\ApiResourceControllerContract;
-use App\Http\Controllers\API\RESTful\Contracts\BaseController;
-use App\Http\Requests\BaseRequest;
-use App\Http\Requests\Contracts\BaseRequestInterface;
-use App\Http\Requests\RoleRequest;
 use Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface;
 use Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface;
 use Core\Data\Repositories\Eloquent\EloquentReadOnlyRepository;

@@ -150,23 +150,23 @@ class TauxAndSalary extends ModelContract
     {
         return [
                 "type" => $this->unite_travaille->type_of_unite_travaille,
-                "symbol" => $this->unite_travaille->symbol
+                "symbol" => $this->unite_travaille->uniteMesure?->symbol
             ];
     }
 
     /**
-     * Define a many-to-many relationship with the CategoryOfEmploye model.
+     * Define a many-to-many relationship with the CategoryOfEmployee model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function categories_of_employees(): BelongsToMany
     {
-        return $this->belongsToMany(CategoryOfEmploye::class, 'categorie_taux', 'taux_id', 'category_employee_id')
+        return $this->belongsToMany(CategoryOfEmployee::class, 'category_of_employee_taux', 'taux_id', 'category_of_employee_id')
                     ->withPivot('est_le_taux_de_base', 'status', 'deleted_at', 'can_be_delete')
                     ->withTimestamps() // Enable automatic timestamps for the pivot table
                     ->wherePivot('status', true) // Filter records where the status is true
                     ->wherePivot('deleted_at', null) // Filter records where the deleted_at column is null
-                    ->using(CategorieTaux::class); // Specify the intermediate model for the pivot relationship
+                    ->using(CategoryOfEmployeeTaux::class); // Specify the intermediate model for the pivot relationship
     }
 
     /**

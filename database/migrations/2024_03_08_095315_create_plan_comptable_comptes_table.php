@@ -51,7 +51,7 @@ class CreatePlanComptableComptesTable extends Migration
                         column: 'classe_id',   // The column to which the foreign key is added ('classe_id' in this case)
                         references: 'classes_de_compte',    // The referenced table (classes_de_compte) to establish the foreign key relationship
                         onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                        nullable: true          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
+                        nullable: false          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
                     );
                 
                 // Define a foreign key for 'plan_comptable_id', referencing the 'plans_comptable' table
@@ -69,7 +69,7 @@ class CreatePlanComptableComptesTable extends Migration
                         column: 'compte_id',   // The column to which the foreign key is added ('compte_id' in this case)
                         references: 'comptes',    // The referenced table (comptes) to establish the foreign key relationship
                         onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                        nullable: true          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
+                        nullable: false          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
                     );
 
                 // Add a boolean column 'status' to the table

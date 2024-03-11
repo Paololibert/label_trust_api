@@ -47,7 +47,7 @@ class CreateTauxAndSalariesTable extends Migration
                     column: 'montant_id',   // The column to which the foreign key is added ('montant_id' in this case)
                     references: 'montants',    // The referenced table (montants) to establish the foreign key relationship
                     onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: true          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
+                    nullable: false          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
                 );
                 
                 // Define a foreign key for 'unite_mesure_id', referencing the 'unite_mesures' table
@@ -56,7 +56,7 @@ class CreateTauxAndSalariesTable extends Migration
                     column: 'unite_mesure_id',   // The column to which the foreign key is added ('unite_mesure_id' in this case)
                     references: 'unite_mesures',    // The referenced table (unite_mesures) to establish the foreign key relationship
                     onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows to be NULL)
+                    nullable: true          // Specify whether the foreign key column can be nullable (false means it not allows to be NULL)
                 );
 
                 //Define the hint float column for the taux
@@ -68,7 +68,7 @@ class CreateTauxAndSalariesTable extends Migration
                     column: 'unite_travaille_id',   // The column to which the foreign key is added ('unite_travaille_id' in this case)
                     references: 'unite_travailles',    // The referenced table (unite_travailles) to establish the foreign key relationship
                     onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: true          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
+                    nullable: false          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
                 );
 
                 // Add a boolean column 'status' to the table

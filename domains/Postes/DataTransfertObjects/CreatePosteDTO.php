@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Domains\Postes\DataTransfertObjects;
 
 use App\Models\Poste;
-use Core\Utils\Rules\ExistsForAuthUserAndUUID;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
 

@@ -24,7 +24,7 @@ class ResourceRequest extends UpdateResourceRequest
      */
     public function __construct(\Core\Utils\DataTransfertObjects\DTOInterface $dto, string $resouce = null)
     {
-        parent::__construct($dto, $resouce);
+        parent::__construct($dto::fromRequest(request()), $resouce);
     }
 
     /**
@@ -33,6 +33,20 @@ class ResourceRequest extends UpdateResourceRequest
     public function isAuthorize(): bool
     {
         return true;
+    }
+
+    /**
+     * Authorize the user to perform the resource creation operation.
+     *
+     * This method is called during the authorization phase of the request lifecycle.
+     * It sets the Data Transfer Object (DTO) associated with this request and then checks the concrete class's authorization.
+     *
+     * @return bool Whether the user is authorized.
+     */
+    public function authorize(): bool
+    {
+        // Check the concrete class's authorization.
+        return $this->isAuthorize();
     }
 
 }

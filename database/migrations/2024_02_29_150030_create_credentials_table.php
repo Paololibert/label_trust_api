@@ -64,8 +64,21 @@ class CreateCredentialsTable extends Migration
                     nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows NULL)
                 );
                 
+                // Add a boolean column 'status' to the table
+                $table->boolean('status')
+                ->default(TRUE) // Set the default value to TRUE
+                ->comment('Record status: 
+                        - TRUE: Active record or soft delete record
+                        - FALSE: permanently Deleted and can be archived in another datastore'
+                    ); // Describe the meaning of the 'status' column
+
+                // Add a boolean column 'can_be_delete' with default value false
+                $this->addCanDeleteColumn(table: $table, column_name: 'can_be_delete', can_be_delete: true);
+                
                 // Add timestamp and soft delete columns to the table
                 $this->addTimestampsAndSoftDeletesColumns($table);
+
+                
             });
 
             // Commit the transaction
