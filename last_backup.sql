@@ -3006,8 +3006,6 @@ CREATE TABLE public.users (
     phone_number jsonb NOT NULL,
     address jsonb,
     email character varying(255),
-    identifier character varying(255) NOT NULL,
-    password character varying(255) NOT NULL,
     userable_type character varying(255) NOT NULL,
     userable_id uuid NOT NULL,
     profilable_type character varying(255),
@@ -3061,20 +3059,6 @@ COMMENT ON COLUMN public.users.address IS 'Address of the user';
 --
 
 COMMENT ON COLUMN public.users.email IS 'Email address of the user';
-
-
---
--- Name: COLUMN users.identifier; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.users.identifier IS 'Encrypted identifier for the user';
-
-
---
--- Name: COLUMN users.password; Type: COMMENT; Schema: public; Owner: master_db_admin
---
-
-COMMENT ON COLUMN public.users.password IS 'Encrypted password for the user';
 
 
 --
@@ -3244,6 +3228,7 @@ COPY public.classes_de_compte (id, code, name, status, can_be_delete, created_by
 --
 
 COPY public.companies (id, name, registration_number, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+9b8a1335-91d9-4cf0-8e91-3ca9600d99a4	Osinski - Bergstrom	\N	t	t	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	2024-03-11 16:08:20	2024-03-11 16:08:20	\N
 \.
 
 
@@ -3276,7 +3261,7 @@ COPY public.contractuelables (id, employee_id, contractuelable_type, contractuel
 --
 
 COPY public.credentials (id, identifier, password, user_id, created_by, status, can_be_delete, created_at, updated_at, deleted_at) FROM stdin;
-9b89b372-b740-4fef-9ca5-7f3cf36b0f85	johndoe@gmail.com	$2y$12$ls3JIl8/pLYRQUnJt8yF6.aElQEdamPoSxEtnTPbBi9PsEHZU2ayy	9b89b371-f854-463e-a4ab-224c41d39aa8	9b89b371-f854-463e-a4ab-224c41d39aa8	t	t	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
+9b8a079b-2e70-4ae7-9a8a-6a3ee958655b	johndoe@gmail.com	$2y$12$qZuZenxisvTINcLSQqtQF.mNOUHr1RqfunKkl..iNxn7qjNSqjpRW	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	t	t	2024-03-11 15:35:54	2024-03-11 15:35:54	\N
 \.
 
 
@@ -3285,9 +3270,9 @@ COPY public.credentials (id, identifier, password, user_id, created_by, status, 
 --
 
 COPY public.departements (id, name, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
-9b89b372-f1b8-402b-b799-89ba1822127c	production	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
-9b89b372-fbac-452a-b575-25f56b6e3694	finance	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
-9b89b373-00b3-4ae5-a07b-67befd1eb41b	vente	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
+9b8a079b-5416-448a-a55d-85bca5841a20	production	t	t	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	2024-03-11 15:35:54	2024-03-11 15:35:54	\N
+9b8a079b-59c9-4d8e-b2fd-c8e7580cfa48	finance	t	t	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	2024-03-11 15:35:54	2024-03-11 15:35:54	\N
+9b8a079b-600f-4325-8b12-3edecc797b70	vente	t	t	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	2024-03-11 15:35:54	2024-03-11 15:35:54	\N
 \.
 
 
@@ -3430,12 +3415,6 @@ COPY public.non_contractuel_categories (id, date_debut, date_fin, employee_non_c
 --
 
 COPY public.oauth_access_tokens (id, user_id, client_id, name, scopes, revoked, created_at, updated_at, expires_at, status, deleted_at) FROM stdin;
-e296eb5b14a8dd573d7951ff1b7809d6ca9b725864c00fc11c294771ab873aff834a401c24fba36d	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b395-bf13-460a-8446-1947b9dee3bb	appToken	[]	t	2024-03-11 11:41:50	2024-03-11 11:45:55	2025-03-11 11:41:50	t	\N
-e031219d63f53b87af7efa727962586abc66aaa81dbcfd3388c1846e507d51b08e81cc12c86141b8	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b395-bf13-460a-8446-1947b9dee3bb	appToken	[]	f	2024-03-11 11:46:26	2024-03-11 11:46:26	2025-03-11 11:46:26	t	\N
-ed618e4fe3a7419dab55246b929c0987812c6bf4ae90f6696cb6db0ddee4d40d8eb16ccf3aa0a765	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b395-bf13-460a-8446-1947b9dee3bb	johndoe@gmail.com	[]	f	2024-03-11 11:47:36	2024-03-11 11:47:36	2025-03-11 11:47:36	t	\N
-f337368681c81beb6242264c673d8c57d40ea072d7c0f93b98066828a330209fa1029597229dab11	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b372-bb08-4d8c-9436-bbdc8785f0a9	\N	["*"]	f	2024-03-11 12:03:13	2024-03-11 12:03:13	2024-03-26 12:03:13	t	\N
-ececad56ff7b174b09b2767d3be048a0f4a5bd4440589cdcd4797b2371d71d023e4a91c03a21a697	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b372-bb08-4d8c-9436-bbdc8785f0a9	\N	["*"]	f	2024-03-11 12:04:02	2024-03-11 12:04:02	2024-03-26 12:04:02	t	\N
-a1529d6a4599b323da1d90372c8899ba4529bb27754c659ac148509f0f77437a6ddc24a5189a2286	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	9b89b372-bb08-4d8c-9436-bbdc8785f0a9	\N	["*"]	f	2024-03-11 12:07:30	2024-03-11 12:07:30	2024-03-26 12:07:30	t	\N
 \.
 
 
@@ -3452,9 +3431,9 @@ COPY public.oauth_auth_codes (id, user_id, client_id, scopes, revoked, expires_a
 --
 
 COPY public.oauth_clients (id, user_id, name, secret, provider, redirect, personal_access_client, password_client, revoked, created_at, updated_at, status, deleted_at) FROM stdin;
-9b89b372-bb08-4d8c-9436-bbdc8785f0a9	9b89b372-b740-4fef-9ca5-7f3cf36b0f85	Password Grant 	51baa8deba17045479e964812fc208779936e7ea5504464800ac4d876f0edc58	\N	http://localhost	f	t	f	2024-03-11 11:40:34	2024-03-11 11:40:34	t	\N
-9b89b395-bf13-460a-8446-1947b9dee3bb	\N	Laravel Personal Access Client	vmAgyHKELqYpbiWJRVroutpidi9XuUIg5hwme8eF	\N	http://localhost	t	f	f	2024-03-11 11:40:57	2024-03-11 11:40:57	t	\N
-9b89b395-dc90-45bd-9d25-11a11fa45739	\N	Laravel Password Grant Client	zHSlgrUCMVPPeRxOEDTgp0l0I1CuBFU6toByCDbq	users	http://localhost	f	t	f	2024-03-11 11:40:57	2024-03-11 11:40:57	t	\N
+9b8a079b-31bb-4f46-8b98-0811716e31bb	9b8a079b-2e70-4ae7-9a8a-6a3ee958655b	Password Grant 	a9c9a65ec046acc3e47c1d77f72b2cbbe6ad443ba24017dd74d86e4183887ad0	\N	http://localhost	f	t	f	2024-03-11 15:35:54	2024-03-11 15:35:54	t	\N
+9b8a07a3-18e8-4cc6-b09b-2c64608995f2	\N	Laravel Personal Access Client	R82nwU8ZiI8daGz7RDfbhvb80WiNKbdaBhnLNf6P	\N	http://localhost	t	f	f	2024-03-11 15:35:59	2024-03-11 15:35:59	t	\N
+9b8a07a3-300a-4e59-9977-973648ee1d4a	\N	Laravel Password Grant Client	68Ck6kTzIRAbZPkIhq14U1ocDB7a3ZhQcvAsJYFq	users	http://localhost	f	t	f	2024-03-11 15:35:59	2024-03-11 15:35:59	t	\N
 \.
 
 
@@ -3463,7 +3442,7 @@ COPY public.oauth_clients (id, user_id, name, secret, provider, redirect, person
 --
 
 COPY public.oauth_personal_access_clients (id, client_id, created_at, updated_at, status, deleted_at) FROM stdin;
-1	9b89b395-bf13-460a-8446-1947b9dee3bb	2024-03-11 11:40:57	2024-03-11 11:40:57	t	\N
+1	9b8a07a3-18e8-4cc6-b09b-2c64608995f2	2024-03-11 15:35:59	2024-03-11 15:35:59	t	\N
 \.
 
 
@@ -3472,9 +3451,6 @@ COPY public.oauth_personal_access_clients (id, client_id, created_at, updated_at
 --
 
 COPY public.oauth_refresh_tokens (id, access_token_id, revoked, expires_at, status, created_at, updated_at, deleted_at) FROM stdin;
-42d1e0cd67254211986508c0bf4eef35654d36491588b77428abe37b81fb7b0d8581408d84943bd8	f337368681c81beb6242264c673d8c57d40ea072d7c0f93b98066828a330209fa1029597229dab11	f	2024-04-10 12:03:13	t	2024-03-11 05:03:14	\N	\N
-6222545c5fd382c917ace07ede9565e1445a6a6265e0d80cda8e23b081a9c7b0aa2a89f9b1641fe3	ececad56ff7b174b09b2767d3be048a0f4a5bd4440589cdcd4797b2371d71d023e4a91c03a21a697	f	2024-04-10 12:04:02	t	2024-03-11 05:04:02	\N	\N
-11734c34b2059a3bdd55578fe813292e499986830ccad3e248378b90c5ed66df2bccd53c22ea435b	a1529d6a4599b323da1d90372c8899ba4529bb27754c659ac148509f0f77437a6ddc24a5189a2286	f	2024-04-10 12:07:30	t	2024-03-11 05:07:31	\N	\N
 \.
 
 
@@ -3491,7 +3467,7 @@ COPY public.operations_comptable (id, libelle, date_ecriture, total_debit, total
 --
 
 COPY public.people (id, last_name, first_name, middle_name, sex, marital_status, birth_date, nip, ifu, nationality, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
-9b89b371-5ad6-49e0-9c5d-8e5a43170a91	DOE	john	["Phillipe"]	male	single	\N	\N	\N	\N	t	t	\N	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b8a079a-725e-4530-822e-e95ff4652012	DOE	john	["Phillipe"]	male	single	\N	\N	\N	\N	t	t	\N	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
 \.
 
 
@@ -3508,16 +3484,16 @@ COPY public.periodes_exercice (id, name, date_debut_periode, date_fin_periode, s
 --
 
 COPY public.permissions (id, name, key, slug, description, status, can_be_delete, created_at, updated_at, deleted_at) FROM stdin;
-9b89b371-03f6-499a-8961-c1f231fce4bf	View Users	view_users	view-users	Permission to view users	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
-9b89b371-16dc-423b-8513-59dc4ecdbbcb	Create Users	create_users	create-users	Permission to create new users	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
-9b89b371-1c3d-4617-b80d-7fd502fe3053	Edit Users	edit_users	edit-users	Permission to edit existing users	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
-9b89b371-207f-4efa-95f2-9a09f8101e53	Delete Users	delete_users	delete-users	Permission to delete users	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
-9b89b371-2502-474c-a680-492d901708f4	View Roles	view_roles	view-roles	Permission to view roles	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
-9b89b371-28e7-4e2b-a3c1-5067f1cecd4e	Edit Roles	edit_roles	edit-roles	Permission to edit roles	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
-9b89b371-2d39-4f78-807a-9b8b01536c48	Delete Roles	delete_roles	delete-roles	Permission to delete roles	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
-9b89b371-3141-4fd2-986e-bed6691f3aee	View Permissions	view_permissions	view-permissions	Permission to view permissions	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
-9b89b371-3572-44f1-b749-629d9a9a3af2	Edit Permissions	edit_permissions	edit-permissions	Permission to edit permissions	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
-9b89b371-399a-4c9f-9a36-2ef4efa38ca7	Delete Permissions	delete_permissions	delete-permissions	Permission to delete permissions	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N
+9b8a079a-1a92-4c72-8db7-7a50c6936311	View Users	view_users	view-users	Permission to view users	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
+9b8a079a-2dd7-45fe-a7d2-8f9ed5daab1a	Create Users	create_users	create-users	Permission to create new users	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
+9b8a079a-32d8-4ca6-adb4-39411464fcac	Edit Users	edit_users	edit-users	Permission to edit existing users	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
+9b8a079a-36d1-4421-89c4-de8f290df370	Delete Users	delete_users	delete-users	Permission to delete users	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
+9b8a079a-3a8a-4251-b68a-2d9c103a3507	View Roles	view_roles	view-roles	Permission to view roles	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
+9b8a079a-3e92-4a54-b7ce-dca4ec4bb71d	Edit Roles	edit_roles	edit-roles	Permission to edit roles	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
+9b8a079a-431b-4f5c-87aa-7233b5ba9c5d	Delete Roles	delete_roles	delete-roles	Permission to delete roles	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
+9b8a079a-472f-4ba6-b224-8dc3d1d9a61d	View Permissions	view_permissions	view-permissions	Permission to view permissions	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
+9b8a079a-4b70-4d00-88d3-51f8c79dce8b	Edit Permissions	edit_permissions	edit-permissions	Permission to edit permissions	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
+9b8a079a-5021-40c5-b01a-d00f3f8c0a10	Delete Permissions	delete_permissions	delete-permissions	Permission to delete permissions	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N
 \.
 
 
@@ -3582,10 +3558,10 @@ COPY public.role_has_permissions (id, role_id, permission_id, status, can_be_det
 --
 
 COPY public.roles (id, name, key, slug, description, status, can_be_delete, created_at, updated_at, deleted_at, created_by) FROM stdin;
-9b89b371-4033-4d25-af33-d1978eff4a48	super administrateur	super_administrateur	super-administrateur	Super Administrator Role	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N	\N
-9b89b371-4513-4ce0-bacb-95286d497bd9	administrateur	administrateur	administrateur	Role	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N	\N
-9b89b371-4a04-472a-a816-67c7efaf4c6a	employer	employer	Employer	Role	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N	\N
-9b89b371-515c-435b-a987-d65f757d819e	partenaire	partenaire	partenaire	Role	t	f	2024-03-11 11:40:33	2024-03-11 11:40:33	\N	\N
+9b8a079a-56b3-4e8a-9ecf-d78333823ad2	super administrateur	super_administrateur	super-administrateur	Super Administrator Role	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N	\N
+9b8a079a-5bfe-4175-a05c-b5dab4f5cce3	administrateur	administrateur	administrateur	Role	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N	\N
+9b8a079a-63e5-46e9-88f0-66cc3f0aa891	employer	employer	Employer	Role	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N	\N
+9b8a079a-6a39-4800-b0c1-8051b47baab5	partenaire	partenaire	partenaire	Role	t	f	2024-03-11 15:35:53	2024-03-11 15:35:53	\N	\N
 \.
 
 
@@ -3610,9 +3586,9 @@ COPY public.taux_and_salaries (id, montant_id, unite_mesure_id, hint, unite_trav
 --
 
 COPY public.unite_mesures (id, name, symbol, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
-9b89b372-c992-42a0-9fcf-778920406f16	mois	m	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
-9b89b372-d624-4587-a9d6-9bd718b9bb79	jour	j	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
-9b89b372-e202-49b7-be65-60cd41a43d99	heure	h	t	t	9b89b371-f854-463e-a4ab-224c41d39aa8	2024-03-11 11:40:34	2024-03-11 11:40:34	\N
+9b8a079b-37d1-4f1c-9eae-22cd63215119	mois	m	t	t	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	2024-03-11 15:35:54	2024-03-11 15:35:54	\N
+9b8a079b-42d8-458e-ab7f-a2154a55e1dd	jour	j	t	t	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	2024-03-11 15:35:54	2024-03-11 15:35:54	\N
+9b8a079b-4c5b-49eb-a0b6-82c65d08f70f	heure	h	t	t	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	2024-03-11 15:35:54	2024-03-11 15:35:54	\N
 \.
 
 
@@ -3629,7 +3605,8 @@ COPY public.unite_travailles (id, type_of_unite_travaille, unite_mesure_id, arti
 --
 
 COPY public.user_has_roles (id, user_id, role_id, attached_by, status, can_be_detach, created_at, updated_at, deleted_at) FROM stdin;
-9b89b372-0b85-4e53-92e4-d60815aee5c0	9b89b371-f854-463e-a4ab-224c41d39aa8	9b89b371-4033-4d25-af33-d1978eff4a48	9b89b371-f854-463e-a4ab-224c41d39aa8	t	f	2024-03-11 04:40:34	\N	\N
+9b8a079a-8e97-4a9b-b5ae-72603b250ce0	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	9b8a079a-56b3-4e8a-9ecf-d78333823ad2	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	t	f	2024-03-11 08:35:54	\N	\N
+9b8a1335-b154-438c-9920-f3227cfbd964	9b8a1335-9e9a-4dc4-bd2d-ee8e0deaefbc	9b8a079a-56b3-4e8a-9ecf-d78333823ad2	9b8a079a-7900-456f-a0bc-65caaa6c7ea4	t	f	2024-03-11 09:08:21	\N	\N
 \.
 
 
@@ -3637,8 +3614,9 @@ COPY public.user_has_roles (id, user_id, role_id, attached_by, status, can_be_de
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
-COPY public.users (id, type_of_account, username, login_channel, phone_number, address, email, identifier, password, userable_type, userable_id, profilable_type, profilable_id, email_verified_at, email_verified, account_activated, account_activated_at, account_verified, account_verified_at, email_verification_token, first_login, status, can_be_delete, account_status, created_at, updated_at, deleted_at, created_by) FROM stdin;
-9b89b371-f854-463e-a4ab-224c41d39aa8	personal	doe.john	email	{"number": 87321067, "area_code": null, "country_code": 229}	\N	johndoe@gmail.com	johndoe@gmail.com	$2y$12$BvQIpQWCDa5nTAS22edAou6gnHI/dqJUE/UcTxipv6l2EEgbIA1t2	App\\Models\\Person	9b89b371-5ad6-49e0-9c5d-8e5a43170a91	\N	\N	\N	f	f	\N	f	\N	\N	t	t	t	pending_activation	2024-03-11 11:40:34	2024-03-11 11:40:34	\N	9b89b371-f854-463e-a4ab-224c41d39aa8
+COPY public.users (id, type_of_account, username, login_channel, phone_number, address, email, userable_type, userable_id, profilable_type, profilable_id, email_verified_at, email_verified, account_activated, account_activated_at, account_verified, account_verified_at, email_verification_token, first_login, status, can_be_delete, account_status, created_at, updated_at, deleted_at, created_by) FROM stdin;
+9b8a079a-7900-456f-a0bc-65caaa6c7ea4	personal	doe.john	email	{"number": 87321067, "area_code": null, "country_code": 229}	\N	johndoe@gmail.com	App\\Models\\Person	9b8a079a-725e-4530-822e-e95ff4652012	\N	\N	\N	f	f	\N	f	\N	\N	t	t	t	pending_activation	2024-03-11 15:35:53	2024-03-11 15:35:53	\N	9b8a079a-7900-456f-a0bc-65caaa6c7ea4
+9b8a1335-9e9a-4dc4-bd2d-ee8e0deaefbc	moral	osinskibergstrom	email	{"number": 804262261, "area_code": null, "country_code": 224}	\N	doe3gh@gmail.com	App\\Models\\Company	9b8a1335-91d9-4cf0-8e91-3ca9600d99a4	\N	\N	\N	f	f	\N	f	\N	\N	t	t	t	pending_activation	2024-03-11 16:08:20	2024-03-11 16:08:20	\N	9b8a079a-7900-456f-a0bc-65caaa6c7ea4
 \.
 
 

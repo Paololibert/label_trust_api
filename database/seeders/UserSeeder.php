@@ -27,9 +27,8 @@ class UserSeeder extends Seeder
         ]);
 
         $user = $person->user()->create([
+            'login_channel' => "email",
             'type_of_account' => "personal",
-            'identifier' => "johndoe@gmail.com",
-            'password' => Hash::make("password"),
             'email' => "johndoe@gmail.com",
             'phone_number'    => ["country_code"=> 229, "number" => 87321067]
         ]);

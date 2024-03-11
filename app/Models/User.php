@@ -95,7 +95,6 @@ class User extends ModelContract implements /* AuthenticatableContract,  */Autho
         'username',
         'login_channel',
         'phone_number',
-        'identifier',
         'password',
         'email',
         'address',
@@ -121,7 +120,6 @@ class User extends ModelContract implements /* AuthenticatableContract,  */Autho
      */
     protected $attributes = [
         'type_of_account'          => TypeOfAccountEnum::DEFAULT,
-        'login_channel'            => 'email',
         'first_login'              => 'true',
         'email'                    => NULL,
         'account_status'           => UserAccountStatus::DEFAULT,

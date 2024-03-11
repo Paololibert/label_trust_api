@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-use Core\Utils\Enums\StatutEmployeeEnum;
-use Core\Utils\Enums\TypeEmployeeEnum;
-use Core\Utils\Enums\TypeUniteTravailleEnum;
 use Core\Utils\Traits\Database\Migrations\CanDeleteTrait;
 use Core\Utils\Traits\Database\Migrations\HasCompositeKey;
 use Core\Utils\Traits\Database\Migrations\HasForeignKey;
@@ -16,13 +13,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class ***`CreateContractuelablesTable`***
+ * Class ***`CreateCategorieTauxTable`***
  *
- * A migration class for creating the "contractuelables" table with UUID primary key and timestamps.
+ * A migration class for creating the "categorie_taux" table with UUID primary key and timestamps.
  *
- * @package ***`\Database\Migrations\CreatecontractuelablesTable`***
+ * @package ***`\Database\Migrations\CreateCategorieTauxTable`***
  */
-class CreateContractuelablesTable extends Migration
+class CreateCategorieTauxTable extends Migration
 {
     use CanDeleteTrait, HasCompositeKey, HasForeignKey, HasTimestampsAndSoftDeletes, HasUuidPrimaryKey;
     
@@ -40,29 +37,32 @@ class CreateContractuelablesTable extends Migration
 
         try {
 
-            Schema::create('contractuelables', function (Blueprint $table) {
-                // Define a UUID primary key for the 'contractuelables' table
-                
+            Schema::create('categorie_taux', function (Blueprint $table) {
+                // Define a UUID primary key for the 'categorie_taux' table
                 $this->uuidPrimaryKey($table);
 
-                // Define a foreign key for 'employee_id', pointing to the 'employees' table
+                // Add a boolean column 'est_le_taux_de_base' to the table
+                $table->boolean('est_le_taux_de_base')
+                    ->default(FALSE) // Set the default value to FALSE
+                    ->comment('');
+                
+                // Define a foreign key for 'category_employee_id', referencing the 'categories_of_employees' table
                 $this->foreignKey(
-                    table: $table,          // The table where the foreign key is being added
-                    column: 'employee_id',   // The column to which the foreign key is added ('employee_id' in this case)
-                    references: 'employees',    // The referenced table (employees) to establish the foreign key relationship
-                    onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows NULL)
-                );
-
-                /**
-                 * Polymorphic relationship columns:
-                 * - 'contractuelable_type' (string): Type of the related model
-                 * - 'contractuelable_id' (uuid): ID of the related model
-                 */
-                $table->uuidMorphs('contractuelable');
-
-                //Define if the employee is still a "contractual or not"
-                $table->boolean('actif')->default(true)->comment('The activity of the employee as contractual or not');
+                        table: $table,          // The table where the foreign key is being added
+                        column: 'category_employee_id',   // The column to which the foreign key is added ('category_employee_id' in this case)
+                        references: 'categories_of_employees',    // The referenced table (categories_of_employees) to establish the foreign key relationship
+                        onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
+                        nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows to be NULL)
+                    );
+    
+                // Define a foreign key for 'taux_id', referencing the 'taux_and_salaries' table
+                $this->foreignKey(
+                        table: $table,          // The table where the foreign key is being added
+                        column: 'taux_id',   // The column to which the foreign key is added ('taux_id' in this case)
+                        references: 'taux_and_salaries',    // The referenced table (taux_and_salaries) to establish the foreign key relationship
+                        onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
+                        nullable: true          // Specify whether the foreign key column can be nullable (true means it allows to be NULL)
+                    );
 
                 // Add a boolean column 'status' to the table
                 $table->boolean('status')
@@ -84,8 +84,8 @@ class CreateContractuelablesTable extends Migration
                     nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows NULL)
                 );
                 
-                // Create a composite index for efficient searching on the combination of name, slug, key, status and can_be_delete
-                $this->compositeKeys(table: $table, keys: ['status', 'can_be_delete']);
+                // Create a composite index for efficient searching on the combination of est_le_taux_de_base, status and can_be_delete
+                $this->compositeKeys(table: $table, keys: ['est_le_taux_de_base', 'status', 'can_be_delete']);
 
                 // Add timestamp and soft delete columns to the table
                 $this->addTimestampsAndSoftDeletesColumns($table);
@@ -99,7 +99,7 @@ class CreateContractuelablesTable extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to migrate "contractuelables" table: ' . $exception->getMessage(),
+                message: 'Failed to migrate "categorie_taux" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }
@@ -118,8 +118,8 @@ class CreateContractuelablesTable extends Migration
         DB::beginTransaction();
 
         try {
-            // Drop the "contractuelables" table if it exists
-            Schema::dropIfExists('contractuelables');
+            // Drop the "categorie_taux" table if it exists
+            Schema::dropIfExists('categorie_taux');
 
             // Commit the transaction
             DB::commit();
@@ -129,7 +129,7 @@ class CreateContractuelablesTable extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to drop "contractuelables" table: ' . $exception->getMessage(),
+                message: 'Failed to drop "categorie_taux" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }

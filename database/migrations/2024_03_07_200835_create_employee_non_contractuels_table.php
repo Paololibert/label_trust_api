@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Core\Utils\Enums\StatutEmployeeEnum;
+use Core\Utils\Enums\TypeEmployeeEnum;
+use Core\Utils\Enums\TypeUniteTravailleEnum;
 use Core\Utils\Traits\Database\Migrations\CanDeleteTrait;
 use Core\Utils\Traits\Database\Migrations\HasCompositeKey;
 use Core\Utils\Traits\Database\Migrations\HasForeignKey;

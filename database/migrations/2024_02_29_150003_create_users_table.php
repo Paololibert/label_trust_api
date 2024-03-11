@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateUsersTable extends Migration
 {
     use CanDeleteTrait, HasCompositeKey, HasForeignKey, HasMatricule, HasTimestampsAndSoftDeletes, HasUuidPrimaryKey;
-    
+
     /**
      * Run the migrations.
      */
@@ -48,7 +48,7 @@ class CreateUsersTable extends Migration
 
                 // "login_channel" column with default value "email"
                 $table->enum('login_channel', ['email', 'phone_number'])->default('email');
-                
+
                 // Phone number stored as JSONB with a uniqueness constraint
                 $table->jsonb('phone_number')->unique()->comment('The phone number of the user');
 
@@ -57,12 +57,6 @@ class CreateUsersTable extends Migration
 
                 // Nullable and unique email address of the user
                 $table->string('email')->unique()->nullable()->comment('Email address of the user');
-
-                // Column for storing encrypted identifiers
-                $table->string('identifier')->comment('Encrypted identifier for the user');
-
-                // Column for storing encrypted passwords
-                $table->string('password')->comment('Encrypted password for the user');
 
                 /**
                  * Polymorphic relationship columns:
@@ -77,8 +71,18 @@ class CreateUsersTable extends Migration
                  * - 'profilable' (string): Type of the related model
                  * - 'profilable_id' (uuid): ID of the related model
                  */
+                $table->uuidMorphs('profilable');
+
+                // Nullable timestamp for email verification
+                $table->timestamp('email_verified_at')->nullable()->comment('Timestamp of email verification');
+
+                /**
+                 * Polymorphic relationship columns:
+                 * - 'profilable' (string): Type of the related model
+                 * - 'profilable_id' (uuid): ID of the related model
+                 */
                 $table->nullableUuidMorphs('profilable');
-                
+
                 // Nullable timestamp for email verification
                 $table->timestamp('email_verified_at')->nullable()->comment('Timestamp of email verification');
 
@@ -102,14 +106,15 @@ class CreateUsersTable extends Migration
 
                 // Boolean flag indicating first login
                 $table->boolean('first_login')->default(true)->comment('First connexion');
-                
+
                 // Add a boolean column 'status' to the table
                 $table->boolean('status')
                     ->default(TRUE) // Set the default value to TRUE
-                    ->comment('Record status: 
+                    ->comment(
+                        'Record status: 
                             - TRUE: Active record or soft delete record
                             - FALSE: permanently Deleted and can be archived in another datastore'
-                        ); // Describe the meaning of the 'status' column
+                    ); // Describe the meaning of the 'status' column
 
                 // Add a boolean column 'can_be_delete' with default value false
                 $this->addCanDeleteColumn(table: $table, column_name: 'can_be_delete', can_be_delete: true);
@@ -119,9 +124,9 @@ class CreateUsersTable extends Migration
                  * - Possible values: [ 'active', 'pending_password_reset', 'pending_activation', ... ]
                  */
                 $table->enum(
-                        'account_status',
-                        UserAccountStatus::values()
-                    )->default(UserAccountStatus::DEFAULT);
+                    'account_status',
+                    UserAccountStatus::values()
+                )->default(UserAccountStatus::DEFAULT);
 
                 // Create a composite index for efficient searching on the combination of status and can_be_delete
                 $this->compositeKeys(table: $table, keys: [/* 'matricule', */'username', 'type_of_account', 'phone_number', 'email', 'status', 'can_be_delete']);
@@ -143,7 +148,7 @@ class CreateUsersTable extends Migration
             );
         }
     }
-    
+
     /**
      * Reverse the migrations.
      *
