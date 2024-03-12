@@ -64,17 +64,7 @@ class CreateUsersTable extends Migration
                  * - 'userable_id' (uuid): ID of the related model
                  */
                 $table->uuidMorphs('userable');
-                //->comment('Polymorphic relationship with other models');
-
-                /**
-                 * Polymorphic relationship columns:
-                 * - 'profilable' (string): Type of the related model
-                 * - 'profilable_id' (uuid): ID of the related model
-                 */
-                $table->uuidMorphs('profilable');
-
-                // Nullable timestamp for email verification
-                $table->timestamp('email_verified_at')->nullable()->comment('Timestamp of email verification');
+                    //->comment('Polymorphic relationship with other models');
 
                 /**
                  * Polymorphic relationship columns:
