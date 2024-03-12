@@ -23,7 +23,7 @@ trait Contractuelable
     /**
      * Get all of the employees for the post.
      */
-    public function employee(): MorphToMany
+    public function employees(): MorphToMany
     {
         return $this->morphToMany(Employee::class, 'contractuelable');
     }

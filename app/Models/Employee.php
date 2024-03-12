@@ -10,6 +10,7 @@ use Core\Utils\Enums\StatutEmployeeEnum;
 use Core\Utils\Enums\TypeEmployeeEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * Class ***`Employee`***
@@ -101,6 +102,15 @@ class Employee extends ModelContract
         );
     }
 
+
+     /**
+     * Get all of the posts that are assigned this tag.
+     */
+    public function employee_temporaire(): MorphToMany
+    {
+        return $this->morphedByMany(EmployeeNonContractuel::class, 'contractuelable');
+    }
+
     /**
      * Get of the non_contractuel (temporaire) that is assigned this employee.
      */
@@ -108,11 +118,11 @@ class Employee extends ModelContract
     {
         return $this->morphedByOne(EmployeeNonContractuel::class, 'contractuelable');
     } */
-    public function employee_temporaire()
+    /*public function employee_temporaire()
     {
         return $this->morphedByMany(EmployeeNonContractuel::class, 'contractuelable', 'contractuelables', 'contractuelable_id', 'employee_id')
-                    ->using(Contractuelable::class)/* ->wherePivot('actif', true) */; 
-    }
+                    ->using(Contractuelable::class) ->wherePivot('actif', true) ; 
+    }*/
 
        /**
      * Get of the non_contractuel (temporaire) that is assigned this employee.
@@ -121,11 +131,17 @@ class Employee extends ModelContract
     {
         return $this->morphedByOne(EmployeeNonContractuel::class, 'contractuelable');
     } */
-    public function employee_contractuel()
+    /*public function employee_contractuel()
     {
         return $this->morphedByMany(EmployeeContractuel::class, 'contractuelable', 'contractuelables', 'contractuelable_id', 'employee_id')
-                    ->using(Contractuelable::class)/* ->wherePivot('actif', true) */; 
+                    ->using(Contractuelable::class) ->wherePivot('actif', true) ; 
+    }*/
+    
+    public function employee_contractuel(): MorphToMany
+    {
+        return $this->morphedByMany(EmployeeContractuel::class, 'contractuelable');
     }
+
     /**
      * Get of the contractual that is assigned this tag.
      */

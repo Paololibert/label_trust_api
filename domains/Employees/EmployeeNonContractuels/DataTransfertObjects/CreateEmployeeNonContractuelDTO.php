@@ -36,7 +36,7 @@ class CreateEmployeeNonContractuelDTO extends BaseDTO
             'can_be_deleted'                => ['sometimes', 'boolean'],
             'category_of_employee_id'       => ['sometimes', 'string', 'exists:categories_of_employees,id'],
             'date_debut'                    => ['sometimes', 'date'],
-            'category_taux_id'              => ['sometimes', 'uuid', 'exists:categorie_taux,id'],
+            /* 'category_taux_id'              => ['sometimes', 'uuid', 'exists:categorie_taux,id'], */
         ], $rules);
 
         return $this->rules = parent::rules($rules);

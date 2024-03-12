@@ -47,6 +47,7 @@ class CreatePersonDTO extends BaseDTO
 			"last_name"             => ["required", "string", 'min:3', 'max:50'],
 			"first_name"            => ["required", "string", 'min:3', 'max:30'],
 			"middle_name"           => ["sometimes", "array", 'min:1'],
+            "name"                  => ["sometimes", "string", 'min:3', 'max:50'],
 			"middle_name.*"         => ["sometimes", "string", 'min:3', 'max:25'],
             'nip'                   => ['sometimes', 'integer', 'digits:13', 'unique:users,nip'],
             'ifu'                   => ['sometimes', 'integer', 'digits:13', 'unique:users,ifu'],

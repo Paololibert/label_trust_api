@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Core\Data\Eloquent\Contract\ModelContract;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * Class ***`EmployeeContractuel`***
@@ -70,6 +71,13 @@ class EmployeeContractuel extends ModelContract
     protected $casts = [
         
     ];
-       
+    
+    /**
+     * Get all of the tags for the post.
+     */
+    public function employees(): MorphToMany
+    {
+        return $this->morphToMany(Employee::class, 'contractuelable');
+    }
 
 }

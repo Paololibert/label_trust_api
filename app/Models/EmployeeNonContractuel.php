@@ -7,6 +7,7 @@ namespace App\Models;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Contractuelable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * Class ***`EmployeeNonContractuel`***
@@ -87,5 +88,12 @@ class EmployeeNonContractuel extends ModelContract
                     ->using(NonContractuelCategorie::class); // Enable automatic timestamps for the pivot table
     }
 
+    /**
+     * Get all of the employee for the post.
+     */
+    public function employees()
+    {
+        return $this->morphToMany(Employee::class, 'contractuelable');
+    }
 
 }

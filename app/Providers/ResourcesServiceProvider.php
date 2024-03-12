@@ -128,7 +128,7 @@ class ResourcesServiceProvider extends ServiceProvider
                 ->needs(
                     \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
                 )
-                ->give(\Domains\CategoriesOfEmployees\Repositories\CategoryOfEmployeReadWriteRepository::class);
+                ->give(\Domains\CategoriesOfEmployees\Repositories\CategoryOfEmployeeReadWriteRepository::class);
             
 
             // Bind ReadOnlyRepositoryInterface to EmployeeReadOnlyRepository

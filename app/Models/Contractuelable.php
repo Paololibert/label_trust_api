@@ -19,7 +19,7 @@ use Core\Utils\Traits\CPivot;
  */
 class Contractuelable extends ModelContract
 {
-    use  CPivot;
+    //use  CPivot;
     /**
      * The database connection that should be used by the model.
      *
@@ -79,8 +79,8 @@ class Contractuelable extends ModelContract
      */
     protected $casts = [
         'employee_id'                     =>'string',
-        'contractuelable_id'                 =>'string',
-        'contractuelable_type'                 =>'string',
+        'contractuelable_id'              =>'string',
+        'contractuelable_type'            =>'string',
         'actif'                           =>'boolean',
     ];
     

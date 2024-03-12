@@ -64,16 +64,16 @@ class EmployeeReadWriteRepository extends EloquentReadWriteRepository
     {
         try {
 
-            //dd($data['user']);
+            //dd($data);
 
-            $this->model = parent::create($data);
+            $theparent =  $this->model = parent::create($data);
 
             $employeDetail = null;
 
 
             if($data['type_employee'] === TypeEmployeeEnum::REGULIER->value)
             {
-                //$employeDetail = $this->employeeContRWRep->create($data['data']);
+                $employeDetail = $this->employeeContRWRep->create($data['data']);
             }
             else if($data['type_employee'] === TypeEmployeeEnum::NON_REGULIER->value)
             {
@@ -81,7 +81,8 @@ class EmployeeReadWriteRepository extends EloquentReadWriteRepository
 
                 if(!$employeDetail) throw new Exception("Error occur while creating type of employee", 1);
                 
-                $this->model->employee_temporaire()->attach($employeDetail->id);
+                $att = $employeDetail->employees()->attach([$theparent->id]);
+                
 
                 //$employeDetail->employee()->attach($this->model);
             }
@@ -90,14 +91,14 @@ class EmployeeReadWriteRepository extends EloquentReadWriteRepository
             if(!$employeDetail) throw new Exception("Error occur while creating type of employee", 1);
 
 
-
             $this->userReadWriteRepository->create(array_merge($data['user'], ["profilable_type"=>$this->model::class, "profilable_id"=>$this->model->id]));
-
+            
             //$this->model = $this->model->user()->create($data['user']);
 
             return $this->model->refresh();
             
         } catch (QueryException $exception) {
+            
             throw new QueryException(message: "Error while creating the record.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while creating the record.", previous: $exception);

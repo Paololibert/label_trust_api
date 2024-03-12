@@ -181,11 +181,11 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                     Route::get('{category_of_employee_id}/taux', 'CategoryOfEmployeeController@fetchCategoryOfEmployeeTaux')->name('categories_of_employees.taux');
                 });
 
-                Route::apiResource('employees', 'CategoryOfEmployeeController')->parameters([
+                Route::apiResource('employees', 'EmployeeController')->parameters([
                     'employees' => 'employee_id'
                 ]);;
 
-                Route::apiResource('employees', 'CategoryOfEmployeController');
+                Route::apiResource('employees', 'EmployeeController');
 
             });
 
