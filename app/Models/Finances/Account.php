@@ -26,12 +26,6 @@ class Account extends ModelContract
 {
     use AsPivot, Balanceable, Accountable;
     
-    /**
-     * The database connection that should be used by the model.
-     *
-     * @var string
-     */
-    protected $connection = 'pgsql';
 
     /**
      * The table associated with the model.

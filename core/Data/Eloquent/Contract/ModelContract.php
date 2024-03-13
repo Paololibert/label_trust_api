@@ -27,13 +27,12 @@ class ModelContract extends Model
     use HasFactory, HasCreator, HasUuids, SoftDeletes;
     //use LogsActivity;
 
-
     /**
      * The database connection that should be used by the model.
      *
      * @var string
      */
-    protected $connection = 'pgsql';
+    protected $connection = 'mysql';
 
     /**
      * The table associated with the model.

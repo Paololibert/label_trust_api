@@ -20,12 +20,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  */
 class LigneEcritureComptable extends ModelContract
 {
-    /**
-     * The database connection that should be used by the model.
-     *
-     * @var string
-     */
-    protected $connection = 'pgsql';
 
     /**
      * The table associated with the model.

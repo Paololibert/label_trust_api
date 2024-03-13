@@ -23,12 +23,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Compte extends ModelContract
 {
 
-    /**
-     * The database connection that should be used by the model.
-     *
-     * @var string
-     */
-    protected $connection = 'pgsql';
 
     /**
      * The table associated with the model.
