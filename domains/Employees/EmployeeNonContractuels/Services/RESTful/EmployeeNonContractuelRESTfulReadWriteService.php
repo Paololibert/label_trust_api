@@ -6,7 +6,10 @@ namespace Domains\Employees\EmployeeNonContractuels\Services\RESTful;
 
 use Core\Logic\Services\Contracts\ReadWriteServiceContract;
 use Core\Logic\Services\RestJson\RestJsonReadWriteService;
+use Core\Utils\DataTransfertObjects\DTOInterface;
+use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Domains\Employees\EmployeeNonContractuels\Services\RESTful\Contracts\EmployeeNonContractuelRESTfulReadWriteServiceContract;
+use Illuminate\Http\Response;
 
 /**
  * The ***`EmployeeNonContractuelRESTfulReadWriteService`*** class provides RESTful CRUD operations for the "EmployeeNonContractuel" resource.
@@ -27,5 +30,27 @@ class EmployeeNonContractuelRESTfulReadWriteService extends RestJsonReadWriteSer
     public function __construct(ReadWriteServiceContract $readWriteService)
     {
         parent::__construct($readWriteService);
+    }
+
+    
+    /**
+     * Changing Category.
+     *
+     * @param   string            $employeeId           The unique identifier of the employee.
+     * @param   string            $newCategoryId        The unique identifier of the contract. 
+     * 
+     * @param   \Core\Utils\DataTransfertObjects\ DTOInterface $data               The order data
+     * 
+     * @return  \Illuminate\Http\JsonResponse           Whether the category is changed successfully.
+     */
+    public function changeCategoryOfNonContractualEmployee(string $employeeId, string $newCategoryId, DTOInterface $data): \Illuminate\Http\JsonResponse
+    {
+        $result = $this->readWriteService->getRepository()->changeCategoryOfNonContractualEmployee($employeeId,  $newCategoryId, $data->toArray()); 
+
+        return JsonResponseTrait::success(
+            message: 'Category changed successfully',
+            data: $result,
+            status_code: Response::HTTP_OK
+        );
     }
 }

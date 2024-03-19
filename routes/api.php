@@ -182,10 +182,27 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                 });
 
                 Route::apiResource('employees', 'EmployeeController')->parameters([
-                    'employees' => 'employee_id'
-                ]);;
+                    'employees' => 'employee_id'//
+                ]);
 
                 Route::apiResource('employees', 'EmployeeController');
+                
+                Route::group(['prefix'=> 'employeecontractuels'], function () {
+
+                    Route::post('/new-post', 'EmployeeContractuelController@assignmentOfPost')->name('employeecontractuels.assignmentOfPost');
+
+                    Route::get('{contract_id}/{employee_contractuel_id}/terminate-contract', 'EmployeeContractuelController@terminateContract')->name('employeecontractuels.terminateContract');
+                    //
+                });
+                
+                Route::group(['prefix'=> 'employeenoncontractuels'], function () {
+
+                    Route::put('{employee_non_contractuel_id}/{category_employee_id}/new-category', 'EmployeeNonContractuelController@changeCategoryOfNonContractualEmployee')->name('employeenoncontractuels.changeCategoryOfNonContractualEmployee');
+                });
+
+                Route::apiResource('contracts', 'ContractController')->parameters([
+                    'contracts' => 'contract_id'//
+                ]);
 
             });
 
@@ -195,4 +212,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
 /* Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+    Route::get('resource/{first_id}/{second_id}', function($first_id, $second_id){
+                    return [$first_id, $second_id];
+                })
 }); */

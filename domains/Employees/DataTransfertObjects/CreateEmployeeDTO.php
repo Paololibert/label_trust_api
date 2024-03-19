@@ -8,7 +8,7 @@ use App\Models\Employee;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Core\Utils\Enums\StatutEmployeeEnum;
 use Core\Utils\Enums\TypeEmployeeEnum;
-use Domains\Employees\EmployeeContrctuels\DataTransfertObjects\CreateEmployeeContractuelDTO;
+use Domains\Employees\EmployeeContractuels\DataTransfertObjects\CreateEmployeeContractuelDTO;
 use Domains\Employees\EmployeeNonContractuels\DataTransfertObjects\CreateEmployeeNonContractuelDTO;
 use Domains\Users\DataTransfertObjects\CreateUserDTO;
 use Illuminate\Validation\Rules\Enum;

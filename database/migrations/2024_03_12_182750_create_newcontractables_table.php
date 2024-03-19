@@ -13,13 +13,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class ***`CreateEmployeeNonContractuelsTable`***
+ * Class ***`CreateNewContractablesTable`***
  *
- * A migration class for creating the "employee_non_contractuels" table with UUID primary key and timestamps.
+ * A migration class for creating the "newcontractables" table with UUID primary key and timestamps.
  *
- * @package ***`\Database\Migrations\CreateEmployeeNonContractuelsTable`***
+ * @package ***`\Database\Migrations\CreateNewContractablesTable`***
  */
-class CreateEmployeeNonContractuelsTable extends Migration
+class CreateNewContractablesTable extends Migration
 {
     use CanDeleteTrait, HasCompositeKey, HasForeignKey, HasTimestampsAndSoftDeletes, HasUuidPrimaryKey;
     
@@ -37,21 +37,29 @@ class CreateEmployeeNonContractuelsTable extends Migration
 
         try {
 
-            Schema::create('employee_non_contractuels', function (Blueprint $table) {
-                // Define a UUID primary key for the 'employee_non_contractuels' table
-                $this->uuidPrimaryKey($table);
-
-                //Define if the employee is convert to a contractual
-                $table->boolean('est_convertir')->default(false)->comment('The conversion of the employee to a contractual');
+            Schema::create('newcontractables', function (Blueprint $table) {
+                // Define a primary key for the 'newcontractables' table
                 
-                // Define a foreign key for 'categories_of_employees', pointing to the 'categories_of_employees' table
+                $table->id();
+
+                // Define a foreign key for 'employee_id', pointing to the 'employees' table
                 $this->foreignKey(
                     table: $table,          // The table where the foreign key is being added
-                    column: 'category_of_employee_id',   // The column to which the foreign key is added ('category_of_employee_id' in this case)
-                    references: 'categories_of_employees',    // The referenced table (categories_of_employees) to establish the foreign key relationship
+                    column: 'employee_id',   // The column to which the foreign key is added ('employee_id' in this case)
+                    references: 'employees',    // The referenced table (employees) to establish the foreign key relationship
                     onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
                     nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows NULL)
                 );
+
+                /**
+                 * Polymorphic relationship columns:
+                 * - 'newcontractable_type' (string): Type of the related model
+                 * - 'newcontractable_id' (uuid): ID of the related model
+                 */
+                $table->uuidMorphs('newcontractable');
+
+                //Define if the employee is still a "contractual or not"
+                $table->boolean('actif')->default(true)->comment('The activity of the employee as contractual or not');
 
                 // Add a boolean column 'status' to the table
                 $table->boolean('status')
@@ -64,14 +72,6 @@ class CreateEmployeeNonContractuelsTable extends Migration
                 // Add a boolean column 'can_be_delete' with default value false
                 $this->addCanDeleteColumn(table: $table, column_name: 'can_be_delete', can_be_delete: true);
                 
-                // Define a foreign key for 'created_by', pointing to the 'users' table
-                $this->foreignKey(
-                    table: $table,          // The table where the foreign key is being added
-                    column: 'created_by',   // The column to which the foreign key is added ('created_by' in this case)
-                    references: 'users',    // The referenced table (users) to establish the foreign key relationship
-                    onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows NULL)
-                );
                 
                 // Create a composite index for efficient searching on the combination of name, slug, key, status and can_be_delete
                 $this->compositeKeys(table: $table, keys: ['status', 'can_be_delete']);
@@ -88,7 +88,7 @@ class CreateEmployeeNonContractuelsTable extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to migrate "employee_non_contractuels" table: ' . $exception->getMessage(),
+                message: 'Failed to migrate "newcontractables" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }
@@ -107,8 +107,8 @@ class CreateEmployeeNonContractuelsTable extends Migration
         DB::beginTransaction();
 
         try {
-            // Drop the "employee_non_contractuels" table if it exists
-            Schema::dropIfExists('employee_non_contractuels');
+            // Drop the "newcontractables" table if it exists
+            Schema::dropIfExists('newcontractables');
 
             // Commit the transaction
             DB::commit();
@@ -118,7 +118,7 @@ class CreateEmployeeNonContractuelsTable extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to drop "employee_non_contractuels" table: ' . $exception->getMessage(),
+                message: 'Failed to drop "newcontractables" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }

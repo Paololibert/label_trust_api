@@ -88,7 +88,7 @@ class Employee extends ModelContract
      * @var array<int, string>
      */
     protected $with = [
-        'employee_temporaire','user'
+        'employee_temporaire','user','employee_contractuel'
     ];
 
     /**
@@ -108,7 +108,7 @@ class Employee extends ModelContract
      */
     public function employee_temporaire(): MorphToMany
     {
-        return $this->morphedByMany(EmployeeNonContractuel::class, 'contractuelable');
+        return $this->morphedByMany(EmployeeNonContractuel::class, 'newcontractable');
     }
 
     /**
@@ -118,11 +118,11 @@ class Employee extends ModelContract
     {
         return $this->morphedByOne(EmployeeNonContractuel::class, 'contractuelable');
     } */
-    /*public function employee_temporaire()
+    /* public function employee_temporaire()
     {
         return $this->morphedByMany(EmployeeNonContractuel::class, 'contractuelable', 'contractuelables', 'contractuelable_id', 'employee_id')
                     ->using(Contractuelable::class) ->wherePivot('actif', true) ; 
-    }*/
+    } */
 
        /**
      * Get of the non_contractuel (temporaire) that is assigned this employee.
@@ -131,15 +131,15 @@ class Employee extends ModelContract
     {
         return $this->morphedByOne(EmployeeNonContractuel::class, 'contractuelable');
     } */
-    /*public function employee_contractuel()
+    /* public function employee_contractuel()
     {
         return $this->morphedByMany(EmployeeContractuel::class, 'contractuelable', 'contractuelables', 'contractuelable_id', 'employee_id')
                     ->using(Contractuelable::class) ->wherePivot('actif', true) ; 
-    }*/
+    } */
     
     public function employee_contractuel(): MorphToMany
     {
-        return $this->morphedByMany(EmployeeContractuel::class, 'contractuelable');
+        return $this->morphedByMany(EmployeeContractuel::class, 'newcontractable');
     }
 
     /**

@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  */
 class EmployeeNonContractuel extends ModelContract
 {
-    use Contractuelable;
+    //use Contractuelable;
     /**
      * The database connection that should be used by the model.
      *
@@ -76,24 +76,43 @@ class EmployeeNonContractuel extends ModelContract
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array<int, string>
+     */
+    protected $with = [
+        'categories'
+    ];
+
+    
+    public function categories()
+    {
+        return $this->belongsToMany(CategoryOfEmployee::class,'employee_non_contractuel_categories','employee_non_contractuel_id','category_of_employee_id') 
+                            ->withPivot('date_debut', 'category_of_employee_taux_id') //
+                            ->withTimestamps();
+    }
+    
+    
+    /**
      * Define a many-to-many relationship with the CategorieOfEmployee model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function categories(): BelongsToMany
-    {
-        return $this->belongsToMany(CategorieOfEmployee::class, 'noncontractuelcategories', 'employee_non_contractuel_id', 'categorie_of_employee_id')
-                    ->withPivot('date_debut', 'date_fin')
-                    ->withTimestamps()
-                    ->using(NonContractuelCategorie::class); // Enable automatic timestamps for the pivot table
-    }
+
+     /* public function categories()
+     {
+         return $this->belongsToMany(CategoryOfEmployee::class, 'non_contractuel_categories', 'employee_non_contractuel_id', 'categorie_of_employee_id')
+                     ->withPivot('date_debut', 'date_fin', 'taux_id')
+                     ->withTimestamps()
+                     ->using(NonContractuelCategorie::class);
+     } */
 
     /**
      * Get all of the employee for the post.
      */
     public function employees()
     {
-        return $this->morphToMany(Employee::class, 'contractuelable');
+        return $this->morphToMany(Employee::class, 'newcontractable');
     }
 
 }

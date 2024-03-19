@@ -41,8 +41,8 @@ class NonContractuelCategorie extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'date_debut','categories_of_employee_id',
-        'employee_non_contractuel_id', 'date_fin','categorie_taux_id'
+        'date_debut','category_of_employee_id',
+        'employee_non_contractuel_id', 'date_fin','category_of_employee_taux_id'
     ];
     
     /**
@@ -73,8 +73,8 @@ class NonContractuelCategorie extends ModelContract
         'date_debut'                                =>'datetime:Y-m-d H:i:s',
         'date_fin'                                  =>'datetime:Y-m-d H:i:s',
         'employee_non_contractuel_id'               =>'string',
-        'categories_of_employee_id'                 =>'string',
-        'categorie_taux_id'                         =>'string',
+        'category_of_employee_id'                 =>'string',
+        'category_of_employee_taux_id'              =>'string',
     ];
     
 
@@ -88,6 +88,7 @@ class NonContractuelCategorie extends ModelContract
         return $this->belongsTo(EmployeeNonContractuel::class, 'employee_non_contractuel_id');
     }
 
+
     /**
      * Get the Non contractuel employee of the non caontractuel categorie. 
      *
@@ -95,7 +96,8 @@ class NonContractuelCategorie extends ModelContract
      */
     public function categorie_employee(): BelongsTo
     {
-        return $this->belongsTo(CategoryOfEmploye::class, 'categories_of_employee_id');
+        return $this->belongsTo(CategoryOfEmploye::class, 'category_of_employee_id');
     }
+
 
 }

@@ -82,7 +82,7 @@ class CategoryOfEmployee extends ModelContract
      */
     public function taux(): BelongsToMany
     {
-        return $this->belongsToMany(TauxAndSalary::class, 'category_of_employee_taux', 'category_of_employee_id', 'taux_id')
+        return $this->belongsToMany(TauxAndSalary::class, 'category_of_employee_taux', 'category_of_employee_id', 'category_of_employee_taux_id')
                     ->withPivot('est_le_taux_de_base', 'status', 'deleted_at', 'can_be_delete')
                     ->withTimestamps() // Enable automatic timestamps for the pivot table
                     ->wherePivot('status', true) // Filter records where the status is true
@@ -90,15 +90,33 @@ class CategoryOfEmployee extends ModelContract
                     ->using(CategoryOfEmployeeTaux::class); // Specify the intermediate model for the pivot relationship
     }
 
+  
     /**
      * Define a many-to-many relationship with the EmployeeNonContractuel model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function employees(): BelongsToMany
+    /* public function employees(): BelongsToMany
     {
         return $this->belongsToMany(EmployeeNonContractuel::class, 'noncontractuelcategories', 'categorie_of_employee_id', 'employee_non_contractuel_id')
                     ->withPivot('date_debut', 'date_fin')
                     ->withTimestamps(); // Enable automatic timestamps for the pivot table
+    } */
+
+    
+    public function employees()
+    {
+        return $this->belongsToMany(EmployeeNonContractuel::class,'employee_non_contractuel_categories','category_of_employee_id','employee_non_contractuel_id') 
+                            ->withPivot('date_debut', 'category_of_employee_taux_id') //
+                            ->withTimestamps();
     }
+    
+
+    /* public function employeenoncontractuels()
+    {
+        return $this->belongsToMany(EmployeeNonContractuel::class, 'non_contractuel_categories', 'category_of_employee_id', 'employee_non_contractuel_id')
+                    ->withPivot('date_debut', 'date_fin', 'category_of_employee_taux_id')
+                    ->withTimestamps()
+                    ->using(NonContractuelCategorie::class);
+    } */
 }

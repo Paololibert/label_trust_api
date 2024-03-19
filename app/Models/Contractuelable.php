@@ -19,7 +19,7 @@ use Core\Utils\Traits\CPivot;
  */
 class Contractuelable extends ModelContract
 {
-    //use  CPivot;
+    use  CPivot;
     /**
      * The database connection that should be used by the model.
      *

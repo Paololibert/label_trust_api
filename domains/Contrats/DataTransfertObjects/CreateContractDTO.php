@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Domains\Employees\EmployeeContrctuels\DataTransfertObjects;
+namespace Domains\Contrats\DataTransfertObjects;
 
-use App\Models\EmployeeContractuel;
+use App\Models\Contract;
 use Core\Utils\DataTransfertObjects\BaseDTO;
-use Core\Utils\Enums\StatutContratEnum;
 use Core\Utils\Enums\TypeContratEnum;
 use Illuminate\Validation\Rules\Enum;
 
-class CreateEmployeeContractuelDTO extends BaseDTO
+class CreateContractDTO extends BaseDTO
 {
 
     public function __construct()
@@ -25,7 +24,7 @@ class CreateEmployeeContractuelDTO extends BaseDTO
      */
     protected function getModelClass(): string
     {
-        return EmployeeContractuel::class;
+        return Contract::class;
     }
 
 
@@ -37,18 +36,19 @@ class CreateEmployeeContractuelDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([//
-            'reference'             => ['sometimes', 'string'],
-            'type_contract'         => ['required', "string", new Enum(TypeContratEnum::class)],
-            'duree'                 => ['required', 'numeric'],
-            'date_debut'            => ['sometimes', 'date'],
-            'date_fin'              => ['nullable', 'date'],
-            'renouvelable'          => ['required', 'boolean'],
-            'poste_id'              => ['required', 'string', 'exists:postes,id'],
-            "poste_salaire_id"      => ["present_if:salaire,null", "sometimes", "uuid", "exists:poste_salaries,id"],
-            "salaire"               => ["present_if:poste_salaire_id,null", "sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
-            'unite_mesures_id'      => ['required', 'string', 'exists:unite_mesures,id'],
-            'can_be_deleted'        => ['sometimes', 'boolean']
-            
+            'reference'                          => ['sometimes', 'string'],
+            'type_contract'                      => ['required', "string", new Enum(TypeContratEnum::class)],
+            'duree'                              => ['required', 'numeric'],
+            'date_debut'                         => ['sometimes', 'date'],
+            'date_fin'                           => ['nullable', 'date'],
+            'renouvelable'                       => ['required', 'boolean'],
+            'poste_id'                           => ['required', 'string', 'exists:postes,id'],
+            "poste_salaire_id"                   => ["present_if:montant,null", "sometimes", "uuid", "exists:poste_salaries,id"],
+            "montant"                            => ["present_if:poste_salaire_id,null", "sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            'unite_mesures_id'                   => ['required', 'string', 'exists:unite_mesures,id'],
+            'can_be_deleted'                     => ['sometimes', 'boolean'],
+            "employee_contractuel_id"           => ['required','string', 'exists:employee_contractuels,id']
+
         ], $rules);
 
         return $this->rules = parent::rules($rules);

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Domains\Employees\EmployeeNonContractuels\DataTransfertObjects;
+namespace Domains\Employees\EmployeeContractuels\DataTransfertObjects;
 
-use App\Models\EmployeeNonContractuel;
+use App\Models\Contract;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
-class CreateEmployeeNonContractuelDTO extends BaseDTO
+class TerminateEmployeeContractuelContractDTO extends BaseDTO
 {
 
     public function __construct()
@@ -22,8 +22,9 @@ class CreateEmployeeNonContractuelDTO extends BaseDTO
      */
     protected function getModelClass(): string
     {
-        return EmployeeNonContractuel::class;
+        return Contract::class;
     }
+
 
     /**
      * Get the validation rules for the DTO object.
@@ -32,16 +33,14 @@ class CreateEmployeeNonContractuelDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
-        $rules = array_merge([
-            'can_be_deleted'                        => ['sometimes', 'boolean'],
-            'category_of_employee_id'               => ['required', 'string', 'exists:categories_of_employees,id'],
-            'date_debut'                            => ['required', 'date'],
-            /* 'category_of_employee_taux_id'          => ['sometimes','nullable', 'uuid', 'exists:categorie_taux,id'], */
+        $rules = array_merge([//
+            'contract_id'                           => ['required',"string", "exists:contracts,id"],
+            "employee_contractuel_id"               => ['required','string', 'exists:employee_contractuels,id']
         ], $rules);
-
+        
         return $this->rules = parent::rules($rules);
-
     }
+
 
     /**
      * Get the validation error messages for the DTO object.

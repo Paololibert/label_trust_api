@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Core\Data\Eloquent\Contract\ModelContract;
+use Core\Data\Eloquent\ORMs\Contractuelable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
@@ -19,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  */
 class EmployeeContractuel extends ModelContract
 {
-    
+    //use Contractuelable;
     /**
      * The database connection that should be used by the model.
      *
@@ -72,12 +74,19 @@ class EmployeeContractuel extends ModelContract
         
     ];
     
-    /**
+     /**
      * Get all of the tags for the post.
      */
-    public function employees(): MorphToMany
+    public function employees()
     {
-        return $this->morphToMany(Employee::class, 'contractuelable');
+        return $this->morphToMany(Employee::class, 'newcontractable');
     }
 
+      /**
+     * Get the comments for the blog post.
+     */
+    public function contracts(): HasMany
+    {
+        return $this->hasMany(Contract::class);
+    }
 }

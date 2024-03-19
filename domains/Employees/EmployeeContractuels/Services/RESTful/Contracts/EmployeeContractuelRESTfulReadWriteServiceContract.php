@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Domains\Employees\EmployeeContractuels\Services\RESTful\Contracts;
 
+use App\Models\Contract;
 use Core\Logic\Services\RestJson\Contracts\RestJsonReadWriteServiceContract;
+use Core\Utils\DataTransfertObjects\DTOInterface;
 
 /**
  * Interface ***`EmployeeContractuelRESTfulReadWriteServiceContract`***
@@ -19,5 +21,24 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonReadWriteServiceContract;
  */
 interface EmployeeContractuelRESTfulReadWriteServiceContract extends RestJsonReadWriteServiceContract
 {
+    /**
+     * Assign a poste to an employeecontractuel and create a new contract and optionally a new salaire.
+     *
+     * @param DTOInterface $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function assignmentOfPost(\Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse;
 
+    
+    /**
+     * Terminate a contract.
+     *
+     *
+     * @param   string            $contractId        The unique identifier of the contract.
+     * @param   string            $employeeId        The unique identifier of the employee.
+     *
+     * @return  \Illuminate\Http\JsonResponse            Whether the contract is terminate successfully.
+     */
+    public function terminateContract(string $contractId, string $employeeId): \Illuminate\Http\JsonResponse;
+    
 }

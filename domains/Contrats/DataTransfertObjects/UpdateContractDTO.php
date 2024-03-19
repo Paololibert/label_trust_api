@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Domains\Employees\EmployeeNonContractuels\DataTransfertObjects;
+namespace Domains\Contrats\DataTransfertObjects;
 
-use App\Models\EmployeeContractuel;
+use App\Models\Contract;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
-class UpdateEmployeeNonContractuelDTO extends BaseDTO
+class UpdateContractDTO extends BaseDTO
 {
 
     public function __construct()
@@ -22,7 +22,7 @@ class UpdateEmployeeNonContractuelDTO extends BaseDTO
      */
     protected function getModelClass(): string
     {
-        return EmployeeContractuel::class;
+        return Contract::class;
     }
 
     /**
@@ -32,17 +32,24 @@ class UpdateEmployeeNonContractuelDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
-
         $rules = array_merge([
-            'can_be_deleted'                => ['sometimes', 'boolean'],
-            'category_of_employee_id'       => ['sometimes', 'string', 'exists:categories_of_employees,id'],
+            'reference'                     => ['sometimes', 'string'],
+            'type_contract'                 => ['sometimes', 'string'],
+            'duree'                         => ['sometimes', 'numeric'],
             'date_debut'                    => ['sometimes', 'date'],
-            'category_taux_id'             => ['sometimes', 'string', 'exists:categorie_taux,id'],
+            'date_fin'                      => ['sometimes', 'date'],
+            'contract_status'               => ['sometimes', 'string'],
+            'renouvelable'                  => ['sometimes', 'boolean'],
+            "poste_salaire_id"              => ["present_if:montant,null", "sometimes", "uuid", "exists:poste_salaries,id"],
+            "montant"                       => ["present_if:poste_salaire_id,null", "sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            'poste_id'                      => ['sometimes', 'string', 'exists:postes,id'],
+            'unite_mesures_id'              => ['sometimes', 'string', 'exists:unite_mesures,id'],
+            'can_be_deleted'                => ['sometimes', 'boolean'],
+            "employee_contractuel_id"       => ['required','string', 'exists:employee_contractuels,id']
         ], $rules);
 
         return $this->rules = parent::rules($rules);
     }
-
 
     /**
      * Get the validation error messages for the DTO object.

@@ -8,6 +8,10 @@ use Core\Logic\Services\Contracts\ReadWriteServiceContract;
 use Core\Logic\Services\RestJson\RestJsonReadWriteService;
 use Domains\Employees\EmployeeContractuels\Services\RESTful\Contracts\EmployeeContractuelRESTfulReadWriteServiceContract as ContractsEmployeeContractuelRESTfulReadWriteServiceContract;
 
+use Core\Utils\DataTransfertObjects\DTOInterface;
+use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
+use Illuminate\Http\Response;
+
 /**
  * The ***`EmployeeContractuelRESTfulReadWriteService`*** class provides RESTful CRUD operations for the "EmployeeContractuel" resource.
  *
@@ -27,5 +31,42 @@ class EmployeeContractuelRESTfulReadWriteService extends RestJsonReadWriteServic
     public function __construct(ReadWriteServiceContract $readWriteService)
     {
         parent::__construct($readWriteService);
+        
+    }
+    
+    /**
+     * Assign a poste to an employeecontractuel and create a new contract and optionally a new salaire.
+     *
+     * @param \Core\Utils\DataTransfertObjects\ DTOInterface $data
+     * @return  \Illuminate\Http\JsonResponse    
+     */
+    public function assignmentOfPost(DTOInterface $data): \Illuminate\Http\JsonResponse{
+        $result = $this->queryService->getRepository()->assignmentOfPost($data->toArray()); 
+
+        return JsonResponseTrait::success(
+            message: 'New Post is assign successfully',
+            data: $result,
+            status_code: Response::HTTP_CREATED
+        );
+    }
+
+    /**
+     * Terminate a contract.
+     *
+     *
+     * @param   string            $contractId        The unique identifier of the contract.
+     * @param   string            $employeeId        The unique identifier of the employee.
+     *
+     * @return  \Illuminate\Http\JsonResponse        Whether the contract is terminate successfully.
+     */
+    public function terminateContract(string $contractId, string $employeeId): \Illuminate\Http\JsonResponse
+    {
+        $result = $this->readWriteService->getRepository()->terminateContract($contractId,$employeeId); 
+
+        return JsonResponseTrait::success(
+            message: 'Contract terminate successfully',
+            data: $result,
+            status_code: Response::HTTP_OK
+        );
     }
 }

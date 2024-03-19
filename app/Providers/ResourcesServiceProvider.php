@@ -144,7 +144,52 @@ class ResourcesServiceProvider extends ServiceProvider
                     \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
                 )
                 ->give(\Domains\Employees\Repositories\EmployeeReadWriteRepository::class);
-          
+
+
+            // Bind ReadOnlyRepositoryInterface to ContractReadOnlyRepository
+            $this->app->when(\App\Http\Controllers\API\RESTful\V1\ContractController::class)
+                ->needs(
+                    \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+                )
+                ->give(\Domains\Contrats\Repositories\ContractReadOnlyRepository::class);
+
+            // Bind ReadWriteRepositoryInterface to ContractReadWriteRepository
+            $this->app->when(\App\Http\Controllers\API\RESTful\V1\ContractController::class)
+                ->needs(
+                    \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+                )
+                ->give(\Domains\Contrats\Repositories\ContractReadWriteRepository::class);
+
+
+            // Bind ReadOnlyRepositoryInterface to ContractReadOnlyRepository
+            $this->app->when(\App\Http\Controllers\API\RESTful\V1\EmployeeContractuelController::class)
+                ->needs(
+                    \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+                )
+                ->give(\Domains\Employees\EmployeeContractuels\Repositories\EmployeeContractuelReadOnlyRepository::class);
+
+            // Bind ReadWriteRepositoryInterface to ContractReadWriteRepository
+            $this->app->when(\App\Http\Controllers\API\RESTful\V1\EmployeeContractuelController::class)
+                ->needs(
+                    \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+                )
+                ->give(\Domains\Employees\EmployeeContractuels\Repositories\EmployeeContractuelReadWriteRepository::class);
+
+
+            // Bind ReadOnlyRepositoryInterface to ContractReadOnlyRepository
+            $this->app->when(\App\Http\Controllers\API\RESTful\V1\EmployeeNonContractuelController::class)
+                ->needs(
+                    \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+                )
+                ->give(\Domains\Employees\EmployeeNonContractuels\Repositories\EmployeeNonContractuelReadOnlyRepository::class);
+
+            // Bind ReadWriteRepositoryInterface to ContractReadWriteRepository
+            $this->app->when(\App\Http\Controllers\API\RESTful\V1\EmployeeNonContractuelController::class)
+                ->needs(
+                    \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+                )
+                ->give(\Domains\Employees\EmployeeNonContractuels\Repositories\EmployeeNonContractuelReadWriteRepository::class);
+
         }
 
     /**

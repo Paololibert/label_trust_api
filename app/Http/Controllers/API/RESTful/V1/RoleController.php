@@ -70,7 +70,9 @@ class RoleController extends RESTfulResourceController
         $createRequest = app(ResourceRequest::class, ['dto' => new PermissionDTO]);
 
         if ($createRequest) {
+
             $createRequest->validate($createRequest->rules());
+            
         }
 
         return $this->restJsonReadWriteService->revokeAccess($id, $createRequest->getDto());
