@@ -61,7 +61,7 @@ class QueryService extends AbstractService implements QueryServiceContract
     public function paginate(int $perPage = 15, array $columns = ['*'], string $orderBy = "created_at", string $order = "desc", string $pageName = 'page', ?int $page = null)
     {
         try {
-            return $this->repository->getModel()->orderBy($orderBy, $order)->paginate(perPage: $perPage, columns: $columns, pageName: $pageName, page: $page);
+            return $this->repository->getModel()->orderBy($orderBy, 'desc')->paginate(perPage: $perPage, columns: $columns, pageName: $pageName, page: $page);
         } catch (Throwable $exception) {
             throw new ServiceException(message: $exception->getMessage(), previous: $exception);
         }

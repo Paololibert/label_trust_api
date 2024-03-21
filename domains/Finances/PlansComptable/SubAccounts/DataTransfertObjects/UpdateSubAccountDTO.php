@@ -6,6 +6,7 @@ namespace Domains\Finances\PlansComptable\SubAccounts\DataTransfertObjects;
 
 use App\Models\Finances\SubAccount;
 use Core\Utils\DataTransfertObjects\BaseDTO;
+use Illuminate\Validation\Rule;
 
 /**
  * Class ***`UpdateSubAccountDTO`***
@@ -41,11 +42,14 @@ class UpdateSubAccountDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "account_number"        => ["required", "string", "max:120", 'unique:plan_comptable_compte_sous_comptes,account_number,' . request()->route("sub_account_id") . ',id'],
-            "sub_account_id"        => ["sometimes", "exists:plan_comptable_compte_sous_comptes,id"],
-            "principal_account_id"  => ["sometimes", "exists:plan_comptable_comptes,id"],
-            "sous_compte_id"        => ["sometimes", "exists:comptes,id", 'unique:plan_comptable_compte_sous_comptes,sous_compte_id'],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
+
+            "accounts.*.sub_accounts"                           => ["required", "array"],
+            "accounts.*.sub_accounts.*"                         => ["distinct", "array"],
+            "accounts.*.sub_accounts.*.account_number"          => ["required", "string", "max:120", Rule::unique('plan_comptable_compte_sous_comptes', 'account_number')->ignore(request()->route("sub_account_id") )->whereNull('deleted_at')],
+            "accounts.*.sub_accounts.*.sub_account_id"          => ["sometimes", "exists:plan_comptable_compte_sous_comptes,id"],
+            "accounts.*.sub_accounts.*.principal_account_id"    => ["sometimes", "exists:plan_comptable_comptes,id"],
+            "accounts.*.sub_accounts.*.sous_compte_id"          => ["sometimes", "exists:comptes,id"],
+            'accounts.*.sub_accounts.*.can_be_deleted'          => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Data\Repositories\Contracts;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * ***`ReadOnlyRepositoryInterface`***
@@ -82,6 +83,19 @@ interface ReadOnlyRepositoryInterface
      * @throws \Core\Utils\Exceptions\QueryException       If there is an error while checking for record existence.
      */
     public function exists(array $conditions): bool;
+    
+    /**
+     * Check if the specified relationship exists for the given IDs.
+     *
+     * @param Relation $relation
+     * @param array $ids
+     *
+     * @return bool
+     *
+     * @throws \Core\Utils\Exceptions\RepositoryException If there is an error while checking for record existence.
+     * @throws \Core\Utils\Exceptions\QueryException      If there is an error while checking for record existence.
+     */
+    public function relationExists(Relation $relation, array $ids, bool $isPivot = true): bool;
 
     /**
      * Get the total count of records.

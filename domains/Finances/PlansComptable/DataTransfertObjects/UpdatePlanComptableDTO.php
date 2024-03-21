@@ -7,6 +7,7 @@ namespace Domains\Finances\PlansComptable\DataTransfertObjects;
 use App\Models\Finances\PlanComptable;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Domains\Finances\PlansComptable\Accounts\DataTransfertObjects\UpdateAccountDTO;
+use Illuminate\Validation\Rule;
 
 /**
  * Class ***`UpdatePlanComptableDTO`***
@@ -44,7 +45,7 @@ class UpdatePlanComptableDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", "max:25", 'unique:plans_comptable,name,' . request()->route("plan_comptable_id") . ',id'],
+            "name"            		=> ["string", "required", "max:25", Rule::unique('plans_comptable', 'name')->whereNull('deleted_at')->ignore(request()->route("plan_comptable_id"))],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

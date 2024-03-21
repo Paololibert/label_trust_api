@@ -8,8 +8,11 @@ use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Accountable;
 use Core\Data\Eloquent\ORMs\Balanceable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class ***`SubAccount`***
@@ -44,7 +47,25 @@ class SubAccount extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'account_number', 'principal_account_id', 'sub_account_id', 'sous_compte_id'
+        'account_number', 'subaccountable_id', 'subaccountable_type', /* 'sub_account_id',  */'sous_compte_id'
+    ];
+
+    /**
+     * The attributes that should be visible in arrays.
+     *
+     * @var array<int, string>
+     */
+    protected $visible = [
+        'account_number'
+    ];
+
+    /**
+     * The attributes that should be visible in arrays.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'intitule'
     ];
 
     /**
@@ -54,33 +75,63 @@ class SubAccount extends ModelContract
      */
     protected $casts = [
         'account_number'            => 'string',
-        'sub_account_id'            => 'string',
+        //'sub_account_id'            => 'string',
         'sous_compte_id'            => 'string',
-        'principal_account_id'      => 'string'
+        'subaccountable_id'         => 'string',
+        'subaccountable_type'       => 'string'
     ];
 
     /**
-     * Get the plan_comptable of the salary of the work unit.
+     * The relationships that should always be loaded.
      *
-     * @return BelongsTo
+     * @var array<int, string>
      */
-    public function principal_account(): BelongsTo
+    protected $with = [
+        'sub_divisions'
+    ];
+
+    /**
+     * Get the user's full name attribute.
+     *
+     * @return string The user's full name.
+     */
+    public function getIntituleAttribute(): string
     {
-        return $this->belongsTo(Account::class, 'principal_account_id');
+        return $this->sous_compte->name ;
+    }
+    
+    /**
+     * Get sub accountable.
+     *
+     * @return MorphTo
+     */
+    public function subaccountable(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    /**
+     * Get sub divisions.
+     *
+     * @return MorphMany
+     */
+    public function sub_divisions(): MorphMany
+    {
+        return $this->morphMany(SubAccount::class, 'subaccountable');
     }
 
     /**
      * Get the plan_comptable of the salary of the work unit.
      *
-     * @return BelongsTo
+     * @return BelongsTo|null
      */
-    public function parent_sub_account(): BelongsTo
+    public function parent_sub_account(): ?BelongsTo
     {
-        return $this->belongsTo(SubAccount::class, 'sub_account_id');
+        return $this->belongsTo(SubAccount::class, 'subaccountable_id');
     }
 
     /**
-     * Get the subdivision
+     * Get the sous compte
      *
      * @return BelongsTo
      */
@@ -94,8 +145,23 @@ class SubAccount extends ModelContract
      *
      * @return HasMany
      */
-    public function sub_divisions(): HasMany
+    /* public function sub_divisions(): HasMany
     {
         return $this->hasMany(Compte::class, 'sub_account_id');
-    }
+    } */
+
+    /**
+     * Get subdivisions
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    /* public function subdivisions(): BelongsToMany
+    {
+        return $this->belongsToMany(Compte::class, 'plan_comptable_compte_sous_comptes', 'sub_account_id', 'sous_compte_id')
+                    ->as('subdivision')
+                    ->withPivot('account_number', 'status', 'deleted_at', 'can_be_delete')
+                    ->withTimestamps() // Enable automatic timestamps for the pivot table
+                    ->wherePivot('status', true) // Filter records where the status is true
+                    ->using(SubAccount::class); // Specify the intermediate model for the pivot relationship
+    } */
 }

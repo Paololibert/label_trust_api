@@ -160,7 +160,7 @@ class RESTfulResourceController extends Controller implements RESTfulResourceCon
         $per_page = intval($request->query('per_page', 15));
         $page = intval($request->query('page', 1));
         $fields = explode(',', $request->query('fields', '*'));
-        $order = $request->query('order', 'asc');
+        $order = $request->query('order', 'desc');
         return $this->restJsonQueryService->paginate(perPage: $per_page, columns: $fields, order: $order, page: $page);
     }
 

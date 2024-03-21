@@ -61,28 +61,23 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
     {
         try {
 
-            if($data['type_of_account'] === TypeOfAccountEnum::PERSONAL->value)
-            {
+            if ($data['type_of_account'] === TypeOfAccountEnum::PERSONAL->value) {
                 $this->model->userable = $this->personReadWriteRepository->create($data['user']);
-            }
-            else if($data['type_of_account'] === TypeOfAccountEnum::MORAL->value)
-            {
+            } else if ($data['type_of_account'] === TypeOfAccountEnum::MORAL->value) {
                 $this->model->userable = $this->companyReadWriteRepository->create($data['user']);
-            }
-            else throw new Exception("Unknown type of account", 1);
+            } else throw new Exception("Unknown type of account", 1);
 
-            if(!$this->model->userable) throw new Exception("Error occur while creating userable", 1);
+            if (!$this->model->userable) throw new Exception("Error occur while creating userable", 1);
 
             $this->model = $this->model->userable->user()->create($data);
 
             $this->model->refresh();
 
-            if($this->model){
+            if ($this->model && isset($data['role_id'])) {
                 $this->model->assignRole($data['role_id']);
             }
 
             return $this->model->refresh();
-            
         } catch (QueryException $exception) {
             throw new QueryException(message: "Error while creating the record.", previous: $exception);
         } catch (Throwable $exception) {
@@ -105,30 +100,28 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
         try {
             $this->model = $this->find($id);
 
-            if($this->model->type_of_account = $data['type_of_account'])
-            {
+            if ($this->model->type_of_account === $data['type_of_account']) {
                 $this->model->userable->update($this->model->userable->id, $data['user']);
-            }/* 
-            else{
-                $userable = $this->model->userable();
-                if($data['type_of_account'] === TypeOfAccountEnum::PERSONAL->value)
-                {
-                    $this->model->userable = $this->personReadWriteRepository->create($data['user']);
-                }
-                else if($data['type_of_account'] === TypeOfAccountEnum::MORAL->value)
-                {
-                    $this->model->userable = $this->companyReadWriteRepository->create($data['user']);
-                }
-                else throw new Exception("Unknown type of account", 1);
+            } else {
+                $userable = $this->model->userable;
 
-                dd($this->model->userable);
+
+                if ($data['type_of_account'] === TypeOfAccountEnum::PERSONAL->value) {
+                    $this->model->userable()->associate($this->personReadWriteRepository->create($data['user']));
+                    $this->model->save();
+                } else if ($data['type_of_account'] === TypeOfAccountEnum::MORAL->value) {
+                    $this->model->userable()->associate($this->companyReadWriteRepository->create($data['user']));
+                    $this->model->save();
+                } else throw new Exception("Unknown type of account", 1);
+
+                if (!$this->model->userable) throw new Exception("Error occur while creating userable", 1);
 
                 $this->model->refresh();
 
-                if($this->model){
+                if ($userable) {
                     $userable->delete();
                 }
-            } */
+            }
 
             $result = $this->model->update($data);
             return $result ? $this->model->refresh() : $result;
@@ -190,6 +183,4 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
             throw new RepositoryException(message: "Error while revoking access from user.", previous: $exception);
         }
     }
-
-    
 }

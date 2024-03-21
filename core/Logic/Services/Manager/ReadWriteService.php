@@ -43,7 +43,7 @@ class ReadWriteService extends QueryService implements ReadWriteServiceContract
     public function create(DTOInterface $data)
     {
         try {
-            return $this->repository->create($data->toArray());
+            return $this->repository->create($data->toArray())->fresh();
         } catch (Throwable $exception) {
             throw new ServiceException(message: $exception->getMessage(), previous: $exception);
         }

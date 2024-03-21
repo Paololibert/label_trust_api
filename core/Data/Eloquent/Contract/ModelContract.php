@@ -6,8 +6,6 @@ namespace Core\Data\Eloquent\Contract;
 
 use Core\Data\Eloquent\Observers\ModelContractObserver;
 use Core\Data\Eloquent\ORMs\HasCreator;
-use Core\Data\Eloquent\Scopes\StatutScope;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

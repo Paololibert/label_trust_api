@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Data\Eloquent\ORMs;
 
-use App\Models\LigneEcritureComptable;
+use App\Models\Finances\LigneEcritureComptable;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**

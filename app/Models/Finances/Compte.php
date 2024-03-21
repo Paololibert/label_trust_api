@@ -117,7 +117,7 @@ class Compte extends ModelContract
     public function plans_comptable(): BelongsToMany
     {
         return $this->belongsToMany(PlanComptable::class, 'plan_comptable_comptes', 'compte_id', 'plan_comptable_id')
-                    ->withPivot('classe_id', 'status', 'deleted_at', 'can_be_delete')
+                    ->withPivot('account_number', 'classe_id', 'status', 'deleted_at', 'can_be_delete')
                     ->withTimestamps() // Enable automatic timestamps for the pivot table
                     ->wherePivot('status', true) // Filter records where the status is true
                     ->using(Account::class); // Specify the intermediate model for the pivot relationship
@@ -131,7 +131,7 @@ class Compte extends ModelContract
     public function sub_divisions(): BelongsToMany
     {
         return $this->belongsToMany(Compte::class, 'plan_comptable_compte_sous_comptes', 'account_id', 'sub_division_id')
-                    ->withPivot('status', 'deleted_at', 'can_be_delete')
+                    ->withPivot('account_number', 'status', 'deleted_at', 'can_be_delete')
                     ->withTimestamps() // Enable automatic timestamps for the pivot table
                     ->wherePivot('status', true) // Filter records where the status is true
                     ->using(SubAccount::class); // Specify the intermediate model for the pivot relationship

@@ -58,20 +58,23 @@ class PlanComptableReadWriteRepository extends EloquentReadWriteRepository
         try {
             $this->model = parent::create($data);
 
-            foreach ($data['accounts'] as $key => $account_data) {
+            foreach ($data['accounts'] as $account_data) {
                 $account_data = array_merge($account_data, ["plan_comptable_id" => $this->model->id]);
                 if(isset($account_data['compte_id'])){
-                    $account = $this->model->comptes()->attach([$account_data['compte_id'] => $account_data]);
+                    $this->accountRepositoryReadWrite->create($account_data);
 
-                    if(!isset(request()['sub_accounts'])){
-                        $this->accountRepositoryReadWrite->attachSubAccounts($account->id, $account_data);
-                    }
+                    /*
+                        $this->model->accounts()->create($account_data);
+
+                        if(!isset(request()['sub_accounts'])){
+                            $this->accountRepositoryReadWrite->attachSubAccounts($account->id, $account_data);
+                        }
+                    */
                 }
                 else{
                     $compte = $this->compteRepositoryReadWrite->create($account_data['compte_data']);
                     
-                    $this->attachAccounts($this->model->id, array_merge($account_data, ["compte_id" => $compte->id]));
-                    //$this->accountRepositoryReadWrite->create(array_merge($account_data, ["compte_id" => $compte->id]));
+                    $this->attachAccounts($this->model->id, [array_merge($account_data, ["compte_id" => $compte->id])]);
                 }
             }
 
@@ -99,18 +102,25 @@ class PlanComptableReadWriteRepository extends EloquentReadWriteRepository
 
             $this->model = $this->find($planComptableId);
 
-            foreach ($accountDataArray as $key => $accountItemData) {
+            foreach ($accountDataArray as $accountItemData) {
                 if(isset($accountItemData['compte_id'])){
-                    // Check if the taux is not already attached
-                    if (!$this->relationExists($this->model->comptes(), [$accountItemData['compte_id']])) {
-                        // Attach the taux
-                        return $this->model->sous_comptes()->syncWithoutDetaching($accountItemData['compte_id'], $accountItemData) ? true : false;
+                    //$this->accountRepositoryReadWrite->attachSubAccounts($this->model->id, $accountItemData['sub_accounts']);
+                    //$account = $this->model->accounts()->create($account_data);
+                    if (!parent::relationExists(relation: $this->model->comptes(), ids: [$accountItemData['compte_id']], isPivot: true)) {
+                        
+                        $this->accountRepositoryReadWrite->create($accountItemData);
                     }
                 }else {
 
-                    $account = $this->accountRepositoryReadWrite->create(array_merge($accountItemData, ["plan_comptable_id" => $this->model->id]));
+                    //dd($accountItemData);
+
+                    $compte = $this->compteRepositoryReadWrite->create($accountItemData['compte_data']);
+
+                    $this->accountRepositoryReadWrite->create(array_merge($accountItemData, ["compte_id" => $compte->id]));
+
+                    //$account = $this->accountRepositoryReadWrite->create(array_merge($accountItemData, ["plan_comptable_id" => $this->model->id]));
                     
-                    return $this->model->sous_comptes()->syncWithoutDetaching($accountItemData['compte_id'], $accountItemData) ? true : false;
+                    //return $this->model->sous_comptes()->syncWithoutDetaching($accountItemData['compte_id'], array_merge($accountItemData, ["compte_id" => $compte->id])) ? true : false;
                 }
             }
     

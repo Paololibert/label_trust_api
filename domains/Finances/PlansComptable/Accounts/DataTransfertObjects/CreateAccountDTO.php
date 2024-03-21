@@ -8,6 +8,7 @@ use App\Models\Finances\Account;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Domains\Finances\Comptes\DataTransfertObjects\CreateCompteDTO;
 use Domains\Finances\PlansComptable\SubAccounts\DataTransfertObjects\CreateSubAccountDTO;
+use Illuminate\Validation\Rule;
 
 /**
  * Class ***`CreateAccountDTO`***
@@ -24,11 +25,13 @@ class CreateAccountDTO extends BaseDTO
     {
         parent::__construct();
 
-        if(!isset(request()['compte_id']) && !request('compte_id')){
+        //if(!isset(request()['compte_id']) && !request('compte_id')){
+        if (!array_key_exists('accounts.*.compte_id', $this->rules())) {
             $this->merge(new CreateCompteDTO(), 'accounts.*.compte_data');
         }
 
-        if(!isset(request()['sub_accounts'])){
+        //if(!isset(request()['sub_accounts'])){
+        if (!array_key_exists('accounts.*.sub_accounts', $this->rules())) {
             $this->merge(new CreateSubAccountDTO());
         }
     }
@@ -53,10 +56,10 @@ class CreateAccountDTO extends BaseDTO
         $rules = array_merge([
             "accounts"                          => ["required", "array"],
             "accounts.*"                        => ["distinct", "array"],
-            "accounts.*.account_number"         => ["required", "string", "max:120", 'unique:plan_comptable_comptes,account_number'],
+            "accounts.*.account_number"         => ["required", "string", "max:120", Rule::unique('plan_comptable_comptes', 'account_number')->whereNull('deleted_at')],
             "accounts.*.classe_id"              => ["required", "exists:classes_de_compte,id"],
             "accounts.*.compte_id"              => ["sometimes", "exists:comptes,id"],
-            'can_be_deleted'                    => ['sometimes', 'boolean', 'in:'.true.','.false],
+            'accounts.*.can_be_deleted'         => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);

@@ -53,6 +53,9 @@ class CreatePlansComptableTable extends Migration
                     ->comment('Description of the plan comptable');
 
                 // Add a boolean column 'status' to the table
+                $table->boolean('est_valider');
+
+                // Add a boolean column 'status' to the table
                 $table->boolean('status')
                     ->default(TRUE) // Set the default value to TRUE
                     ->comment('Record status: 

@@ -143,9 +143,11 @@ class User extends ModelContract implements /* AuthenticatableContract,  */Autho
         'first_login',
         'account_status',
         'userable_type', 'userable_id',
+        'profilable_type', 'profilable_id',
         'email_verified', 'email_verified_at',
         'account_verified', 'account_verified_at',
         'account_activated', 'account_activated_at',
+        'email_verification_token'
     ];
 
     /**
@@ -208,6 +210,15 @@ class User extends ModelContract implements /* AuthenticatableContract,  */Autho
     public function getUnmodifiableAttributes() {
         return [
             "{$this->login_channel}"
+        ];
+    }
+
+    public function getConditionallyUpdatableAttributes(): array {
+        return [
+            'account_status',
+            'email_verified', 'email_verified_at',
+            'account_verified', 'account_verified_at',
+            'account_activated', 'account_activated_at',
         ];
     }
 

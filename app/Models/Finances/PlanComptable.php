@@ -94,7 +94,7 @@ class PlanComptable extends ModelContract
     {
         return $this->belongsToMany(Compte::class, 'plan_comptable_comptes', 'plan_comptable_id', 'compte_id')
                     ->as('account')
-                    ->withPivot('classe_id', 'status', 'deleted_at', 'can_be_delete')
+                    ->withPivot('account_number', 'classe_id', 'status', 'deleted_at', 'can_be_delete')
                     ->withTimestamps() // Enable automatic timestamps for the pivot table
                     ->wherePivot('status', true) // Filter records where the status is true
                     ->using(Account::class); // Specify the intermediate model for the pivot relationship

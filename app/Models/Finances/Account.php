@@ -11,6 +11,7 @@ use Core\Utils\Traits\CPivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * Class ***`Account`***
@@ -140,15 +141,25 @@ class Account extends ModelContract
     /**
      * Get sous comptes
      *
+     * @return MorphMany
+     */
+    public function sous_comptes(): MorphMany
+    {
+        return $this->morphMany(SubAccount::class, 'subaccountable');
+    }
+
+    /**
+     * Get sous comptes
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function sous_comptes(): BelongsToMany
+    /* public function sous_comptes(): BelongsToMany
     {
-        return $this->belongsToMany(Compte::class, 'plan_comptable_compte_sous_comptes', 'principal_account_id', 'sous_compte_id')
+        return $this->belongsToMany(Compte::class, 'plan_comptable_compte_sous_comptes', 'subaccountable_id', 'sous_compte_id')
                     ->as('sub_account')
-                    ->withPivot('status', 'deleted_at', 'can_be_delete')
+                    ->withPivot('account_number', 'status', 'deleted_at', 'can_be_delete')
                     ->withTimestamps() // Enable automatic timestamps for the pivot table
                     ->wherePivot('status', true) // Filter records where the status is true
                     ->using(SubAccount::class); // Specify the intermediate model for the pivot relationship
-    }
+    } */
 }

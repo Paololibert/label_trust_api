@@ -8,6 +8,7 @@ use App\Models\Finances\Account;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
+use Domains\Finances\Comptes\Repositories\CompteReadWriteRepository;
 use Domains\Finances\PlansComptable\SubAccounts\Repositories\SubAccountReadWriteRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -23,6 +24,11 @@ use Throwable;
 class AccountReadWriteRepository extends EloquentReadWriteRepository
 {
     /**
+     * @var CompteReadWriteRepository
+     */
+    protected $compteReadWriteRepository;
+
+    /**
      * @var SubAccountReadWriteRepository
      */
     protected $subAcountRepositoryReadWrite;
@@ -33,9 +39,10 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
      * @param  \App\Models\Finances\Account $model
      * @return void
      */
-    public function __construct(Account $model, SubAccountReadWriteRepository $subAcountRepositoryReadWrite)
+    public function __construct(Account $model, CompteReadWriteRepository $compteReadWriteRepository, SubAccountReadWriteRepository $subAcountRepositoryReadWrite)
     {
         parent::__construct($model);
+        $this->compteReadWriteRepository = $compteReadWriteRepository;
         $this->subAcountRepositoryReadWrite = $subAcountRepositoryReadWrite;
     }
 
@@ -50,6 +57,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
     public function create(array $data): Account
     {
         try {
+
             $this->model = parent::create($data);
 
             if(isset($data['sub_accounts'])){
@@ -80,20 +88,24 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
 
             $this->model = $this->find($accountId);
 
-            dd($this->model);
+            foreach ($subAccountDataArray as $subAccountItem) {
 
-            foreach ($subAccountDataArray as $key => $subAccountItem) {
-                if(isset($taux['sous_compte_id'])){
-                    // Check if the taux is not already attached
-                    if (!$this->relationExists($this->model->sous_comptes(), [$subAccountItem['sous_compte_id']])) {
+                if(isset($subAccountItem['sous_compte_id'])){
+                    if (!parent::relationExists(relation: $this->model->sous_comptes(), ids: [$subAccountItem['sous_compte_id']], isPivot: false)) {
+                        
                         // Attach the sous compte to principal compte
-                        $this->model->sous_comptes()->syncWithoutDetaching($subAccountItem['sous_compte_id'], $subAccountItem) ? true : false;
+                        $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
+                        //$this->model->sous_comptes()->syncWithoutDetaching([$subAccountItem['sous_compte_id'] => $subAccountItem]);
                     }
                 }else {
 
-                    $account = $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["plan_comptable_id" => $this->model->id]));
+                    $compte = $this->compteReadWriteRepository->create(array_merge($subAccountItem, $subAccountItem["compte_data"]));
+
+                    $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["sous_compte_id" => $compte->id, "subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
+
+                    //array_merge($subAccountItem, ["compte_id" => $compte->id]);
                     
-                    return $this->model->sous_comptes()->syncWithoutDetaching($subAccountItem['sous_compte_id'], $subAccountItem) ? true : false;
+                    //$this->model->sous_comptes()->syncWithoutDetaching([$compte->id => $subAccountItem]);
                 }
             }
     
@@ -106,45 +118,6 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while attaching taux to category of employee.", previous: $exception);
         }        
-    }
-
-    /**
-     * Detach taux from a category of employee.
-     *
-     * This method associates specific taux with a given category of employee.
-     *
-     * @param   string      $accountId     The unique identifier of the category of employee.
-     * @param   array       $subAccountIds                The array of access identifiers representing the taux to be detached.
-     *
-     * @return  bool                                Whether the taux were detached successfully.
-     */
-    public function detachTaux(string $accountId, $subAccountIds): bool
-    {
-        try {
-
-            $this->model = $this->find($accountId);
-
-            return $this->model->sous_comptes()->updateExistingPivot($subAccountIds, ['deleted_at' => now()]) ? true : false;
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while detaching taux from category of employee.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while detaching taux from category of employee.", previous: $exception);
-        }
-    }
-    
-    /**
-     * Check if the specified relationship exists for the given IDs.
-     *
-     * @param \Illuminate\Database\Eloquent\Relations\BelongsToMany $relation
-     * @param array $ids
-     *
-     * @return bool
-     */
-    protected function relationExists(BelongsToMany $relation, array $ids): bool
-    {
-        return $relation->wherePivotIn('id', $ids)->exists();
     }
     
 }

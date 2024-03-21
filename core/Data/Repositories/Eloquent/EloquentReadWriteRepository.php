@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Data\Repositories\Eloquent;
 
+use Carbon\Carbon;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface;
@@ -199,20 +200,36 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
         try {
             $result = true;
 
-            if (is_string($ids)){
-                $result = $this->find($ids)->delete();
-            }
-            else{
-                $result = [];
-                foreach ($this->model->whereIn('id', $ids)->get() as $key => $record) {
-                    $result [] = $record->delete();
+            $uniqueColumns = $this->getUniqueColumns();
+
+            if (is_string($ids)) {
+
+                // Get the current date and time
+                $currentDateTime = Carbon::now();
+
+                // Soft delete a single record
+                $this->model = $this->find($ids);
+
+                foreach ($uniqueColumns as $column) {
+                    // Combine the existing value with the current date and time
+                    $this->model->{$column} .= '_' . $currentDateTime->format('Y-m-d_H:i:s');
                 }
 
-                return count($result) === count($ids) ;
+                $this->model->save();
+
+                $result = $this->model->delete();
+            } else {
+
+                $result = [];
+
+                foreach ($ids as $id) {
+                    $result[] = $this->softDelete($id);
+                }
+
+                return count($result) === count($ids);
             }
 
             return $result;
-
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
@@ -237,20 +254,18 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
             $result = true;
 
-            if (is_string($ids)){
+            if (is_string($ids)) {
                 $result = $this->find($ids)->forceDelete();
-            }
-            else{
+            } else {
                 $result = [];
                 foreach ($this->model->whereIn('id', $ids)->get() as $record) {
-                    $result [] = $record->forceDelete();
+                    $result[] = $record->forceDelete();
                 }
 
-                return count($result) === count($ids) ;
+                return count($result) === count($ids);
             }
 
             return $result;
-
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
@@ -275,20 +290,18 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
             $result = true;
 
-            if (is_string($ids)){
+            if (is_string($ids)) {
                 $result = $this->onlyTrashed()->findOrfail($ids)->restore();
-            }
-            else{
+            } else {
                 $result = [];
                 foreach ($this->onlyTrashed()->whereIn('id', $ids)->get() as $record) {
-                    $result [] = $record->restore();
+                    $result[] = $record->restore();
                 }
 
-                return count($result) === count($ids) ;
+                return count($result) === count($ids);
             }
 
             return $result;
-
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {

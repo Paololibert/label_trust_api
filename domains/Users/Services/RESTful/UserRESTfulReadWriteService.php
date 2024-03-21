@@ -74,6 +74,40 @@ class UserRESTfulReadWriteService extends RestJsonReadWriteService implements Us
     }
 
     /**
+     * Update an existing record.
+     *
+     * @param  Model|string                                     $id     The ID of the record to update.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $data   The data for updating the record.
+     * @return \Illuminate\Http\JsonResponse                            The JSON response indicating whether the update was successful or not.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                  If there is an error while updating the record.
+     */
+    public function update($id, DTOInterface $data): JsonResponse
+    {
+        // Begin the transaction
+        DB::beginTransaction();
+
+        try {
+
+            $user = $this->readWriteService->getRepository()->update($id, $data->toArray());
+
+            // Commit the transaction
+            DB::commit();
+
+            return JsonResponseTrait::success(
+                message: 'User updated successfully',
+                data: $user,
+                status_code: Response::HTTP_CREATED
+            );
+        } catch (Throwable $exception) {
+            // Rollback the transaction in case of an exception
+            DB::rollBack();
+            
+            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        }
+    }
+
+    /**
      * Assign role privileges to a user.
      *
      * @param string $userId                                           The identifier of the user to which role will be granted.
@@ -90,7 +124,7 @@ class UserRESTfulReadWriteService extends RestJsonReadWriteService implements Us
 
         try {
             // Call the grantAccess method on the repository to grant access to the role
-            $result = $this->queryService->getRepository()->assignRolePrivileges($userId, $roleIds->toArray()['roles']);
+            $result = $this->readWriteService->getRepository()->assignRolePrivileges($userId, $roleIds->toArray()['roles']);
 
             // If the result is false, throw a custom exception
             if (!$result) {
@@ -133,7 +167,7 @@ class UserRESTfulReadWriteService extends RestJsonReadWriteService implements Us
 
         try {
             // Call the revokeAccess method on the repository to grant access to the role
-            $result = $this->queryService->getRepository()->revokeRolePrivileges($userId, $roleIds->toArray()['roles']);
+            $result = $this->readWriteService->getRepository()->revokeRolePrivileges($userId, $roleIds->toArray()['roles']);
 
             // If the result is false, throw a custom exception
             if (!$result) {

@@ -41,7 +41,7 @@ class CategoryOfEmployee extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'name', 'description',
         'category_id',
     ];
 
@@ -51,7 +51,7 @@ class CategoryOfEmployee extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'name'
+        'name', 'description'
     ];
 
     /**

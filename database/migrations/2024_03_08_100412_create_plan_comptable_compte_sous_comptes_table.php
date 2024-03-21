@@ -45,23 +45,16 @@ class CreatePlanComptableCompteSousComptesTable extends Migration
                 $table->string('account_number')->unique()
                     ->comment('The unique account number');
 
+                $table->uuidMorphs("subaccountable");
+
                 // Define a foreign key for 'account_id', referencing the 'plan_comptable_comptes' table
-                $this->foreignKey(
+                /* $this->foreignKey(
                     table: $table,         // The table where the foreign key is being added
                     column: 'principal_account_id',   // The column to which the foreign key is added ('account_id' in this case)
                     references: 'plan_comptable_comptes', // The referenced table (plan_comptable_comptes) to establish the foreign key relationship
                     onDelete: 'cascade',   // Action to perform when the referenced record is deleted (cascade deletion)
                     nullable: false        // Specify whether the foreign key column can be nullable (false means it not allows to be NULL)
-                );
-
-                // Define a foreign key for 'sub_account_id', referencing the 'plan_comptable_compte_sous_comptes' table
-                $this->foreignKey(
-                    table: $table,         // The table where the foreign key is being added
-                    column: 'sub_account_id',   // The column to which the foreign key is added ('account_id' in this case)
-                    references: 'plan_comptable_compte_sous_comptes', // The referenced table (plan_comptable_compte_sous_comptes) to establish the foreign key relationship
-                    onDelete: 'cascade',   // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: true        // Specify whether the foreign key column can be nullable (false means it not allows to be NULL)
-                );
+                ); */
     
                 // Define a foreign key for 'sous_compte_id', referencing the 'comptes' table
                 $this->foreignKey(

@@ -134,7 +134,7 @@ class AddNewColumnsToTables extends Migration
                 }
             }
 
-            if (Schema::hasTable('plan_comptable_compte_sous_comptes')) {
+            /* if (Schema::hasTable('plan_comptable_compte_sous_comptes')) {
                 // Check if the "sub_account_id" column does not exist in the "plan_comptable_compte_sous_comptes" table
                 if (!Schema::hasColumn('plan_comptable_compte_sous_comptes', 'sub_account_id')) {
                     // Modify the "plan_comptable_compte_sous_comptes" table
@@ -149,7 +149,7 @@ class AddNewColumnsToTables extends Migration
                         );
                     });
                 }
-            }
+            } */
 
             // Commit the transaction
             DB::commit();

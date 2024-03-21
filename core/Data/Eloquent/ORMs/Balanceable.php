@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Data\Eloquent\ORMs;
 
-use App\Models\BalanceDeCompte;
+use App\Models\Finances\BalanceDeCompte;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
