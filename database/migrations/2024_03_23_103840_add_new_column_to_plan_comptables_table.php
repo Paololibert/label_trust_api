@@ -23,8 +23,10 @@ class AddNewColumnToPlanComptablesTable extends Migration
 
             Schema::table('plans_comptable', function (Blueprint $table) {
 
-                // Add a boolean column 'est_valider' to the table
-                $table->boolean('est_valider')->default(false);
+                if (!Schema::hasColumn('plans_comptable', 'est_valider')) {
+                    // Add a boolean column 'est_valider' to the table
+                    $table->boolean('est_valider')->default(false);
+                }
             });
 
             // Commit the transaction
@@ -55,8 +57,11 @@ class AddNewColumnToPlanComptablesTable extends Migration
 
         try {
             Schema::table('plan_comptables', function (Blueprint $table) {
-                // Drop the 'est_valider' column if it exists
-                $table->dropColumn('est_valider');
+
+                if (Schema::hasColumn('plans_comptable', 'est_valider')) {
+                    // Drop the 'est_valider' column if it exists
+                    $table->dropColumn('est_valider');
+                }
             });
 
             // Commit the transaction
