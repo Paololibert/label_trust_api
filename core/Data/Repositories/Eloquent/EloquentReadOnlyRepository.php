@@ -10,6 +10,8 @@ use Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Throwable;
 
 /**
@@ -113,6 +115,33 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
     {
         try {
             return $this->model->where($conditions)->exists();
+        } catch (QueryException $exception) {
+            throw new QueryException(message: "Error while checking for record existence.", previous: $exception);
+        } catch (Throwable $exception) {
+            throw new RepositoryException(message: "Error while checking for record existence.", previous: $exception);
+        }
+    }
+    
+    /**
+     * Check if the specified relationship exists for the given IDs.
+     *
+     * @param Relation $relation
+     * @param array $ids
+     *
+     * @return bool
+     *
+     * @throws \Core\Utils\Exceptions\RepositoryException If there is an error while checking for record existence.
+     * @throws \Core\Utils\Exceptions\QueryException      If there is an error while checking for record existence.
+     */
+    public function relationExists(Relation $relation, array $ids, bool $isPivot = true): bool
+    {
+        try {
+            if($isPivot){
+                return $relation->wherePivotIn('id', $ids)->exists();
+            }
+            else {
+                return $relation->whereIn('id', $ids)->exists();
+            }
         } catch (QueryException $exception) {
             throw new QueryException(message: "Error while checking for record existence.", previous: $exception);
         } catch (Throwable $exception) {

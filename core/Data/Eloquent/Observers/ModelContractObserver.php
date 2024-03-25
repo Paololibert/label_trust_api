@@ -159,7 +159,6 @@ class ModelContractObserver
      */
     public function deleting(ModelContract $model)
     {
-        //dd($model);
         if (!(in_array($model->deleteable(), $model->getFillable()) && $model->{$model->deleteable()})) {
             // Prevent the deletion from happening by returning false
             return false;

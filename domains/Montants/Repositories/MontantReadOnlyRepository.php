@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Domains\TauxAndSalaries\Repositories;
+namespace Domains\Montants\Repositories;
 
-use App\Models\TauxAndSalary;
+use App\Models\Montant;
 use Core\Data\Repositories\Eloquent\EloquentReadOnlyRepository;
 
 
 /**
- * ***`TauxAndSalaryReadOnlyRepository`***
+ * ***`MontantReadOnlyRepository`***
  *
- * This class extends the EloquentReadOnlyRepository class, which suggests that it is responsible for providing read-only access to the TauxAndSalary $instance data.
+ * This class extends the EloquentReadOnlyRepository class, which suggests that it is responsible for providing read-only access to the Montant $instance data.
  *
- * @package ***`\Domains\TauxAndSalaries\Repositories`***
+ * @package ***`\Domains\Montants\Repositories`***
  */
-class TauxAndSalaryReadOnlyRepository extends EloquentReadOnlyRepository
+class MontantReadOnlyRepository extends EloquentReadOnlyRepository
 {
     /**
-     * Create a new TauxAndSalaryReadOnlyRepository instance.
+     * Create a new MontantReadOnlyRepository instance.
      *
-     * @param  \App\Models\TauxAndSalary $model
+     * @param  \App\Models\Montant $model
      * @return void
      */
-    public function __construct(TauxAndSalary $model)
+    public function __construct(Montant $model)
     {
         parent::__construct($model);
     }

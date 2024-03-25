@@ -42,10 +42,6 @@ class CreateComptesTable extends Migration
                 // Define a UUID primary key for the 'comptes' table
                 $this->uuidPrimaryKey($table);
 
-                // Define a unique string column for the comptes code
-                $table->string('code')->unique()
-                    ->comment('The unique code of the classe de compte');
-                                
                 // Define a unique string column for the comptes name
                 $table->string('name')->unique()
                     ->comment('The unique name of the classe de compte');
@@ -84,7 +80,7 @@ class CreateComptesTable extends Migration
                 
 
                 // Create a composite index for efficient searching on the combination of code, name, status and can_be_delete
-                $this->compositeKeys(table: $table, keys: ['code', 'name', 'type_de_compte', 'status', 'can_be_delete']);
+                $this->compositeKeys(table: $table, keys: ['name', 'type_de_compte', 'status', 'can_be_delete']);
 
                 // Add timestamp and soft delete columns to the table
                 $this->addTimestampsAndSoftDeletesColumns($table);

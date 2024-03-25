@@ -6,7 +6,6 @@ namespace App\Http\Requests\Users\v1;
 
 use Core\Utils\Requests\CreateResourceRequest;
 use Domains\Users\DataTransfertObjects\CreateUserDTO;
-use Domains\Users\People\DataTransfertObjects\CreatePersonDTO;
 
 /**
  * Class **`CreateUserRequest`**

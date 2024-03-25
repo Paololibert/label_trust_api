@@ -6,7 +6,8 @@ namespace Core\Data\Repositories\Eloquent;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Schema;
+use Doctrine\DBAL\Types\Type;
 
 /**
  * ***`BaseRepository`***
@@ -124,6 +125,38 @@ class BaseRepository
     public function getCacheMinutes(): int
     {
         return $this->cache_minutes;
+    }
+
+    public function getUniqueColumns()
+    {
+        $tableName = $this->model->getTable(); //with(new static)->getTable();
+        $uniqueColumns = [];
+
+        // Get the table's schema
+        $tableSchema = Schema::getConnection()->getDoctrineSchemaManager()->listTableDetails($tableName);
+
+        // Columns to exclude
+        $excludeColumns = ['id', 'status', 'can_be_delete', 'created_by', 'attached_by', 'created_at', 'updated_at', 'deleted_at'];
+
+        $foreignKeys = $tableSchema->getForeignKeys();
+
+        // Extract column names from foreign keys
+        foreach ($foreignKeys as $key => $foreignKey) {
+            $excludeColumns[] = $foreignKey->getLocalColumns()[0];
+        }
+        
+        // Iterate over the columns to find unique ones
+        foreach ($tableSchema->getColumns() as $column) {
+            // Check if the column name is not in the exclusion list
+            if (!in_array($column->getName(), $excludeColumns)) {
+                // Check if the column is unique
+                if ($column->getNotNull() && $column->getType()->getName() === "string") {
+                    $uniqueColumns[] = $column->getName();
+                }
+            }
+        }
+
+        return $uniqueColumns;
     }
 
     /**

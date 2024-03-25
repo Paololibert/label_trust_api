@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Core\Data\Repositories\Eloquent;
 
+use Carbon\Carbon;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 /**
@@ -67,6 +69,52 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
             $record = parent::find($id);
             $result = $record->update($data);
             return $result ? $record->fresh() : $result;
+        } catch (ModelNotFoundException $exception) {
+            throw new QueryException(message: $exception->getMessage(), code: $exception->getCode());
+        } catch (QueryException $exception) {
+            throw new QueryException(message: "Error while updating the record.", previous: $exception);
+        } catch (Throwable $exception) {
+            throw new RepositoryException(message: "Error while updating the record.", previous: $exception);
+        }
+    }
+
+    /**
+     * Update an existing record.
+     *
+     * @param  array        $data                            The data for updating the record.
+     * return bool|array<int, bool|Model|null>|null         Whether the update was successful or not.
+     *
+     * @throws ModelNotFoundException                        If the record with the given ID is not found.
+     * @throws \Core\Utils\Exceptions\RepositoryException    If there is an error while updating the record.
+     */
+    public function updateMultiple(array $data, array $filters = [], string $checker = "id")
+    {
+        try {
+
+            $query = $this->model;
+
+            if ($filters) {
+                foreach ($filters as $filterName => $filter) {
+                    foreach ($filter as $condition) {
+                        switch ($filterName) {
+                            case 'whereIn':
+                                $query = $query->{$filterName}($condition[0], $condition[1]);
+                                break;
+
+                            default:
+                                $query = $query->{$filterName}($condition[0], $condition[1], $condition[2]);
+                                break;
+                        }
+                    }
+                }
+            }
+                
+            foreach ($data as $key => $item) {
+                unset($item['id']);
+                $affectedRows[] =$query->update($item);
+            }
+
+            return $affectedRows; ///$result ? $record->fresh() : $result;
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: $exception->getMessage(), code: $exception->getCode());
         } catch (QueryException $exception) {
@@ -194,25 +242,106 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
      * @throws ModelNotFoundException If any of the records with the given IDs are not found.
      * @throws \Core\Utils\Exceptions\RepositoryException    If there is an error while performing the soft delete.
      */
-    public function softDelete($ids): bool
+    public function softDelete($ids, array $filters = []): bool
     {
         try {
             $result = true;
 
-            if (is_string($ids)){
-                $result = $this->find($ids)->delete();
-            }
-            else{
-                $result = [];
-                foreach ($this->model->whereIn('id', $ids)->get() as $key => $record) {
-                    $result [] = $record->delete();
+            if (is_string($ids)) {
+
+                // Soft delete a single record
+                $query = $this->model->where("id", (string) $ids);
+
+                if ($filters) {
+                    foreach ($filters as $filterName => $filter) {
+                        foreach ($filter as $condition) {
+                            switch ($filterName) {
+                                case 'whereIn':
+                                    $query = $query->{$filterName}($condition[0], $condition[1]);
+                                    break;
+
+                                default:
+                                    $query = $query->{$filterName}($condition[0], $condition[1], $condition[2]);
+                                    break;
+                            }
+                        }
+                    }
                 }
 
-                return count($result) === count($ids) ;
+                $uniqueColumns = $this->getUniqueColumns();
+
+                if ($uniqueColumns) {
+
+                    // Update multiple records before updated
+                    $updatedValues = [];
+
+                    foreach ($uniqueColumns as $column) {
+                        if ($this->model->hasCast($column, ["string"])) {
+                            // Get the current date and time
+                            $currentDateTime = Carbon::now()->format('Y-m-d_H:i:s');
+                            // Combine the existing value with the current date and hour value
+                            $updatedValues[$column] = DB::raw("CONCAT({$column}, '_{$currentDateTime}')");
+                        }
+                    }
+
+                    $query->update($updatedValues);
+                }
+
+                $result = $query->delete();
+            } else {
+
+                $result = [];
+                $query = $this->model;
+
+                if ($filters) {
+                    foreach ($filters as $filterName => $filter) {
+                        foreach ($filter as $condition) {
+                            switch ($filterName) {
+                                case 'whereIn':
+                                    $query = $query->{$filterName}($condition[0], $condition[1]);
+                                    break;
+
+                                default:
+                                    $query = $query->{$filterName}($condition[0], $condition[1], $condition[2]);
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                if ($ids) {
+                    $query = $query->whereIn("id", $ids);
+                }
+
+                $ids = $query->select("id")->pluck("id");
+
+                if (count($ids)) {
+
+                    $uniqueColumns = $this->getUniqueColumns();
+
+                    if ($uniqueColumns) {
+
+                        // Update multiple records before updated
+                        $updatedValues = [];
+
+                        foreach ($uniqueColumns as $column) {
+                            // Get the current date and time
+                            $currentDateTime = Carbon::now()->format('Y-m-d_H:i:s');
+                            // Combine the existing value with the current date and hour value
+                            $updatedValues[$column] = DB::raw("CONCAT({$column}, '_{$currentDateTime}')");
+                        }
+
+                        $query->update($updatedValues);
+                    }
+
+                    // Soft delete multiple records
+                    $result = $query->delete();
+
+                    return $result === count($ids);
+                }
             }
 
-            return $result;
-
+            return $result ? true : false;
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
@@ -237,20 +366,18 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
             $result = true;
 
-            if (is_string($ids)){
+            if (is_string($ids)) {
                 $result = $this->find($ids)->forceDelete();
-            }
-            else{
+            } else {
                 $result = [];
                 foreach ($this->model->whereIn('id', $ids)->get() as $record) {
-                    $result [] = $record->forceDelete();
+                    $result[] = $record->forceDelete();
                 }
 
-                return count($result) === count($ids) ;
+                return count($result) === count($ids);
             }
 
             return $result;
-
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
@@ -275,20 +402,18 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
             $result = true;
 
-            if (is_string($ids)){
+            if (is_string($ids)) {
                 $result = $this->onlyTrashed()->findOrfail($ids)->restore();
-            }
-            else{
+            } else {
                 $result = [];
                 foreach ($this->onlyTrashed()->whereIn('id', $ids)->get() as $record) {
-                    $result [] = $record->restore();
+                    $result[] = $record->restore();
                 }
 
-                return count($result) === count($ids) ;
+                return count($result) === count($ids);
             }
 
             return $result;
-
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {

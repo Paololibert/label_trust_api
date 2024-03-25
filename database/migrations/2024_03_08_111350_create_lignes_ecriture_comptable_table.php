@@ -41,10 +41,6 @@ class CreateLignesEcritureComptableTable extends Migration
             Schema::create('lignes_ecriture_comptable', function (Blueprint $table) {
                 // Define a UUID primary key for the 'lignes_ecriture_comptable' table
                 $this->uuidPrimaryKey($table);
-                                
-                // Define a 
-                $table->string('libelle')->nullable()
-                    ->comment('Libelle of the ecriture comptable');
 
                 // "type_ecriture_compte" column with default value "debit"
                 $table->enum('type_ecriture_compte', TypeEcritureCompteEnum::values())->default(TypeEcritureCompteEnum::DEFAULT);

@@ -61,9 +61,9 @@ if (!function_exists('generate_path')) {
 
 if (!function_exists('loadModel')) {
 
-    function loadModel(string $className)
+    function loadModel(string $className, string $path = null)
     {
-        $modelNamespace = 'App\\Models\\';
+        $modelNamespace = $path ?? 'App\\Models\\';
         $fullClassName = $modelNamespace . $className;
 
         if (class_exists($fullClassName)) {

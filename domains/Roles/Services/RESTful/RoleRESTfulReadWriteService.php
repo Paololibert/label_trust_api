@@ -60,7 +60,7 @@ class RoleRESTfulReadWriteService extends RestJsonReadWriteService implements Ro
 
             return JsonResponseTrait::success(
                 message: 'Role created successfully',
-                data: $role,
+                data: $role->fresh(),
                 status_code: Response::HTTP_CREATED
             );
         } catch (Throwable $exception) {

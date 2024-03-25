@@ -9,7 +9,6 @@ use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Throwable;
 
 /**
@@ -93,18 +92,5 @@ class PosteReadWriteRepository extends EloquentReadWriteRepository
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while detaching salaries from poste.", previous: $exception);
         }
-    }
-    
-    /**
-     * Check if the specified relationship exists for the given IDs.
-     *
-     * @param \Illuminate\Database\Eloquent\Relations\BelongsToMany $relation
-     * @param array $ids
-     *
-     * @return bool
-     */
-    protected function relationExists(BelongsToMany $relation, array $ids): bool
-    {
-        return $relation->wherePivotIn('id', $ids)->exists();
-    }    
+    }  
 }

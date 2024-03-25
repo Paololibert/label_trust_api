@@ -42,23 +42,13 @@ class CreateJournauxTable extends Migration
                 // Define a UUID primary key for the 'journaux' table
                 $this->uuidPrimaryKey($table);
 
-                // Define the decimal column 'total' for storing the monetary amount with 8 digits, 2 of which are decimal places
-                $table->decimal('total', 12, 2)->comment('');
-
-                // Define the decimal column 'total_debit' for storing the monetary amount with 8 digits, 2 of which are decimal places
-                $table->decimal('total_debit', 12, 2)->comment('');
-                
-                // Define the decimal column 'total_credit' for storing the monetary amount with 8 digits, 2 of which are decimal places
-                $table->decimal('total_credit', 12, 2)->comment('');         
-                
-                // Define a foreign key for 'exercice_id', referencing the 'exercices_comptable' table
-                $this->foreignKey(
-                    table: $table,          // The table where the foreign key is being added
-                    column: 'exercice_id',   // The column to which the foreign key is added ('exercice_id' in this case)
-                    references: 'exercices_comptable',    // The referenced table (exercices_comptable) to establish the foreign key relationship
-                    onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows to be NULL)
-                );
+                // Define a unique string column for the journal code
+                $table->string('code')->unique()
+                    ->comment('The unique code of the journal');
+                                
+                // Define a unique string column for the journal name
+                $table->string('name')->unique()
+                    ->comment('The unique name of the journal');
 
                 // Add a boolean column 'status' to the table
                 $table->boolean('status')
@@ -81,8 +71,8 @@ class CreateJournauxTable extends Migration
                 );
                 
 
-                // Create a composite index for efficient searching on the combination of total, total_debit, total_credit, status and can_be_delete
-                $this->compositeKeys(table: $table, keys: ['total', 'total_debit', 'total_credit', 'status', 'can_be_delete']);
+                // Create a composite index for efficient searching on the combination of code, name, status and can_be_delete
+                $this->compositeKeys(table: $table, keys: ['code', 'name', 'status', 'can_be_delete']);
 
                 // Add timestamp and soft delete columns to the table
                 $this->addTimestampsAndSoftDeletesColumns($table);

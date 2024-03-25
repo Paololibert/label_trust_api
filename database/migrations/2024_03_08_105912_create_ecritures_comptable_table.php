@@ -57,11 +57,11 @@ class CreateEcrituresComptableTable extends Migration
                 $table->decimal('total_credit', 12, 2)
                     ->comment('Total amount on the credit side.');
                 
-                // Define a foreign key for 'journal_id', referencing the 'journaux' table
+                // Define a foreign key for 'exercice_comptable_journal_id', referencing the 'exercice_comptable_journaux' table
                 $this->foreignKey(
                     table: $table,         // The table where the foreign key is being added
-                    column: 'journal_id',   // The column to which the foreign key is added ('journal_id' in this case)
-                    references: 'journaux', // The referenced table (journaux) to establish the foreign key relationship
+                    column: 'exercice_comptable_journal_id',   // The column to which the foreign key is added ('exercice_comptable_journal_id' in this case)
+                    references: 'exercice_comptable_journaux', // The referenced table (exercice_comptable_journaux) to establish the foreign key relationship
                     onDelete: 'cascade',   // Action to perform when the referenced record is deleted (cascade deletion)
                     nullable: false        // Specify whether the foreign key column can be nullable (false means it not allows to be NULL)
                 );

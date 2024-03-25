@@ -18,8 +18,6 @@ class PersonObserver extends ModelContractObserver
     public function creating(ModelContract $model): void
     {
         parent::creating($model);
-
-        dd($model->id);
         
         $model->key = generate_key($model->name);
     }

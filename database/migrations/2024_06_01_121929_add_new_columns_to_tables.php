@@ -134,6 +134,23 @@ class AddNewColumnsToTables extends Migration
                 }
             }
 
+            /* if (Schema::hasTable('plan_comptable_compte_sous_comptes')) {
+                // Check if the "sub_account_id" column does not exist in the "plan_comptable_compte_sous_comptes" table
+                if (!Schema::hasColumn('plan_comptable_compte_sous_comptes', 'sub_account_id')) {
+                    // Modify the "plan_comptable_compte_sous_comptes" table
+                    Schema::table('plan_comptable_compte_sous_comptes', function (Blueprint $table) {
+                        // Define a foreign key for 'sub_account_id', referencing the 'plan_comptable_compte_sous_comptes' table
+                        $this->foreignKey(
+                            table: $table,                // The table where the foreign key is being added
+                            column: 'sub_account_id',        // The column to which the foreign key is added ('category_id' in this case)
+                            references: 'plan_comptable_compte_sous_comptes',    // The referenced table (plan_comptable_compte_sous_comptes) to establish the foreign key relationship
+                            onDelete: 'cascade',         // Action to perform when the referenced record is deleted (cascade deletion)
+                            nullable: true              // Specify whether the foreign key column can be nullable (false means it is not allows to be NULL)
+                        );
+                    });
+                }
+            } */
+
             // Commit the transaction
             DB::commit();
         } catch (\Throwable $exception) {

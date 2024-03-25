@@ -41,9 +41,6 @@ class CreateDevisesTable extends Migration
                 // Define a UUID primary key for the 'devises' table
                 $this->uuidPrimaryKey($table);
 
-                // Define a unique string column for the devises code
-                $table->string('code')->unique()->comment('The unique code of the currency');
-                
                 // Define a unique string column for the devises name
                 $table->string('name')->unique()->comment('The unique name of the currency');
                 
@@ -72,7 +69,7 @@ class CreateDevisesTable extends Migration
                 
 
                 // Create a composite index for efficient searching on the combination of code, name, symbol, status and can_be_delete
-                $this->compositeKeys(table: $table, keys: ['code', 'name', 'symbol', 'status', 'can_be_delete']);
+                $this->compositeKeys(table: $table, keys: ['name', 'symbol', 'status', 'can_be_delete']);
 
                 // Add timestamp and soft delete columns to the table
                 $this->addTimestampsAndSoftDeletesColumns($table);

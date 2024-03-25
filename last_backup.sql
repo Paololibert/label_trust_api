@@ -2209,7 +2209,7 @@ ALTER SEQUENCE public.personal_access_tokens_id_seq OWNED BY public.personal_acc
 CREATE TABLE public.plan_comptable_compte_sous_comptes (
     id uuid NOT NULL,
     account_number character varying(255) NOT NULL,
-    plan_comptable_compte_id uuid NOT NULL,
+    account_id uuid NOT NULL,
     sous_compte_id uuid NOT NULL,
     sub_division_id uuid,
     status boolean DEFAULT true NOT NULL,
@@ -3509,7 +3509,7 @@ COPY public.personal_access_tokens (id, tokenable_type, tokenable_id, name, toke
 -- Data for Name: plan_comptable_compte_sous_comptes; Type: TABLE DATA; Schema: public; Owner: master_db_admin
 --
 
-COPY public.plan_comptable_compte_sous_comptes (id, account_number, plan_comptable_compte_id, sous_compte_id, sub_division_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
+COPY public.plan_comptable_compte_sous_comptes (id, account_number, account_id, sous_compte_id, sub_division_id, status, can_be_delete, created_by, created_at, updated_at, deleted_at) FROM stdin;
 \.
 
 
@@ -5007,11 +5007,11 @@ ALTER TABLE ONLY public.plan_comptable_compte_sous_comptes
 
 
 --
--- Name: plan_comptable_compte_sous_comptes plan_comptable_compte_sous_comptes_plan_comptable_compte_id_for; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
+-- Name: plan_comptable_compte_sous_comptes plan_comptable_compte_sous_comptes_account_id_for; Type: FK CONSTRAINT; Schema: public; Owner: master_db_admin
 --
 
 ALTER TABLE ONLY public.plan_comptable_compte_sous_comptes
-    ADD CONSTRAINT plan_comptable_compte_sous_comptes_plan_comptable_compte_id_for FOREIGN KEY (plan_comptable_compte_id) REFERENCES public.plan_comptable_comptes(id) ON DELETE CASCADE;
+    ADD CONSTRAINT plan_comptable_compte_sous_comptes_account_id_for FOREIGN KEY (account_id) REFERENCES public.plan_comptable_comptes(id) ON DELETE CASCADE;
 
 
 --
