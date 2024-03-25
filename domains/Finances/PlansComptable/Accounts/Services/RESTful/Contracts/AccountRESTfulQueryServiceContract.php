@@ -23,5 +23,16 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
  */
 interface AccountRESTfulQueryServiceContract extends RestJsonQueryServiceContract
 {
-
+    /**
+     * Fetches sub-accounts information for a specific account within a given plan comptable.
+     *
+     * @param string                                    $planComptableId    The unique identifier of the plan comptable to query sub-accounts for.
+     * @param string                                    $accountId          The unique identifier of the account to query sub-accounts for.
+     * @param string                                    $subAccountId       The unique identifier of the sub-account to query.
+     * 
+     * @return \Illuminate\Http\JsonResponse                                The JSON response containing information about the sub-account.
+     * 
+     * @throws \Core\Utils\Exceptions\ServiceException                      Throws an exception if there is an issue with the service operation.
+     */
+    public function fetchSubAccounts(string $planComptableId, string $accountId, string $subAccountId): \Illuminate\Http\JsonResponse;
 }

@@ -9,9 +9,9 @@ use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\Comptes\Repositories\CompteReadWriteRepository;
-use Domains\Finances\PlansComptable\SubAccounts\Repositories\SubAccountReadWriteRepository;
+use Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories\SubAccountReadWriteRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Throwable;
 
 /**
@@ -54,7 +54,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
      *
      * @throws \Core\Utils\Exceptions\RepositoryException If there is an error while creating the record.
      */
-    public function create(array $data): Account
+    public function create(array $data): Model
     {
         try {
 
@@ -95,21 +95,16 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
                         
                         // Attach the sous compte to principal compte
                         $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
-                        //$this->model->sous_comptes()->syncWithoutDetaching([$subAccountItem['sous_compte_id'] => $subAccountItem]);
                     }
                 }else {
 
                     $compte = $this->compteReadWriteRepository->create(array_merge($subAccountItem, $subAccountItem["compte_data"]));
 
                     $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["sous_compte_id" => $compte->id, "subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
-
-                    //array_merge($subAccountItem, ["compte_id" => $compte->id]);
-                    
-                    //$this->model->sous_comptes()->syncWithoutDetaching([$compte->id => $subAccountItem]);
                 }
             }
     
-            return false; // Taux is already attached
+            return true;
             
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
@@ -118,6 +113,66 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while attaching taux to category of employee.", previous: $exception);
         }        
+    }
+
+    /**
+     * Delete accounts from a Plan Comptable.
+     *
+     * This method deletes the accounts associated with a given Plan Comptable.
+     *
+     * @param   string                                      $planComptableId        The unique identifier of the Plan Comptable to delete accounts from.
+     * @param   array                                       $deletedAccountIds      The array of IDs of accounts to be deleted.
+     *
+     * @return  bool                                                                Whether the accounts were deleted successfully.
+     *
+     * @throws  \Core\Utils\Exceptions\QueryException                               If there is an error while deleting accounts.
+     * @throws  \Core\Utils\Exceptions\RepositoryException                          If there is an issue with the repository operation.
+     */
+    public function deleteSubAccounts(string $accountId, array $deletedSubAccountIds, array $filters = []): bool
+    {
+        try {
+
+            $query = $this->model;
+            $query = $this->find($accountId);
+
+            $filters = array_merge($filters["where"], [["id", "=", $accountId]]);
+
+            if ($filters) {
+                foreach ($filters as $filterName => $filter) {
+                    foreach ($filter as $condition) {
+                        switch ($filterName) {
+                            case 'whereIn':
+                                $query = $query->{$filterName}($condition[0], $condition[1]);
+                                break;
+
+                            default:
+                                $query = $query->{$filterName}($condition[0], $condition[1], $condition[2]);
+                                
+                                break;
+                        }
+                    }
+                }
+            }
+
+            // Find the Plan Comptable by ID
+            //$query = $this->find($accountId);
+
+            dd($query->get());
+
+            // Soft-delete sub-accounts
+            $result = $this->subAcountRepositoryReadWrite->softDelete([], filters: ["where" => [["account_id", "=", $this->model->id]], "whereIn" => [["sous_compte_id", $deletedSubAccountIds]]]);
+
+            return $result;
+        } catch (ModelNotFoundException $exception) {
+            // Throw a QueryException if the Plan Comptable or any of the accounts are not found
+            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
+        } catch (QueryException $exception) {
+            // Throw a QueryException if there is an error while deleting sub-accounts
+            throw new QueryException(message: "Error while deleting sub-accounts from a plan comptable account.", previous: $exception);
+        } catch (Throwable $exception) {
+            // Throw a RepositoryException if there is an issue with the repository operation
+            throw new RepositoryException(message: "Error while deleting sub-accounts from a plan comptable account.", previous: $exception);
+        }
     }
     
 }

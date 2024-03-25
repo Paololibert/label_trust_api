@@ -2,33 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Domains\Finances\PlansComptable\DataTransfertObjects;
+namespace Domains\Finances\PlansComptable\Accounts\DataTransfertObjects;
 
-use App\Models\Finances\PlanComptable;
+use App\Models\Finances\Account;
 use Core\Utils\DataTransfertObjects\BaseDTO;
-use Domains\Finances\PlansComptable\Accounts\DataTransfertObjects\CreateAccountDTO;
-use Illuminate\Validation\Rule;
 
 /**
- * Class ***`CreatePlanComptableDTO`***
+ * Class ***`AccountDTO`***
  *
  * This class extends the ***`BaseDTO`*** class.
- * It represents the data transfer object for creating a new ***`PlanComptable`*** model.
+ * It represents the data transfer object for updating a new ***`Account`*** model.
  *
- * @package ***`\Domains\Finances\PlansComptable\DataTransfertObjects`***
+ * @package ***`\Domains\Finances\PlansComptable\Accounts\DataTransfertObjects`***
  */
-class CreatePlanComptableDTO extends BaseDTO
+class AccountDTO extends BaseDTO
 {
 
     public function __construct()
     {
         parent::__construct();
-
-        if (array_key_exists('accounts', $this->rules())) {
-            $this->merge(new CreateAccountDTO());
-        }
     }
-
+    
     /**
      * Get the class name of the model associated with the DTO.
      *
@@ -36,7 +30,7 @@ class CreatePlanComptableDTO extends BaseDTO
      */
     protected function getModelClass(): string
     {
-        return PlanComptable::class;
+        return Account::class;
     }
 
     /**
@@ -47,8 +41,9 @@ class CreatePlanComptableDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["required", "string", "max:25", Rule::unique('plans_comptable', 'name')->whereNull('deleted_at')],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "accounts"                          => ["required", "array"],
+            "accounts.*"                        => ["distinct", "exists:plan_comptable_comptes,id"],
+            'accounts.*.can_be_deleted'         => ['sometimes', 'boolean', 'in:'.true.','.false]
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -62,8 +57,8 @@ class CreatePlanComptableDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
+            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
         ], $messages);
 
         $messages = array_merge([], $default_messages);

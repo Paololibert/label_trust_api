@@ -29,13 +29,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        /* Auth::provider('credentials', function ($app, array $config) {
-            dd( $config['model']);
-            return new \App\Providers\CredentialUserProvider($this->app['hash'], $config['model']);
-        });
-         */
-        //Passport::routes();
-
         Passport::tokensExpireIn(now()->addDays(15));
         Passport::refreshTokensExpireIn(now()->addDays(30));
     }

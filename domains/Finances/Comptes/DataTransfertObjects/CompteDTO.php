@@ -2,31 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Domains\Finances\PlansComptable\DataTransfertObjects;
+namespace Domains\Finances\Comptes\DataTransfertObjects;
 
-use App\Models\Finances\PlanComptable;
+use App\Models\Finances\Compte;
 use Core\Utils\DataTransfertObjects\BaseDTO;
-use Domains\Finances\PlansComptable\Accounts\DataTransfertObjects\CreateAccountDTO;
-use Illuminate\Validation\Rule;
+
 
 /**
- * Class ***`CreatePlanComptableDTO`***
+ * Class ***`CompteDTO`***
  *
  * This class extends the ***`BaseDTO`*** class.
- * It represents the data transfer object for creating a new ***`PlanComptable`*** model.
+ * It represents the data transfer object for creating a new ***`Compte`*** model.
  *
- * @package ***`\Domains\Finances\PlansComptable\DataTransfertObjects`***
+ * @package ***`\Domains\Comptes\DataTransfertObjects`***
  */
-class CreatePlanComptableDTO extends BaseDTO
+class CompteDTO extends BaseDTO
 {
 
     public function __construct()
     {
         parent::__construct();
-
-        if (array_key_exists('accounts', $this->rules())) {
-            $this->merge(new CreateAccountDTO());
-        }
     }
 
     /**
@@ -36,7 +31,7 @@ class CreatePlanComptableDTO extends BaseDTO
      */
     protected function getModelClass(): string
     {
-        return PlanComptable::class;
+        return Compte::class;
     }
 
     /**
@@ -47,8 +42,8 @@ class CreatePlanComptableDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["required", "string", "max:25", Rule::unique('plans_comptable', 'name')->whereNull('deleted_at')],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
+            'comptes'           => 'required|array|min:1',
+            'comptes.*'         => ['distinct', "exists:comptes,id"]
         ], $rules);
 
         return $this->rules = parent::rules($rules);

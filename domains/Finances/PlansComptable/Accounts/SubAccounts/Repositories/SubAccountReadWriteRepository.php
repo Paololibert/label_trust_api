@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Domains\Finances\PlansComptable\SubAccounts\Repositories;
+namespace Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories;
 
 use App\Models\Finances\SubAccount;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\Comptes\Repositories\CompteReadWriteRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
@@ -17,7 +18,7 @@ use Throwable;
  *
  * This class extends the EloquentReadWriteRepository class, which suggests that it is responsible for providing read-only access to the SubAccount $instance data.
  *
- * @package ***`Domains\Finances\PlansComptable\SubAccounts\Repositories`***
+ * @package ***`Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories`***
  */
 class SubAccountReadWriteRepository extends EloquentReadWriteRepository
 {
@@ -46,7 +47,7 @@ class SubAccountReadWriteRepository extends EloquentReadWriteRepository
      *
      * @throws \Core\Utils\Exceptions\RepositoryException If there is an error while creating the record.
      */
-    public function create(array $data): SubAccount
+    public function create(array $data): Model
     {
         try {
 
@@ -82,7 +83,7 @@ class SubAccountReadWriteRepository extends EloquentReadWriteRepository
 
             foreach ($subDivisionDataArray as $subDivisionItem) {
                 if(isset($subDivisionItem['sous_compte_id'])){
-                    if (!parent::relationExists($this->model->sub_divisions(), [$subDivisionItem['sous_compte_id']])) {
+                    if (!parent::relationExists($this->model->sub_divisions(), [$subDivisionItem['sous_compte_id']], isPivot: false)) {
                         $this->create(array_merge($subDivisionItem, ["subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
                     }
                 }else {
@@ -92,7 +93,7 @@ class SubAccountReadWriteRepository extends EloquentReadWriteRepository
                 }
             }
     
-            return false; // Taux is already attached
+            return true;
             
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);

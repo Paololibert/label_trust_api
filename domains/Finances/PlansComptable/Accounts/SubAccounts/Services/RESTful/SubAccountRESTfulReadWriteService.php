@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Domains\Finances\PlansComptable\SubAccounts\Services\RESTful;
+namespace Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful;
 
 use Core\Logic\Services\Contracts\ReadWriteServiceContract;
 use Core\Logic\Services\RestJson\RestJsonReadWriteService;
-use Domains\Finances\PlansComptable\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulReadWriteServiceContract;
+use Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulReadWriteServiceContract;
 
 /**
  * The ***`SubAccountRESTfulReadWriteService`*** class provides RESTful CRUD operations for the "SubAccount" resource.
@@ -15,7 +15,7 @@ use Domains\Finances\PlansComptable\SubAccounts\Services\RESTful\Contracts\SubAc
  * It implements the `SubAccountRESTfulReadWriteServiceContract` interface that defines the contract for this service.
  * The class leverages the `JsonResponseTrait` to create consistent JSON responses with `success`, `error`, and `validation` error structures.
  *
- * @package ***`\Domains\Finances\PlansComptable\SubAccounts\Services\RESTful`***
+ * @package ***`\Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful`***
  */
 class SubAccountRESTfulReadWriteService extends RestJsonReadWriteService implements SubAccountRESTfulReadWriteServiceContract
 {

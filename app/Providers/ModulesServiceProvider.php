@@ -377,6 +377,54 @@ class ModulesServiceProvider extends ServiceProvider
             }
         );
 
+        // Binds the implementation of AccountRESTfulReadWriteServiceContract to the AccountRESTfulReadWriteService class.
+        $this->app->bind(
+            \Domains\Finances\PlansComptable\Accounts\Services\RESTful\Contracts\AccountRESTfulReadWriteServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for AccountRESTfulReadWriteService
+                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
+
+                // Create and return an instance of AccountRESTfulReadWriteService
+                return new \Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulReadWriteService($readWriteService);
+            }
+        );
+
+        // Binds the implementation of AccountRESTfulQueryServiceContract to the AccountRESTfulQueryService class.
+        $this->app->bind(
+            \Domains\Finances\PlansComptable\Accounts\Services\RESTful\Contracts\AccountRESTfulQueryServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for AccountRESTfulQueryService
+                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
+
+                // Create and return an instance of AccountRESTfulQueryService
+                return new \Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulQueryService($queryService);
+            }
+        );
+
+        // Binds the implementation of SubAccountRESTfulReadWriteServiceContract to the SubAccountRESTfulReadWriteService class.
+        $this->app->bind(
+            \Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulReadWriteServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for SubAccountRESTfulReadWriteService
+                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
+
+                // Create and return an instance of SubAccountRESTfulReadWriteService
+                return new \Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\SubAccountRESTfulReadWriteService($readWriteService);
+            }
+        );
+
+        // Binds the implementation of SubAccountRESTfulQueryServiceContract to the SubAccountRESTfulQueryService class.
+        $this->app->bind(
+            \Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulQueryServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for SubAccountRESTfulQueryService
+                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
+
+                // Create and return an instance of SubAccountRESTfulQueryService
+                return new \Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\SubAccountRESTfulQueryService($queryService);
+            }
+        );
+
 
         // Binds the implementation of CompteRESTfulReadWriteServiceContract to the CompteRESTfulReadWriteService class.
         $this->app->bind(

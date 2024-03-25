@@ -96,17 +96,4 @@ class CategoryOfEmployeeReadWriteRepository extends EloquentReadWriteRepository
             throw new RepositoryException(message: "Error while detaching taux from category of employee.", previous: $exception);
         }
     }
-    
-    /**
-     * Check if the specified relationship exists for the given IDs.
-     *
-     * @param \Illuminate\Database\Eloquent\Relations\BelongsToMany $relation
-     * @param array $ids
-     *
-     * @return bool
-     */
-    protected function relationExists(BelongsToMany $relation, array $ids): bool
-    {
-        return $relation->wherePivotIn('id', $ids)->exists();
-    }
 }

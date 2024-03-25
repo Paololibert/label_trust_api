@@ -7,7 +7,7 @@ namespace Domains\Finances\PlansComptable\Accounts\DataTransfertObjects;
 use App\Models\Finances\Account;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Domains\Finances\Comptes\DataTransfertObjects\CreateCompteDTO;
-use Domains\Finances\PlansComptable\SubAccounts\DataTransfertObjects\CreateSubAccountDTO;
+use Domains\Finances\PlansComptable\Accounts\SubAccounts\DataTransfertObjects\CreateSubAccountDTO;
 use Illuminate\Validation\Rule;
 
 /**
@@ -31,7 +31,7 @@ class CreateAccountDTO extends BaseDTO
         }
 
         //if(!isset(request()['sub_accounts'])){
-        if (!array_key_exists('accounts.*.sub_accounts', $this->rules())) {
+        if (array_key_exists('accounts.*.sub_accounts', $this->rules())) {
             $this->merge(new CreateSubAccountDTO());
         }
     }

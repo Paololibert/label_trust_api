@@ -197,36 +197,34 @@ class ModelContract extends Model
 
         parent::__construct($attributes);
 
-        $this->attributes       = array_unique(array_merge($this->default_attributes,       $this->attributes));
-        // $this->attributes       = array_unique(array_merge($this->attributes,               ["{$this->deleteable()}"=> FALSE]));
+        $this->attributes       = array_merge($this->default_attributes,       $this->attributes);
+        // $this->attributes       = array_merge($this->attributes,               ["{$this->deleteable()}"=> FALSE]);
         if($this->authorable()){
-            $this->default_fillable = array_unique(array_merge($this->default_fillable,         ["{$this->deleteable()}", "{$this->authorable()}"]));
+            $this->default_fillable = array_merge($this->default_fillable,         ["{$this->deleteable()}", "{$this->authorable()}"]);
         }
-        $this->fillable         = array_unique(array_merge($this->default_fillable,         $this->fillable));
-        $this->guarded          = array_unique(array_merge($this->default_guarded,          $this->guarded));
-        $this->default_appends  = array_unique(array_merge($this->default_appends,          $this->getAppends()));
-        $this->appends          = array_unique(array_merge($this->default_appends,          $this->appends));
-        $this->with             = array_unique(array_merge($this->default_with,             $this->with));
+        $this->fillable         = array_merge($this->default_fillable,         $this->fillable);
+        $this->guarded          = array_merge($this->default_guarded,          $this->guarded);
+        $this->default_appends  = array_merge($this->default_appends,          $this->getAppends());
+        $this->appends          = array_merge($this->default_appends,          $this->appends);
+        $this->with             = array_merge($this->default_with,             $this->with);
 
         if($this->authorable()){
-            $this->default_hidden   = array_unique(array_merge($this->default_hidden,          ["{$this->deleteable()}", "{$this->authorable()}"]));
+            $this->default_hidden   = array_merge($this->default_hidden,          ["{$this->deleteable()}", "{$this->authorable()}"]);
         }
 
-        $this->hidden           = array_unique(array_merge($this->default_hidden,           $this->hidden));
+        $this->hidden           = array_merge($this->default_hidden,           $this->hidden);
         
         if($this->authorable()){
-            $this->default_casts    = array_unique(array_merge($this->default_casts,            ["{$this->deleteable()}"=> 'boolean', "{$this->authorable()}"=> 'string']));
+            $this->default_casts    = array_merge($this->default_casts,            ["{$this->deleteable()}"=> 'boolean', "{$this->authorable()}"=> 'string']);
         }
         
-        $this->casts            = array_unique(array_merge($this->default_casts,            $this->casts));
-        $this->default_visible  = array_unique(array_merge($this->default_visible,          ["{$this->deleteable()}"]));
-        $this->visible          = array_unique(array_merge($this->default_visible,          $this->visible));
-        $this->visible          = array_unique(array_merge($this->visible,                  $this->appends));
-        $this->visible          = array_unique(array_merge($this->visible,                  $this->with));
-        $this->dates            = array_unique(array_merge($this->default_dates,            $this->dates));
-        $this->dispatchesEvents = array_unique(array_merge($this->defaultDispatchesEvents, $this->dispatchesEvents));
-
-        //parent::__construct($this->attributes);
+        $this->casts            = array_merge($this->default_casts,            $this->casts);
+        $this->default_visible  = array_merge($this->default_visible,          ["{$this->deleteable()}"]);
+        $this->visible          = array_merge($this->default_visible,          $this->visible);
+        $this->visible          = array_merge($this->visible,                  $this->appends);
+        $this->visible          = array_merge($this->visible,                  $this->with);
+        $this->dates            = array_merge($this->default_dates,            $this->dates);
+        $this->dispatchesEvents = array_merge($this->defaultDispatchesEvents, $this->dispatchesEvents);
     }
 
     /**

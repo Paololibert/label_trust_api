@@ -25,7 +25,7 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Permissions\Repositories\PermissionReadOnlyRepository::class);
 
-    
+
         // Bind ReadWriteRepositoryInterface to RoleReadWriteRepository
         $this->app->when(\Domains\Roles\Services\RESTful\RoleRESTfulReadWriteService::class)
             ->needs(
@@ -40,7 +40,7 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Roles\Repositories\RoleReadOnlyRepository::class);
 
-    
+
         // Bind ReadWriteRepositoryInterface to PersonReadWriteRepository
         $this->app->when(\Domains\Users\People\Services\RESTful\PersonRESTfulReadWriteService::class)
             ->needs(
@@ -55,7 +55,7 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Users\People\Repositories\PersonReadOnlyRepository::class);
 
-    
+
         // Bind ReadWriteRepositoryInterface to CompanyReadWriteRepository
         $this->app->when(\Domains\Users\Companies\Services\RESTful\CompanyRESTfulReadWriteService::class)
             ->needs(
@@ -70,7 +70,7 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Users\Companies\Repositories\CompanyReadOnlyRepository::class);
 
-    
+
         // Bind ReadWriteRepositoryInterface to UserReadWriteRepository
         $this->app->when(\Domains\Users\Services\RESTful\UserRESTfulReadWriteService::class)
             ->needs(
@@ -86,7 +86,7 @@ class RepositoriesServiceProvider extends ServiceProvider
             ->give(\Domains\Users\Repositories\UserReadOnlyRepository::class);
 
 
-    
+
         // Bind ReadWriteRepositoryInterface to UniteMesureReadWriteRepository
         $this->app->when(\Domains\UniteMesures\Services\RESTful\UniteMesureRESTfulReadWriteService::class)
             ->needs(
@@ -101,7 +101,7 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\UniteMesures\Repositories\UniteMesureReadOnlyRepository::class);
 
-    
+
         // Bind ReadWriteRepositoryInterface to DepartementReadWriteRepository
         $this->app->when(\Domains\Departements\Services\RESTful\DepartementRESTfulReadWriteService::class)
             ->needs(
@@ -116,7 +116,7 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Departements\Repositories\DepartementReadOnlyRepository::class);
 
-    
+
         // Bind ReadWriteRepositoryInterface to PosteReadWriteRepository
         $this->app->when(\Domains\Postes\Services\RESTful\PosteRESTfulReadWriteService::class)
             ->needs(
@@ -160,8 +160,8 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\CategoriesOfEmployees\Repositories\CategoryOfEmployeeReadOnlyRepository::class);
 
-        
-    
+
+
         // Bind ReadWriteRepositoryInterface to DeviseReadWriteRepository
         $this->app->when(\Domains\Finances\Devises\Services\RESTful\DeviseRESTfulReadWriteService::class)
             ->needs(
@@ -175,8 +175,8 @@ class RepositoriesServiceProvider extends ServiceProvider
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
             ->give(\Domains\Finances\Devises\Repositories\DeviseReadOnlyRepository::class);
-        
-    
+
+
         // Bind ReadWriteRepositoryInterface to CategoriesDeCompteReadWriteRepository
         $this->app->when(\Domains\Finances\CategoriesDeCompte\Services\RESTful\CategorieDeCompteRESTfulReadWriteService::class)
             ->needs(
@@ -191,7 +191,7 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Finances\CategoriesDeCompte\Repositories\CategorieDeCompteReadOnlyRepository::class);
 
-    
+
         // Bind ReadWriteRepositoryInterface to ClassesDeCompteReadWriteRepository
         $this->app->when(\Domains\Finances\ClassesDeCompte\Services\RESTful\ClasseDeCompteRESTfulReadWriteService::class)
             ->needs(
@@ -206,8 +206,8 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Finances\ClassesDeCompte\Repositories\ClasseDeCompteReadOnlyRepository::class);
 
-        
-    
+
+
         // Bind ReadWriteRepositoryInterface to PeriodesExerciceReadWriteRepository
         $this->app->when(\Domains\Finances\PeriodesExercice\Services\RESTful\PeriodeExerciceRESTfulReadWriteService::class)
             ->needs(
@@ -222,8 +222,8 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Finances\PeriodesExercice\Repositories\PeriodeExerciceReadOnlyRepository::class);
 
-       
-    
+
+
         // Bind ReadWriteRepositoryInterface to CompteReadWriteRepository
         $this->app->when(\Domains\Finances\Comptes\Services\RESTful\CompteRESTfulReadWriteService::class)
             ->needs(
@@ -238,7 +238,7 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Finances\Comptes\Repositories\CompteReadOnlyRepository::class);
 
-    
+
         // Bind ReadWriteRepositoryInterface to JournalReadWriteRepository
         $this->app->when(\Domains\Finances\Journaux\Services\RESTful\JournalRESTfulReadWriteService::class)
             ->needs(
@@ -252,8 +252,8 @@ class RepositoriesServiceProvider extends ServiceProvider
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
             ->give(\Domains\Finances\Journaux\Repositories\JournalReadOnlyRepository::class);
-       
-    
+
+
         // Bind ReadWriteRepositoryInterface to PlanComptableReadWriteRepository
         $this->app->when(\Domains\Finances\PlansComptable\Services\RESTful\PlanComptableRESTfulReadWriteService::class)
             ->needs(
@@ -267,8 +267,37 @@ class RepositoriesServiceProvider extends ServiceProvider
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
             ->give(\Domains\Finances\PlansComptable\Repositories\PlanComptableReadOnlyRepository::class);
-        
-    
+
+
+        // Bind ReadWriteRepositoryInterface to AccountReadWriteRepository
+        $this->app->when(\Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulReadWriteService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to AccountReadOnlyRepository
+        $this->app->when(\Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulQueryService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadOnlyRepository::class);
+
+
+        // Bind ReadWriteRepositoryInterface to AccountReadWriteRepository
+        $this->app->when(\Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulReadWriteService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to AccountReadOnlyRepository
+        $this->app->when(\Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulQueryService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadOnlyRepository::class);
+
         // Bind ReadWriteRepositoryInterface to ExerciceComptableReadWriteRepository
         $this->app->when(\Domains\Finances\ExercicesComptable\Services\RESTful\ExerciceComptableRESTfulReadWriteService::class)
             ->needs(

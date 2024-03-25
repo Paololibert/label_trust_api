@@ -10,6 +10,8 @@ use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\Comptes\Repositories\CompteReadWriteRepository;
 use Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository;
+use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
@@ -53,28 +55,21 @@ class PlanComptableReadWriteRepository extends EloquentReadWriteRepository
      *
      * @throws \Core\Utils\Exceptions\RepositoryException If there is an error while creating the record.
      */
-    public function create(array $data): PlanComptable
+    public function create(array $data): Model
     {
         try {
             $this->model = parent::create($data);
 
-            foreach ($data['accounts'] as $account_data) {
-                $account_data = array_merge($account_data, ["plan_comptable_id" => $this->model->id]);
-                if(isset($account_data['compte_id'])){
-                    $this->accountRepositoryReadWrite->create($account_data);
+            if (isset($data['accounts'])) {
+                foreach ($data['accounts'] as $account_data) {
+                    $account_data = array_merge($account_data, ["plan_comptable_id" => $this->model->id]);
+                    if (isset($account_data['compte_id'])) {
+                        $this->accountRepositoryReadWrite->create($account_data);
+                    } else {
+                        $compte = $this->compteRepositoryReadWrite->create($account_data['compte_data']);
 
-                    /*
-                        $this->model->accounts()->create($account_data);
-
-                        if(!isset(request()['sub_accounts'])){
-                            $this->accountRepositoryReadWrite->attachSubAccounts($account->id, $account_data);
-                        }
-                    */
-                }
-                else{
-                    $compte = $this->compteRepositoryReadWrite->create($account_data['compte_data']);
-                    
-                    $this->attachAccounts($this->model->id, [array_merge($account_data, ["compte_id" => $compte->id])]);
+                        $this->attachAccounts($this->model->id, [array_merge($account_data, ["compte_id" => $compte->id])]);
+                    }
                 }
             }
 
@@ -87,52 +82,162 @@ class PlanComptableReadWriteRepository extends EloquentReadWriteRepository
     }
 
     /**
-     * Attach accounts.
+     * Attach accounts to a Plan Comptable.
      *
-     * This method associates specific taux with a given category of employee.
+     * This method associates specific accounts with a given Plan Comptable.
      *
-     * @param   string      $planComptableId              The unique identifier of the plan.
-     * @param   array       $subAccountDataArray    The array of access identifiers representing the taux to be attached.
+     * @param   string                                      $planComptableId        The unique identifier of the Plan Comptable to attach accounts to.
+     * @param   array                                       $accountDataArray       The array of account data representing the accounts to be attached.
      *
-     * @return  bool                                Whether the taux were attached successfully.
+     * @return  bool                                                                Whether the accounts were attached successfully.
+     *
+     * @throws  \Core\Utils\Exceptions\QueryException                               If there is an error while attaching accounts.
+     * @throws  \Core\Utils\Exceptions\RepositoryException                          If there is an issue with the repository operation.
      */
     public function attachAccounts(string $planComptableId, array $accountDataArray): bool
     {
         try {
-
+            // Find the Plan Comptable by ID
             $this->model = $this->find($planComptableId);
 
+            if($this->model->est_valider) throw new Exception("Le plan comptable a deja ete valider", 1);
+
+            // Iterate through each account data item
             foreach ($accountDataArray as $accountItemData) {
-                if(isset($accountItemData['compte_id'])){
-                    //$this->accountRepositoryReadWrite->attachSubAccounts($this->model->id, $accountItemData['sub_accounts']);
-                    //$account = $this->model->accounts()->create($account_data);
+                // Check if the 'compte_id' key is set in the account data
+                if (isset($accountItemData['compte_id'])) {
+                    // Check if the relation exists, if not, create the account
                     if (!parent::relationExists(relation: $this->model->comptes(), ids: [$accountItemData['compte_id']], isPivot: true)) {
-                        
+
+                        if (!isset($accountItemData['plan_comptable_id'])) {
+                            $accountItemData['plan_comptable_id'] = $this->model->id;
+                        }
                         $this->accountRepositoryReadWrite->create($accountItemData);
                     }
-                }else {
-
-                    //dd($accountItemData);
-
+                } else {
+                    if (!isset($accountItemData['plan_comptable_id'])) {
+                        $accountItemData['plan_comptable_id'] = $this->model->id;
+                    }
+                    // If 'compte_id' is not set, create the related Compte first, then create the account
                     $compte = $this->compteRepositoryReadWrite->create($accountItemData['compte_data']);
-
                     $this->accountRepositoryReadWrite->create(array_merge($accountItemData, ["compte_id" => $compte->id]));
-
-                    //$account = $this->accountRepositoryReadWrite->create(array_merge($accountItemData, ["plan_comptable_id" => $this->model->id]));
-                    
-                    //return $this->model->sous_comptes()->syncWithoutDetaching($accountItemData['compte_id'], array_merge($accountItemData, ["compte_id" => $compte->id])) ? true : false;
                 }
             }
-    
-            return false; // Taux is already attached
-            
+
+            return true;
         } catch (ModelNotFoundException $exception) {
+            // Throw a QueryException if the Plan Comptable is not found
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while attaching taux to category of employee.", previous: $exception);
+            // Throw a QueryException if there is an error while attaching accounts
+            throw new QueryException(message: "Error while attaching accounts to Plan Comptable.", previous: $exception);
         } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while attaching taux to category of employee.", previous: $exception);
-        }        
+            // Throw a RepositoryException if there is an issue with the repository operation
+            throw new RepositoryException(message: "Error while attaching accounts to Plan Comptable.", previous: $exception);
+        }
     }
-    
+
+    /**
+     * Update accounts in a Plan Comptable.
+     *
+     * This method updates the accounts associated with a given Plan Comptable.
+     *
+     * @param   string                                      $planComptableId        The unique identifier of the Plan Comptable to update accounts for.
+     * @param   array                                       $updatedAccountsData    The array of updated account data representing the changes to be made.
+     *
+     * @return  bool                                                                Whether the accounts were updated successfully.
+     *
+     * @throws  \Core\Utils\Exceptions\QueryException                               If there is an error while updating accounts.
+     * @throws  \Core\Utils\Exceptions\RepositoryException                          If there is an issue with the repository operation.
+     */
+    public function updateAccounts(string $planComptableId, array $updatedAccountsData): bool
+    {
+        try {
+            // Find the Plan Comptable by ID
+            $this->model = $this->find($planComptableId);
+
+            if($this->model->est_valider) throw new Exception("Le plan comptable a deja ete valider", 1);
+
+            $result = $this->accountRepositoryReadWrite->updateMultiple($updatedAccountsData, filters: ["where" => [["plan_comptable_id", "=", $this->model->id]]]);
+
+            return count($result) === count($updatedAccountsData);
+        } catch (ModelNotFoundException $exception) {
+            // Throw a QueryException if the Plan Comptable or any of the accounts are not found
+            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
+        } catch (QueryException $exception) {
+            // Throw a QueryException if there is an error while updating accounts
+            throw new QueryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
+        } catch (Throwable $exception) {
+            // Throw a RepositoryException if there is an issue with the repository operation
+            throw new RepositoryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
+        }
+    }
+
+    /**
+     * Delete accounts from a Plan Comptable.
+     *
+     * This method deletes the accounts associated with a given Plan Comptable.
+     *
+     * @param   string                                      $planComptableId        The unique identifier of the Plan Comptable to delete accounts from.
+     * @param   array                                       $deletedAccountIds      The array of IDs of accounts to be deleted.
+     *
+     * @return  bool                                                                Whether the accounts were deleted successfully.
+     *
+     * @throws  \Core\Utils\Exceptions\QueryException                               If there is an error while deleting accounts.
+     * @throws  \Core\Utils\Exceptions\RepositoryException                          If there is an issue with the repository operation.
+     */
+    public function deleteAccounts(string $planComptableId, array $deletedAccountIds): bool
+    {
+        try {
+            // Find the Plan Comptable by ID
+            $this->model = $this->find($planComptableId);
+
+            if($this->model->est_valider) throw new Exception("Le plan comptable a deja ete valider", 1);
+
+            // Soft-delete accounts
+            $result = $this->accountRepositoryReadWrite->softDelete([], filters: ["where" => [["plan_comptable_id", "=", $this->model->id]], "whereIn" => [["compte_id", $deletedAccountIds]]]);
+
+            return $result;
+        } catch (ModelNotFoundException $exception) {
+            // Throw a QueryException if the Plan Comptable or any of the accounts are not found
+            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
+        } catch (QueryException $exception) {
+            // Throw a QueryException if there is an error while updating accounts
+            throw new QueryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
+        } catch (Throwable $exception) {
+            // Throw a RepositoryException if there is an issue with the repository operation
+            throw new RepositoryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
+        }
+    }
+
+    /**
+     * Delete accounts from a Plan Comptable.
+     *
+     * This method deletes the accounts associated with a given Plan Comptable.
+     *
+     * @param   string                                      $planComptableId        The unique identifier of the Plan Comptable to delete accounts from.
+     *
+     * @return  bool                                                                Whether the accounts were deleted successfully.
+     *
+     * @throws  \Core\Utils\Exceptions\QueryException                               If there is an error while deleting accounts.
+     * @throws  \Core\Utils\Exceptions\RepositoryException                          If there is an issue with the repository operation.
+     */
+    public function validatePlanComptable(string $planComptableId): bool
+    {
+        try {
+            // Find the Plan Comptable by ID
+            $result = $this->update($planComptableId, ["est_valider" => true]);
+
+            return $result ? true : false;
+        } catch (ModelNotFoundException $exception) {
+            // Throw a QueryException if the Plan Comptable or any of the accounts are not found
+            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
+        } catch (QueryException $exception) {
+            // Throw a QueryException if there is an error while updating accounts
+            throw new QueryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
+        } catch (Throwable $exception) {
+            // Throw a RepositoryException if there is an issue with the repository operation
+            throw new RepositoryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
+        }
+    }
 }

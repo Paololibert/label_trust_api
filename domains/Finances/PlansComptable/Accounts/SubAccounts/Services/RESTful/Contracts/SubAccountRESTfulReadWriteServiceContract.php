@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Domains\Finances\PlansComptable\SubAccounts\Services\RESTful\Contracts;
+namespace Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts;
 
 use Core\Logic\Services\RestJson\Contracts\RestJsonReadWriteServiceContract;
 
@@ -15,7 +15,7 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonReadWriteServiceContract;
  *
  * Implementing classes should provide the necessary functionality to perform `read` and `write` operations on SubAccount resources via RESTful API endpoints.
  *
- * @package ***`\Domains\Finances\PlansComptable\SubAccounts\Services\RESTful\Contracts`***
+ * @package ***`\Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts`***
  */
 interface SubAccountRESTfulReadWriteServiceContract extends RestJsonReadWriteServiceContract
 {

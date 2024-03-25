@@ -23,5 +23,16 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
  */
 interface PlanComptableRESTfulQueryServiceContract extends RestJsonQueryServiceContract
 {
-
+    /**
+     * Fetches the accounts associated with a specific Plan Comptable.
+     *
+     * Retrieves the accounts belonging to the Plan Comptable identified by the given ID.
+     * Returns a JSON response containing information about the accounts associated with the Plan Comptable.
+     *
+     * @param  string                           $planComptableId    The unique identifier of the Plan Comptable to query accounts for.
+     * @return \Illuminate\Http\JsonResponse                        The JSON response containing information about the accounts.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException              If there is an issue with the service operation.
+     */
+    public function fetchAccounts(string $planComptableId): \Illuminate\Http\JsonResponse;
 }

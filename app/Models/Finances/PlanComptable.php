@@ -42,7 +42,7 @@ class PlanComptable extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'code', 'name', 'description',
+        'code', 'name', 'description', 'est_valider'
     ];
 
     /**
@@ -62,7 +62,8 @@ class PlanComptable extends ModelContract
     protected $casts = [
         'code'         => 'string',
         'name'         => 'string',
-        'description'  => 'string'
+        'description'  => 'string',
+        'est_valider'  => 'boolean'
     ];
 
     /**
@@ -133,8 +134,6 @@ class PlanComptable extends ModelContract
 
         return $uniqueCode;
     }
-
-
 
     /**
      * The "boot" method of the model.

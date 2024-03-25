@@ -20,7 +20,7 @@ use Domains\Finances\EcrituresComptable\LignesEcritureComptable\Services\RESTful
 class LigneEcritureComptableRESTfulReadWriteService extends RestJsonReadWriteService implements LigneEcritureComptableRESTfulReadWriteServiceContract
 {
     /**
-     * Constructor for the EcritureComptableRESTfulReadWriteService class.
+     * Constructor for the LigneEcritureComptableRESTfulReadWriteService class.
      *
      * @param ReadWriteServiceContract $readWriteService The query service instance to be used.
      */

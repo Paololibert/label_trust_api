@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Domains\Finances\PlansComptable\SubAccounts\Services\RESTful;
+namespace Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful;
 
 use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\RestJsonQueryService;
-use Domains\Finances\PlansComptable\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulQueryServiceContract;
+use Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulQueryServiceContract;
 
 /**
  * Class ***`SubAccountRESTfulQueryService`***
@@ -16,7 +16,7 @@ use Domains\Finances\PlansComptable\SubAccounts\Services\RESTful\Contracts\SubAc
  *
  * The `SubAccountRESTfulQueryService` class primarily serves as a wrapper around the underlying query service, providing RESTful capabilities for querying SubAccount resources.
  *
- * @package ***`\Domains\Finances\PlansComptable\SubAccounts\Services\RESTful`***
+ * @package ***`\Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful`***
  */
 class SubAccountRESTfulQueryService extends RestJsonQueryService implements SubAccountRESTfulQueryServiceContract
 {

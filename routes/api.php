@@ -41,7 +41,6 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
         Route::get('/user', 'Auths\AuthController@user')
             ->middleware('auth:api');
-
     });
 
     Route::middleware([/* 'auth:api' */])->group(function () {
@@ -90,7 +89,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                 Route::apiResource('roles', 'RoleController')->parameters(['roles' => 'role_id']);
 
-                Route::group(['prefix'=> 'roles'], function () {
+                Route::group(['prefix' => 'roles'], function () {
                     // Get all roles
                     Route::put('{role_id}/grant-access', 'RoleController@grantAccess')->name('roles.grantAccess');
                     Route::put('{role_id}/revoke-access', 'RoleController@revokeAccess')->name('roles.revokeAccess');
@@ -114,7 +113,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                 Route::apiResource('users', 'UserController')->parameters(['users' => 'user_id']);
 
 
-                Route::group(['prefix'=> 'users'], function () {
+                Route::group(['prefix' => 'users'], function () {
                     // Get user privileges
                     Route::put('{user_id}/assign-roles', 'UserController@assignRolePrivileges')->name('users.assignRolePrivileges');
                     Route::put('{user_id}/revoke-roles', 'UserController@revokeRolePrivileges')->name('users.revokeRolePrivileges');
@@ -157,7 +156,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                 Route::apiResource('postes', 'PosteController')->parameters(['postes' => 'poste_id']);
 
-                Route::group(['prefix'=> 'postes'], function () {
+                Route::group(['prefix' => 'postes'], function () {
                     Route::put('{poste_id}/attach-salaries', 'PosteController@attachSalariesToAPoste')->name('postes.attach');
                     Route::delete('{poste_id}/detach-salaries', 'PosteController@detachSalariesFromAPoste')->name('postes.detach');
                     Route::get('{poste_id}/salaries', 'PosteController@fetchPosteSalaries')->name('postes.salaries');
@@ -167,7 +166,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                 Route::apiResource('unite_travailles', 'UniteTravailleController')->parameters(['unite_travailles' => 'unite_travaille_id']);
 
-                Route::group(['prefix'=> 'unite_travailles'], function () {
+                Route::group(['prefix' => 'unite_travailles'], function () {
                     Route::put('{unite_travaille_id}/add-taux', 'UniteTravailleController@addTaux')->name('unite_travailles.addTaux');
                     Route::patch('{unite_travaille_id}/edit-taux', 'UniteTravailleController@editTaux')->name('unite_travailles.editTaux');
                     Route::delete('{unite_travaille_id}/remove-taux', 'UniteTravailleController@removeTaux')->name('unite_travailles.removeTaux');
@@ -175,7 +174,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                 Route::apiResource('categories_of_employees', 'CategoryOfEmployeeController')->parameters(['categories_of_employees' => 'category_of_employee_id']);
 
-                Route::group(['prefix'=> 'categories_of_employees'], function () {
+                Route::group(['prefix' => 'categories_of_employees'], function () {
                     Route::put('{category_of_employee_id}/attach-taux', 'CategoryOfEmployeeController@attachTauxToACategoryOfEmployee')->name('categories_of_employees.attach');
                     Route::delete('{category_of_employee_id}/detach-taux', 'CategoryOfEmployeeController@detachTauxFromACategoryOfEmployee')->name('categories_of_employees.detach');
                     Route::get('{category_of_employee_id}/taux', 'CategoryOfEmployeeController@fetchCategoryOfEmployeeTaux')->name('categories_of_employees.taux');
@@ -187,28 +186,41 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                 Route::apiResource('employees', 'CategoryOfEmployeeController');
 
-                Route::group(['namespace' => 'Finances'], function(){
+                Route::group(['namespace' => 'Finances'], function () {
 
 
                     Route::apiResource('devises', 'DeviseController')->parameters(['devises' => 'devise_id']);
 
                     Route::apiResource('categories_de_compte', 'CategorieDeCompteController')->parameters(['categories_de_compte' => 'categorie_de_compte_id']);
-    
+
                     Route::apiResource('classes_de_compte', 'ClasseDeCompteController')->parameters(['classes_de_compte' => 'classe_de_compte_id']);
-        
+
                     Route::apiResource('comptes', 'CompteController')->parameters(['comptes' => 'compte_id']);
-        
+
                     Route::apiResource('journaux', 'JournalController')->parameters(['journaux' => 'journal_id']);
-        
+
                     Route::apiResource('periodes_exercice', 'PeriodeExerciceController')->parameters(['periodes_exercice' => 'periode_exercice_id']);
-    
+
                     Route::apiResource('plans_comptable', 'PlanComptableController')->parameters(['plans_comptable' => 'plan_comptable_id']);
-        
+
+                    Route::group(['prefix' => 'plans_comptable'], function () {
+                        Route::put('{plan_comptable_id}/attach-accounts', 'PlanComptableController@addNewAccountsToPlan')->name('plans_comptable.attach');
+                        Route::patch('{plan_comptable_id}/update-attach-accounts', 'PlanComptableController@updateAccountsInPlan')->name('plans_comptable.update-attach');
+                        Route::patch('{plan_comptable_id}/detach-accounts', 'PlanComptableController@deleteAccountsFromPlan')->name('plans_comptable.detach');
+                        Route::get('{plan_comptable_id}/accounts', 'PlanComptableController@fetchAccounts')->name('plans_comptable.accounts');
+                        Route::get('{plan_comptable_id}/valider', 'PlanComptableController@validatePlanComptable')->name('plans_comptable.valider');
+                    });
+                    
+                    Route::group(['prefix' => 'plans_comptable'], function () {
+                        Route::put('{plan_comptable_id}/accounts/{account_id}/attach-sub-accounts-to-an-account', 'PlanComptableController@addNewSubAccountsToAPlanAccount')->name('plans_comptable.account.attach');
+                        Route::patch('{plan_comptable_id}/accounts/{account_id}/update-attach-sub-accounts-of-an-account', 'PlanComptableController@updateSubAccountsInPlanAccount')->name('plans_comptable.account.update-attach');
+                        Route::patch('{plan_comptable_id}/accounts/{account_id}/detach-sub-accounts-from-an-account', 'PlanComptableController@deleteSubAccountsFromAPlanAccount')->name('plans_comptable.account.detach');
+                        Route::get('{plan_comptable_id}/accounts/{account_id}/sub-accounts', 'PlanComptableController@fetchSubAccountsOfAPlanAccount')->name('plans_comptable.account.sub-accounts');
+                    });
+
                     Route::apiResource('exercices_comptable', 'ExerciceComptableController')->parameters(['exercices_comptable' => 'exercice_comptable_id']);
-    
                 });
             });
-
         });
     });
 });

@@ -20,4 +20,46 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonReadWriteServiceContract;
 interface PlanComptableRESTfulReadWriteServiceContract extends RestJsonReadWriteServiceContract
 {
     
+    /**
+     * Adds new accounts to a Plan Comptable.
+     *
+     * @param  string                                           $planComptableId    The unique identifier of the Plan Comptable to add accounts to.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountsData       Data of the accounts to be added.
+     * @return \Illuminate\Http\JsonResponse                                        The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                              If there is an issue with adding the accounts.
+     */
+    public function addAccounts(string $planComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsData): \Illuminate\Http\JsonResponse;
+    
+    /**
+     * Updates accounts in a Plan Comptable.
+     *
+     * @param  string                                           $planComptableId        The unique identifier of the Plan Comptable to update accounts in.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $updatedAccountsData    Data of the accounts to be updated.
+     * @return \Illuminate\Http\JsonResponse                                            The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                  If there is an issue with updating the accounts.
+     */
+    public function updateAccounts(string $planComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $updatedAccountsData): \Illuminate\Http\JsonResponse;
+
+    /**
+     * Deletes accounts from a Plan Comptable.
+     *
+     * @param  string                                           $planComptableId    The unique identifier of the Plan Comptable to delete accounts from.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountIds         The IDs of the accounts to be deleted.
+     * @return \Illuminate\Http\JsonResponse                                        The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                              If there is an issue with deleting the accounts.
+     */
+    public function deleteAccounts(string $planComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $accountIds): \Illuminate\Http\JsonResponse;
+
+    /**
+     * Validate a Plan Comptable.
+     *
+     * @param  string                                   $planComptableId    The unique identifier of the Plan Comptable to validate.
+     * @return \Illuminate\Http\JsonResponse                                The JSON response indicating the validation result.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                      If there is an issue with validating the Plan Comptable.
+     */
+    public function validatePlanComptable(string $planComptableId): \Illuminate\Http\JsonResponse;
 }

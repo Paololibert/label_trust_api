@@ -24,7 +24,9 @@ class UpdatePlanComptableDTO extends BaseDTO
     {
         parent::__construct();
 
-        $this->merge(new UpdateAccountDTO(), 'accounts', ['array']);
+        if (array_key_exists('accounts', $this->rules())) {
+            $this->merge(new UpdateAccountDTO());
+        }
     }
     
     /**
