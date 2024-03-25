@@ -190,6 +190,20 @@ class ResourcesServiceProvider extends ServiceProvider
                 )
                 ->give(\Domains\Employees\EmployeeNonContractuels\Repositories\EmployeeNonContractuelReadWriteRepository::class);
 
+                // Bind ReadOnlyRepositoryInterface to PartnerReadOnlyRepository
+                $this->app->when(\App\Http\Controllers\API\RESTful\V1\PartnerController::class)
+                    ->needs(
+                        \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+                    )
+                    ->give(\Domains\Partners\Repositories\PartnerReadOnlyRepository::class);
+    
+                // Bind ReadWriteRepositoryInterface to ContractReadWriteRepository
+                $this->app->when(\App\Http\Controllers\API\RESTful\V1\PartnerController::class)
+                    ->needs(
+                        \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+                    )
+                    ->give(\Domains\Partners\Repositories\PartnerReadWriteRepository::class);
+
         }
 
     /**

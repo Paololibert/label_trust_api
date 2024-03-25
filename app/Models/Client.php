@@ -10,16 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
- * Class ***`EmployeeContractuel`***
+ * Class ***`Client`***
  *
- * This model represents the `employee_contractuels` table in the database.
+ * This model represents the `clients` table in the database.
  * It extends the ModelContract class and provides access to the database table associated with the model.
  *
  * @property  string    $name;
  *
  * @package ***`\App\Models`***
  */
-class EmployeeContractuel extends ModelContract
+class Client extends ModelContract
 {
     //use Contractuelable;
     /**
@@ -34,7 +34,7 @@ class EmployeeContractuel extends ModelContract
      *
      * @var string
      */
-    protected $table = 'employee_contractuels';
+    protected $table = 'clients';
 
 
     /**
@@ -74,19 +74,12 @@ class EmployeeContractuel extends ModelContract
         
     ];
     
-     /**
-     * Get all of the tags for the post.
-     */
-    public function employees()
+    /**
+     * Get all of the users for the client.
+    */
+    public function partners()
     {
-        return $this->morphToMany(Employee::class, 'newcontractable');
+        return $this->morphToMany(Partner::class, 'partnerable');
     }
 
-    /**
-     * Get the comments for the blog post.
-    */
-    public function contracts(): HasMany
-    {
-        return $this->hasMany(Contract::class);
-    }
 }

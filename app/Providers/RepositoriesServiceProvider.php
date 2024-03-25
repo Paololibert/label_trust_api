@@ -233,7 +233,51 @@ class RepositoriesServiceProvider extends ServiceProvider
                 )
                 ->give(\Domains\Employees\EmployeeNonContractuels\Repositories\EmployeeNonContractuelReadOnlyRepository::class);
             
+                
+                
+            // Bind ReadWriteRepositoryInterface to PartnerReadWriteRepository
+            $this->app->when(\Domains\Partners\Services\RESTful\PartnerRESTfulReadWriteService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Partners\Repositories\PartnerReadWriteRepository::class);
+    
+            // Bind ReadWriteRepositoryInterface to ContractReadOnlyRepository
+            $this->app->when(\Domains\Partners\Services\RESTful\PartnerRESTfulQueryService::class)
+                ->needs(
+                    \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+                )
+                ->give(\Domains\Partners\Repositories\PartnerReadOnlyRepository::class);
         
+            // Bind ReadWriteRepositoryInterface to SupplierReadWriteRepository
+            $this->app->when(\Domains\Partners\Suppliers\Services\RESTful\SupplierRESTfulReadWriteService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Partners\Suppliers\Repositories\SupplierReadWriteRepository::class);
+    
+            // Bind ReadWriteRepositoryInterface to ContractReadOnlyRepository
+            $this->app->when(\Domains\Partners\Suppliers\Services\RESTful\SupplierRESTfulQueryService::class)
+                ->needs(
+                    \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+                )
+                ->give(\Domains\Partners\Suppliers\Repositories\SupplierReadOnlyRepository::class);
+
+
+            // Bind ReadWriteRepositoryInterface to ClientReadWriteRepository
+            $this->app->when(\Domains\Partners\Clients\Services\RESTful\ClientRESTfulReadWriteService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Partners\Clients\Repositories\ClientReadWriteRepository::class);
+    
+            // Bind ReadWriteRepositoryInterface to ContractReadOnlyRepository
+            $this->app->when(\Domains\Partners\Clients\Services\RESTful\ClientRESTfulQueryService::class)
+                ->needs(
+                    \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+                )
+                ->give(\Domains\Partners\Clients\Repositories\ClientReadOnlyRepository::class);
+            
     }
 
     /**

@@ -184,9 +184,11 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                 Route::apiResource('employees', 'EmployeeController')->parameters([
                     'employees' => 'employee_id'//
                 ]);
-
-                Route::apiResource('employees', 'EmployeeController');
                 
+                Route::apiResource('partners', 'PartnerController')->parameters([
+                    'partners' => 'partner_id'//
+                ]);
+
                 Route::group(['prefix'=> 'employeecontractuels'], function () {
 
                     Route::post('/new-post', 'EmployeeContractuelController@assignmentOfPost')->name('employeecontractuels.assignmentOfPost');
