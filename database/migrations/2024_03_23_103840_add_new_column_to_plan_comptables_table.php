@@ -59,7 +59,7 @@ class AddNewColumnToPlanComptablesTable extends Migration
 
         try {
             if (Schema::hasTable('plans_comptable')) {
-                Schema::table('plan_comptables', function (Blueprint $table) {
+                Schema::table('plans_comptable', function (Blueprint $table) {
 
                     if (Schema::hasColumn('plans_comptable', 'est_valider')) {
                         // Drop the 'est_valider' column if it exists
