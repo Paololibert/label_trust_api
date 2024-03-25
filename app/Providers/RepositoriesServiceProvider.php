@@ -233,8 +233,6 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Employees\EmployeeNonContractuels\Repositories\EmployeeNonContractuelReadOnlyRepository::class);
 
-
-
         // Bind ReadWriteRepositoryInterface to PartnerReadWriteRepository
         $this->app->when(\Domains\Partners\Services\RESTful\PartnerRESTfulReadWriteService::class)
             ->needs(
@@ -277,8 +275,6 @@ class RepositoriesServiceProvider extends ServiceProvider
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
             ->give(\Domains\Partners\Clients\Repositories\ClientReadOnlyRepository::class);
-
-
 
 
         // Bind ReadWriteRepositoryInterface to DeviseReadWriteRepository

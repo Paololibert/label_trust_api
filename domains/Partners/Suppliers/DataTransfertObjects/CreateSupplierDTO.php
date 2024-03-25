@@ -34,7 +34,7 @@ class CreateSupplierDTO extends BaseDTO
     {
         $rules = array_merge([
             'can_be_deleted'                        => ['sometimes', 'boolean'],
-            'date_debut'                            => ['required', 'date']
+            
         ], $rules);
 
         return $this->rules = parent::rules($rules);
