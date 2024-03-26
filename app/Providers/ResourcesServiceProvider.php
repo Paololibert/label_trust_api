@@ -275,7 +275,7 @@ class ResourcesServiceProvider extends ServiceProvider
 
 
         // Bind ReadOnlyRepositoryInterface to PlanComptableReadOnlyRepository
-        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Finances\PlanComptableController::class)
+       /*  $this->app->when(\App\Http\Controllers\API\RESTful\V1\Finances\PlanComptableController::class)
             ->needs(
                 \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
             )
@@ -286,7 +286,7 @@ class ResourcesServiceProvider extends ServiceProvider
             ->needs(
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
-            ->give(\Domains\Finances\PlansComptable\Repositories\PlanComptableReadWriteRepository::class);
+            ->give(\Domains\Finances\PlansComptable\Repositories\PlanComptableReadWriteRepository::class); */
 
 
 

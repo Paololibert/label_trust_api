@@ -404,6 +404,9 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\PlansComptable\Services\RESTful\Contracts\PlanComptableRESTfulReadWriteServiceContract::class,
             function ($app) {
+                $readWriteService = new \Core\Logic\Services\Manager\ReadWriteService();
+                
+                return new \Domains\Finances\PlansComptable\Services\RESTful\PlanComptableRESTfulReadWriteService($readWriteService);
                 // Resolve the necessary dependencies for PlanComptableRESTfulReadWriteService
                 $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
 
@@ -428,18 +431,16 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\PlansComptable\Accounts\Services\RESTful\Contracts\AccountRESTfulReadWriteServiceContract::class,
             function ($app) {
-                // Resolve the necessary dependencies for AccountRESTfulReadWriteService
-                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
-
+                /**
+                 * Resolve the necessary dependencies for AccountRESTfulReadWriteService
+                 * Create and return an instance of AccountRESTfulReadWriteService
+                 */
                 return new \Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulReadWriteService(
                     new \Core\Logic\Services\Manager\ReadWriteService(
-                        $app->make(\Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository::class)
-                        //new \Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository(new \App\Models\Finances\Account)
+                        new \Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository(new \App\Models\Finances\Account)
                     )
                 );
 
-                // Create and return an instance of AccountRESTfulReadWriteService
-                return new \Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulReadWriteService($readWriteService);
             }
         );
 

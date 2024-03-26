@@ -7,6 +7,7 @@ namespace Core\Data\Repositories\Eloquent;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface;
+use Core\Utils\Exceptions\NotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -73,7 +74,7 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
             return $this->model->select($columns)->findOrFail($id)->fresh();
         } catch (ModelNotFoundException $exception) {
             // Customize the message for ModelNotFoundException
-            throw new QueryException(message: "Record not found.", previous: $exception);
+            throw new NotFoundException(message: "Record not found.", previous: $exception);
         } catch (QueryException $exception) {
             throw new QueryException(message: "Error while retrieving the record.", previous: $exception);
         } catch (Throwable $exception) {

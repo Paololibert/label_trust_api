@@ -8,8 +8,8 @@ use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Illuminate\Database\Eloquent\Model;
-use Throwable;
 
 
 /**
@@ -70,8 +70,8 @@ abstract class RestJsonQueryService implements RestJsonQueryServiceContract
     {
         try {
             return JsonResponseTrait::success(message: "", data: $this->queryService->all($columns));
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -90,8 +90,8 @@ abstract class RestJsonQueryService implements RestJsonQueryServiceContract
     {
         try {
             return JsonResponseTrait::success(data: $this->queryService->paginate(perPage: $perPage, columns: $columns, orderBy: $orderBy, order: $order, pageName: $pageName, page: $page));
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -108,8 +108,8 @@ abstract class RestJsonQueryService implements RestJsonQueryServiceContract
     {
         try {
             return JsonResponseTrait::success(data: $this->queryService->findById($id, $columns));
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), previous: $exception);
         }
     }
 
@@ -126,8 +126,8 @@ abstract class RestJsonQueryService implements RestJsonQueryServiceContract
     {
         try {
             return JsonResponseTrait::success(data: $this->queryService->where($criteria, $columns));
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -143,8 +143,8 @@ abstract class RestJsonQueryService implements RestJsonQueryServiceContract
     {
         try {
             return JsonResponseTrait::success(data: $this->queryService->count($criteria));
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -160,8 +160,8 @@ abstract class RestJsonQueryService implements RestJsonQueryServiceContract
     {
         try {
             return JsonResponseTrait::success(data: $this->queryService->trash($columns));
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -178,8 +178,8 @@ abstract class RestJsonQueryService implements RestJsonQueryServiceContract
     {
         try {
             return JsonResponseTrait::success(data: $this->queryService->getTrash($id, $columns));
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -197,8 +197,8 @@ abstract class RestJsonQueryService implements RestJsonQueryServiceContract
 
         try {
             return JsonResponseTrait::success(data: $this->queryService->where($criteria, $columns));
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }

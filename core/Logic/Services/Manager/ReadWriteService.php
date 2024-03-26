@@ -9,7 +9,7 @@ use Core\Utils\Exceptions\ServiceException;
 use Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface;
 use Core\Logic\Services\Contracts\ReadWriteServiceContract;
 use Illuminate\Database\Eloquent\Model;
-use Throwable;
+use Core\Utils\Exceptions\Contract\CoreException;
 
 /**
  * Class `ReadWriteService`
@@ -44,8 +44,8 @@ class ReadWriteService extends QueryService implements ReadWriteServiceContract
     {
         try {
             return $this->repository->create($data->toArray())->fresh();
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -62,8 +62,8 @@ class ReadWriteService extends QueryService implements ReadWriteServiceContract
     {
         try {
             return $this->repository->update($id, $data->toArray());
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -79,8 +79,8 @@ class ReadWriteService extends QueryService implements ReadWriteServiceContract
     {
         try {
             return $this->repository->softDelete($ids);
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -96,8 +96,8 @@ class ReadWriteService extends QueryService implements ReadWriteServiceContract
     {
         try {
             return $this->repository->permanentlyDelete($ids);
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -113,8 +113,8 @@ class ReadWriteService extends QueryService implements ReadWriteServiceContract
     {
         try {
             return $this->repository->restore($ids);
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -129,8 +129,8 @@ class ReadWriteService extends QueryService implements ReadWriteServiceContract
     {
         try {
             return $this->repository->restoreAll();
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -145,8 +145,8 @@ class ReadWriteService extends QueryService implements ReadWriteServiceContract
     {
         try {
             return $this->repository->emptyTrash();
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -161,8 +161,8 @@ class ReadWriteService extends QueryService implements ReadWriteServiceContract
     {
         try {
             return $this->repository->permanentlyDeleteAll();
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }

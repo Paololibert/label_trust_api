@@ -13,8 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Throwable;
-
+use Core\Utils\Exceptions\Contract\CoreException;
 
 /**
  * Class `RestJsonReadWriteService`
@@ -88,11 +87,11 @@ abstract class RestJsonReadWriteService extends RestJsonQueryService implements 
                 data: $data,
                 status_code: Response::HTTP_CREATED
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -121,11 +120,11 @@ abstract class RestJsonReadWriteService extends RestJsonQueryService implements 
                 data: $data,
                 status_code: Response::HTTP_CREATED
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -155,11 +154,11 @@ abstract class RestJsonReadWriteService extends RestJsonQueryService implements 
                 data: $data,
                 status_code: Response::HTTP_OK
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -189,11 +188,11 @@ abstract class RestJsonReadWriteService extends RestJsonQueryService implements 
                 data: $data,
                 status_code: Response::HTTP_OK
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -223,11 +222,11 @@ abstract class RestJsonReadWriteService extends RestJsonQueryService implements 
                 data: $data,
                 status_code: Response::HTTP_OK
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -255,11 +254,11 @@ abstract class RestJsonReadWriteService extends RestJsonQueryService implements 
                 data: $data,
                 status_code: Response::HTTP_OK
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -287,11 +286,11 @@ abstract class RestJsonReadWriteService extends RestJsonQueryService implements 
                 data: $data,
                 status_code: Response::HTTP_OK
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -319,11 +318,11 @@ abstract class RestJsonReadWriteService extends RestJsonQueryService implements 
                 data: $data,
                 status_code: Response::HTTP_OK
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }

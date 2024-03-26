@@ -6,6 +6,7 @@ namespace Domains\Roles\Services\RESTful;
 
 use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\RestJsonQueryService;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Domains\Roles\Services\RESTful\Contracts\RoleRESTfulQueryServiceContract;
@@ -56,9 +57,10 @@ class RoleRESTfulQueryService extends RestJsonQueryService implements RoleRESTfu
                 data: $roleAccess,
                 status_code: Response::HTTP_OK
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+            // Throw a ServiceException with an error message and the caught exception
+            throw new ServiceException(message: 'Failed to fetched role access: ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }

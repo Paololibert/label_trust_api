@@ -7,8 +7,8 @@ namespace Core\Logic\Services\Manager;
 use Core\Utils\Exceptions\ServiceException;
 use Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface;
 use Core\Logic\Services\Contracts\QueryServiceContract;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Illuminate\Database\Eloquent\Model;
-use Throwable;
 
 /**
  * `QueryService`
@@ -42,7 +42,7 @@ class QueryService extends AbstractService implements QueryServiceContract
     {
         try {
             return $this->repository->all($columns);
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             throw new \Core\Utils\Exceptions\ServiceException(message: $exception->getMessage(), previous: $exception);
         }
     }
@@ -62,8 +62,8 @@ class QueryService extends AbstractService implements QueryServiceContract
     {
         try {
             return $this->repository->getModel()->orderBy($orderBy, 'desc')->paginate(perPage: $perPage, columns: $columns, pageName: $pageName, page: $page);
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -80,8 +80,8 @@ class QueryService extends AbstractService implements QueryServiceContract
     {
         try {
             return $this->repository->find($id, $columns);
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -98,8 +98,8 @@ class QueryService extends AbstractService implements QueryServiceContract
     {
         try {
             return $this->repository->where($criteria, $columns);
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -115,8 +115,8 @@ class QueryService extends AbstractService implements QueryServiceContract
     {
         try {
             return $this->repository->count($criteria);
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -133,8 +133,8 @@ class QueryService extends AbstractService implements QueryServiceContract
     {
         try {
             return $this->repository->where($params);
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -152,8 +152,8 @@ class QueryService extends AbstractService implements QueryServiceContract
     {
         try {
             return $this->repository->trash($columns);
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -170,8 +170,8 @@ class QueryService extends AbstractService implements QueryServiceContract
     {
         try {
             return $this->repository->getModel()->onlyTrash($id)->select($columns)->get();
-        } catch (Throwable $exception) {
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
