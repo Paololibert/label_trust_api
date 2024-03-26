@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Core\Data\Repositories\Eloquent;
 
 use Carbon\Carbon;
+use Core\Utils\Exceptions\QueryException as CoreQueryException;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface;
+use Core\Utils\Exceptions\NotFoundException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -47,7 +49,7 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
         try {
             return $this->model->create($data)->fresh();
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while creating the record.", previous: $exception);
+            throw new CoreQueryException(message: "Error while creating the record.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
         }
@@ -70,9 +72,9 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
             $result = $record->update($data);
             return $result ? $record->fresh() : $result;
         } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: $exception->getMessage(), code: $exception->getCode());
+            throw new NotFoundException(message: $exception->getMessage(), code: $exception->getCode());
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while updating the record.", previous: $exception);
+            throw new CoreQueryException(message: "Error while updating the record.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while updating the record.", previous: $exception);
         }
@@ -116,9 +118,9 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
             return $affectedRows; ///$result ? $record->fresh() : $result;
         } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: $exception->getMessage(), code: $exception->getCode());
+            throw new NotFoundException(message: $exception->getMessage(), code: $exception->getCode());
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while updating the record.", previous: $exception);
+            throw new CoreQueryException(message: "Error while updating the record.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while updating the record.", previous: $exception);
         }
@@ -154,9 +156,9 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
             return true;
         } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
+            throw new NotFoundException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while attaching the related model.", previous: $exception);
+            throw new CoreQueryException(message: "Error while attaching the related model.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while attaching the related model.", previous: $exception);
         }
@@ -192,9 +194,9 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
             return true;
         } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
+            throw new NotFoundException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while detaching the related model.", previous: $exception);
+            throw new CoreQueryException(message: "Error while detaching the related model.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while detaching the related model.", previous: $exception);
         }
@@ -225,9 +227,9 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
             return $record;
         } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
+            throw new NotFoundException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while associating the related model.", previous: $exception);
+            throw new CoreQueryException(message: "Error while associating the related model.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while associating the related model.", previous: $exception);
         }
@@ -339,13 +341,15 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
                     return $result === count($ids);
                 }
+                
+                return true;
             }
 
             return $result ? true : false;
         } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
+            throw new NotFoundException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while performing the soft delete of record(s).", previous: $exception);
+            throw new CoreQueryException(message: "Error while performing the soft delete of record(s).", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while performing the soft delete of record(s).", previous: $exception);
         }
@@ -379,9 +383,9 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
             return $result;
         } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
+            throw new NotFoundException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while performing the permanent deletion.", previous: $exception);
+            throw new CoreQueryException(message: "Error while performing the permanent deletion.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while performing the permanent deletion.", previous: $exception);
         }
@@ -415,9 +419,9 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
 
             return $result;
         } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
+            throw new NotFoundException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while restoring the soft delete record(s).", previous: $exception);
+            throw new CoreQueryException(message: "Error while restoring the soft delete record(s).", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while restoring the soft delete record(s).", previous: $exception);
         }
@@ -435,7 +439,7 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
         try {
             return (bool) $this->model->onlyTrashed()->restore();
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while restoring all soft deleted records.", previous: $exception);
+            throw new CoreQueryException(message: "Error while restoring all soft deleted records.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while restoring all soft deleted records.", previous: $exception);
         }
@@ -453,7 +457,7 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
         try {
             return (bool) $this->model->onlyTrashed()->forceDelete();
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while emptying the trash.", previous: $exception);
+            throw new CoreQueryException(message: "Error while emptying the trash.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while emptying the trash.", previous: $exception);
         }
@@ -471,7 +475,7 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
         try {
             return (bool) $this->model->withTrashed()->forceDelete();
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while performing the permanent deletion of all records.", previous: $exception);
+            throw new CoreQueryException(message: "Error while performing the permanent deletion of all records.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while performing the permanent deletion of all records.", previous: $exception);
         }

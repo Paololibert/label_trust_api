@@ -12,11 +12,9 @@ use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Domains\Users\Services\RESTful\Contracts\UserRESTfulReadWriteServiceContract;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Throwable;
 
 /**
  * The ***`UserRESTfulReadWriteService`*** class provides RESTful CRUD operations for the "User" resource.

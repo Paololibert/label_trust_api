@@ -7,11 +7,7 @@ namespace Domains\CategoriesOfEmployees\Repositories;
 use App\Models\CategoryOfEmployee;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Exceptions\Contract\CoreException;
-use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Throwable;
 
 /**
  * ***`CategoryOfEmployeeReadWriteRepository`***

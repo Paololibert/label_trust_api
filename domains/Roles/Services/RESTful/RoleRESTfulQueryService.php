@@ -11,7 +11,6 @@ use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Domains\Roles\Services\RESTful\Contracts\RoleRESTfulQueryServiceContract;
 use Illuminate\Http\Response;
-use Throwable;
 
 /**
  * Class ***`RoleRESTfulQueryService`***

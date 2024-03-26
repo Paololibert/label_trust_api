@@ -7,10 +7,7 @@ namespace Domains\Postes\Repositories;
 use App\Models\Poste;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Exceptions\Contract\CoreException;
-use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
 
 /**
  * ***`PosteReadWriteRepository`***

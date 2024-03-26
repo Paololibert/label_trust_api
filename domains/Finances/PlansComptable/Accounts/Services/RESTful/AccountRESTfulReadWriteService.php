@@ -6,12 +6,13 @@ namespace Domains\Finances\PlansComptable\Accounts\Services\RESTful;
 
 use Core\Logic\Services\Contracts\ReadWriteServiceContract;
 use Core\Logic\Services\RestJson\RestJsonReadWriteService;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Domains\Finances\PlansComptable\Accounts\Services\RESTful\Contracts\AccountRESTfulReadWriteServiceContract;
 use Illuminate\Http\Response;
-use Throwable;
+use Illuminate\Support\Facades\DB;
 
 /**
  * The ***`AccountRESTfulReadWriteService`*** class provides RESTful CRUD operations for the "Account" resource.
@@ -46,6 +47,9 @@ class AccountRESTfulReadWriteService extends RestJsonReadWriteService implements
      */
     public function addNewSubAccountsToAPlanAccount(string $planComptableId, string $accountId, \Core\Utils\DataTransfertObjects\DTOInterface $subAccountsData): \Illuminate\Http\JsonResponse
     {
+        // Begin the transaction
+        DB::beginTransaction();
+        
         try {
 
             // Logic to add accounts to the specified Plan Comptable
@@ -56,14 +60,62 @@ class AccountRESTfulReadWriteService extends RestJsonReadWriteService implements
                 throw new QueryException("Failed to attach accounts to a Plan Comptable. The accounts were not detach.", 1);
             }
 
+            // Commit the transaction
+            DB::commit();
+
             return JsonResponseTrait::success(
                 message: 'Accounts added successfully to the Plan Comptable.',
                 data: $result,
                 status_code: Response::HTTP_CREATED
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
+            // Begin the transaction
+            DB::rollback();
+
             // Throw a ServiceException if there is an issue with adding the accounts
-            throw new ServiceException(message: 'Failed to add accounts to the Plan Comptable: ' . $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: "Failed to add sub-accounts records to a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }
+    }
+
+    /**
+     * Updates existing sub-accounts of a plan comptable account.
+     *
+     * @param  string                                           $planComptableId            The unique identifier of the plan comptable to add sub-accounts to.
+     * @param  string                                           $accountId                  The unique identifier of the account to add sub-accounts to.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $updatedSubAccountsData     Data of the sub-accounts to be added.
+     * @return \Illuminate\Http\JsonResponse                                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                      If there is an issue with adding the accounts.
+     */
+    public function updateSubAccountsOfAPlanAccount(string $planComptableId, string $accountId, \Core\Utils\DataTransfertObjects\DTOInterface $updatedSubAccountsData): \Illuminate\Http\JsonResponse
+    {
+        // Begin the transaction
+        DB::beginTransaction();
+
+        try {
+
+            // Logic to add accounts to the specified Plan Comptable
+            $result = $this->readWriteService->getRepository()->updateSubAccounts(accountId: $accountId, updatedSubAccountsData: $updatedSubAccountsData->toArray()['sub_accounts'], filters: ["where" => [["plan_comptable_id", "=", $planComptableId]]]);
+
+            // If the result is false, throw a specific exception
+            if (!$result) {
+                throw new ServiceException("Failed to update sub-accounts records of a plan comptable. Update operation unsuccessful.");
+            }
+
+            // Commit the transaction
+            DB::commit();
+
+            return JsonResponseTrait::success(
+                message: 'Sub Accounts updated successfully of a plan comptable account.',
+                data: $result,
+                status_code: Response::HTTP_OK
+            );
+        } catch (CoreException $exception) {
+            // Begin the transaction
+            DB::rollback();
+
+            // Throw a ServiceException if there is an issue with updating the accounts
+            throw new ServiceException(message: "Failed to update sub-accounts records of a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -79,6 +131,9 @@ class AccountRESTfulReadWriteService extends RestJsonReadWriteService implements
      */
     public function deleteSubAccountsFromAPlanAccount(string $planComptableId, string $accountId, \Core\Utils\DataTransfertObjects\DTOInterface $accountIds): \Illuminate\Http\JsonResponse
     {
+        // Begin the transaction
+        DB::beginTransaction();
+
         try {
 
             // Logic to delete accounts from the specified Plan Comptable
@@ -89,14 +144,21 @@ class AccountRESTfulReadWriteService extends RestJsonReadWriteService implements
                 throw new QueryException("Failed to detach accounts from the Plan Comptable. The accounts were not detach.", 1);
             }
 
+            // Commit the transaction
+            DB::commit();
+
             return JsonResponseTrait::success(
                 message: 'Sub Accounts deleted successfully from a plan comptable account.',
                 data: $result,
                 status_code: Response::HTTP_OK
             );
-        } catch (Throwable $exception) {
-            // Throw a ServiceException if there is an issue with deleting the sub-accounts
-            throw new ServiceException(message: 'Failed to delete sub-accounts from a plan comptable account: ' . $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+
+            // Begin the transaction
+            DB::rollback();
+
+            // Throw a ServiceException if there is an issue with deleting the accounts
+            throw new ServiceException(message: "Failed to delete sub-accounts records from a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 

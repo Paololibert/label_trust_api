@@ -2,7 +2,12 @@
 
 namespace App\Exceptions;
 
+use Core\Utils\Exceptions\ApplicationException;
+use Core\Utils\Exceptions\Contract\CoreException;
+use Core\Utils\Exceptions\HttpMethodNotAllowedException;
+use Core\Utils\Exceptions\ServiceException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +31,14 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            throw new HttpMethodNotAllowedException();
+        }
+    
+        return parent::render($request, $exception);
     }
 }

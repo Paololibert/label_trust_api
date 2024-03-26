@@ -32,6 +32,18 @@ interface AccountRESTfulReadWriteServiceContract extends RestJsonReadWriteServic
     public function addNewSubAccountsToAPlanAccount(string $planComptableId, string $accountId, \Core\Utils\DataTransfertObjects\DTOInterface $subAccountsData): \Illuminate\Http\JsonResponse;
 
     /**
+     * Updates existing sub-accounts of a plan comptable account.
+     *
+     * @param  string                                           $planComptableId            The unique identifier of the plan comptable to add sub-accounts to.
+     * @param  string                                           $accountId                  The unique identifier of the account to add sub-accounts to.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $updatedSubAccountsData     Data of the sub-accounts to be added.
+     * @return \Illuminate\Http\JsonResponse                                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                      If there is an issue with adding the accounts.
+     */
+    public function updateSubAccountsOfAPlanAccount(string $planComptableId, string $accountId, \Core\Utils\DataTransfertObjects\DTOInterface $updatedSubAccountsData): \Illuminate\Http\JsonResponse;
+
+    /**
      * Delete sub-accounts from a plan comptable account.
      *
      * @param  string                                           $planComptableId    The unique identifier of the Plan Comptable to delete accounts from.

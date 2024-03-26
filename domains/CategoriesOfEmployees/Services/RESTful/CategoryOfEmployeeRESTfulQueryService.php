@@ -11,7 +11,6 @@ use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Domains\CategoriesOfEmployees\Services\RESTful\Contracts\CategoryOfEmployeeRESTfulQueryServiceContract;
 use Illuminate\Http\Response;
-use Throwable;
 
 /**
  * Class ***`CategoryOfEmployeeRESTfulQueryService`***

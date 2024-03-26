@@ -4,11 +4,14 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Tests\TestCase;
+use Illuminate\Http\Client\RequestException as HttpTimeoutException;
 
 class RetrieveProductTest extends TestCase
 {
@@ -126,10 +129,10 @@ class RetrieveProductTest extends TestCase
      */
     public function testRetrieveProductWithInvalidId()
     {
-        $invalidUuid = Uuid::uuid4()->toString();;
+        $invalidUuid = Uuid::uuid4()->toString();
 
         // Send a GET request with an invalid product ID format
-        $response = $this->get("api/products/{$invalidUuid}");
+        $response = $this->get("api/products/{$invalidUuid}4");
 
         // Assert that the response is a bad request
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
@@ -144,8 +147,11 @@ class RetrieveProductTest extends TestCase
      */
     public function testRetrieveProductWithoutAuthentication()
     {
+        // Disable authentication middleware
+        $this->withoutMiddleware();
+
         // Send a GET request to retrieve a product without authentication
-        $response = $this->get("api/products/" . $this->product->id);
+        $response =  $this->getJson("api/products/" . $this->product->id);
 
         // Assert that the response is unauthorized
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
@@ -160,8 +166,23 @@ class RetrieveProductTest extends TestCase
      */
     public function testRetrieveProductWithInsufficientPermissions()
     {
+        // Mock the authorization check to always return false
+        Gate::shouldReceive('allows')->andReturn(false);
+
         // Assuming we have a user with insufficient permissions
-        $user = User::factory()->create();
+        $user = User::create([
+            'type_of_account' => 'personal',
+            'username' => 'john_doe',
+            'login_channel' => 'web',
+            'phone_number' => '123456789',
+            'password' => bcrypt('password'),
+            'email' => 'john@example.com',
+            'address' => '123 Street, City',
+            'userable_type' => 'App\Models\Person', // Adjust as per your application structure
+            'userable_id' => Uuid::uuid4()->toString(), // Adjust as per your application structure
+        ]);
+
+
         
         // Send a GET request to retrieve the product as the user with insufficient permissions
         $response = $this->actingAs($user)->get("api/products/" . $this->product->id);
@@ -195,10 +216,9 @@ class RetrieveProductTest extends TestCase
     {
         // Mocking a request timeout scenario (example)
         // This might require additional setup and mocking
-        // $response = $this->get("api/products/" . $this->product->id);
-        // $response->assertStatus(Response::HTTP_REQUEST_TIMEOUT);
-
-        // Additional assertions can be added here
+        $this->expectException(HttpTimeoutException::class);
+        $response = $this->get("api/products/" . $this->product->id);
+        $response->assertStatus(Response::HTTP_REQUEST_TIMEOUT);
     }
 
     /**
@@ -208,10 +228,10 @@ class RetrieveProductTest extends TestCase
      */
     public function testRetrieveProductWithInternalServerError()
     {
+        $response = $this->get("api/products/" . $this->product->id);
         // Mocking an internal server error scenario (example)
         // This might require additional setup and mocking
-        // $response->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
-        // $response->assertStatus(500);
+        $response->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
 
         // Additional assertions can be added here
     }
@@ -225,8 +245,8 @@ class RetrieveProductTest extends TestCase
     {
         // Mocking a service unavailable scenario (example)
         // This might require additional setup and mocking
-        // $response = $this->get("api/products/" . $this->product->id);
-        // $response->assertStatus(Response::HTTP_SERVICE_UNAVAILABLE);
+        $response = $this->get("api/products/" . $this->product->id);
+        $response->assertStatus(Response::HTTP_SERVICE_UNAVAILABLE);
 
         // Additional assertions can be added here
     }

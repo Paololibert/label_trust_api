@@ -8,14 +8,12 @@ use App\Models\User;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Enums\Users\TypeOfAccountEnum;
 use Core\Utils\Exceptions\Contract\CoreException;
-use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Users\Companies\Repositories\CompanyReadWriteRepository;
 use Domains\Users\People\Repositories\PersonReadWriteRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
 
 /**
  * ***`UserReadWriteRepository`***

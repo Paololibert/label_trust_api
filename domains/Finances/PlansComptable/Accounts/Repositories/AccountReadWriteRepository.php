@@ -6,13 +6,12 @@ namespace Domains\Finances\PlansComptable\Accounts\Repositories;
 
 use App\Models\Finances\Account;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
-use Core\Utils\Exceptions\QueryException;
+use Core\Utils\Exceptions\Contract\CoreException;
+use Core\Utils\Exceptions\NotFoundException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\Comptes\Repositories\CompteReadWriteRepository;
 use Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories\SubAccountReadWriteRepository;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
 
 /**
  * ***`AccountReadWriteRepository`***
@@ -65,10 +64,9 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
             }
 
             return $this->model->refresh();
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while creating the record.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while creating accounts of a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -85,8 +83,8 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
     public function attachSubAccounts(string $accountId, array $subAccountDataArray, array $filters = []): bool
     {
         try {
-
-            $query = $this->find($accountId);
+            
+            $query = $this->model;
 
             if ($filters) {
                 foreach ($filters as $filterName => $filter) {
@@ -105,7 +103,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
                 }
             }
 
-            $this->model = $query->first();
+            $this->model = $query->where("id", $accountId)->first();
 
             foreach ($subAccountDataArray as $subAccountItem) {
 
@@ -126,36 +124,30 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
     
             return true;
             
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while attaching sub-accounts to a plan comptable account.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while attaching sub-accounts to a plan comptable account.", previous: $exception);
-        }        
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while attaching sub-accounts to a plan comptable account." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }      
     }
 
     /**
-     * Delete accounts from a Plan Comptable.
+     * Update sub-accounts of a plan comptable account.
      *
-     * This method deletes the accounts associated with a given Plan Comptable.
+     * This method updates the sub-accounts associated with a given plan comptable account.
      *
-     * @param   string                                      $planComptableId        The unique identifier of the Plan Comptable to delete accounts from.
-     * @param   array                                       $deletedAccountIds      The array of IDs of accounts to be deleted.
+     * @param   string                                      $accountId                  The unique identifier of the plan comptable account of which sub-accounts will be update.
+     * @param   array                                       $updatedSubAccountsData     The array of updated sub-account data representing the changes to be made.
      *
-     * @return  bool                                                                Whether the accounts were deleted successfully.
+     * @return  bool                                                                    Whether the sub-accounts were updated successfully.
      *
-     * @throws  \Core\Utils\Exceptions\QueryException                               If there is an error while deleting accounts.
-     * @throws  \Core\Utils\Exceptions\RepositoryException                          If there is an issue with the repository operation.
+     * @throws  \Core\Utils\Exceptions\QueryException                                   If there is an error while updating sub-accounts.
+     * @throws  \Core\Utils\Exceptions\RepositoryException                              If there is an issue with the repository operation.
      */
-    public function deleteSubAccounts(string $accountId, array $deletedSubAccountIds, array $filters = []): bool
+    public function updateSubAccounts(string $accountId, array $updatedSubAccountsData, array $filters = []): bool
     {
         try {
-
+            
             $query = $this->model;
-            $query = $this->find($accountId);
-
-            $filters = array_merge($filters["where"], [["id", "=", $accountId]]);
 
             if ($filters) {
                 foreach ($filters as $filterName => $filter) {
@@ -174,25 +166,66 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
                 }
             }
 
-            // Find the Plan Comptable by ID
-            //$query = $this->find($accountId);
+            $this->model = $query->where("id", $accountId)->first();
 
-            dd($query->get());
+            if(!$this->model) throw new NotFoundException("Error Processing Request", 1);
 
-            // Soft-delete sub-accounts
-            $result = $this->subAcountRepositoryReadWrite->softDelete([], filters: ["where" => [["account_id", "=", $this->model->id]], "whereIn" => [["sous_compte_id", $deletedSubAccountIds]]]);
+            $result = $this->subAcountRepositoryReadWrite->updateMultiple($updatedSubAccountsData, filters: ["where" => [["subaccountable_id", "=", $this->model->id]]]);
 
-            return $result;
-        } catch (ModelNotFoundException $exception) {
-            // Throw a QueryException if the Plan Comptable or any of the accounts are not found
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            // Throw a QueryException if there is an error while deleting sub-accounts
-            throw new QueryException(message: "Error while deleting sub-accounts from a plan comptable account.", previous: $exception);
-        } catch (Throwable $exception) {
+            return count($result) === count($updatedSubAccountsData);
+        } catch (CoreException $exception) {
             // Throw a RepositoryException if there is an issue with the repository operation
-            throw new RepositoryException(message: "Error while deleting sub-accounts from a plan comptable account.", previous: $exception);
+            throw new RepositoryException(message: "Error while updating accounts in a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
-    
+
+    /**
+     * Delete sub-accounts from a plan comptable account.
+     *
+     * This method deletes the sub-accounts associated with a given plan comptable account.
+     *
+     * @param   string                                      $accountId                  The unique identifier of the plan comptable account sub-accounts will be delete from.
+     * @param   array                                       $deletedSubAccountIds       The array of IDs of sub-accounts to be deleted.
+     *
+     * @return  bool                                                                    Whether the sub-accounts were deleted successfully.
+     *
+     * @throws  \Core\Utils\Exceptions\QueryException                                   If there is an error while deleting sub-accounts.
+     * @throws  \Core\Utils\Exceptions\RepositoryException                              If there is an issue with the repository operation.
+     */
+    public function deleteSubAccounts(string $accountId, array $deletedSubAccountIds, array $filters = []): bool
+    {
+        try {
+
+            $query = $this->model;
+
+            if ($filters) {
+                foreach ($filters as $filterName => $filter) {
+                    foreach ($filter as $condition) {
+                        switch ($filterName) {
+                            case 'whereIn':
+                                $query = $query->{$filterName}($condition[0], $condition[1]);
+                                break;
+
+                            default:
+                                $query = $query->{$filterName}($condition[0], $condition[1], $condition[2]);
+                                
+                                break;
+                        }
+                    }
+                }
+            }
+
+            $this->model = $query->where("id", $accountId)->first();
+
+            if(!$this->model) throw new NotFoundException("Error Processing Request", 1);
+
+            // Soft-delete sub-accounts
+            $result = $this->subAcountRepositoryReadWrite->softDelete([], filters: ["where" => [["subaccountable_id", "=", $this->model->id]], "whereIn" => [["sous_compte_id", $deletedSubAccountIds]]]);
+
+            return $result;
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while deleting sub-accounts from a plan comptable account." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }
+    }
 }

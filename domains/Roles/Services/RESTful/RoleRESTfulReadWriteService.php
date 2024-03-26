@@ -15,7 +15,6 @@ use Domains\Roles\Services\RESTful\Contracts\RoleRESTfulReadWriteServiceContract
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Throwable;
 
 /**
  * The ***`RoleRESTfulReadWriteService`*** class provides RESTful CRUD operations for the "Role" resource.

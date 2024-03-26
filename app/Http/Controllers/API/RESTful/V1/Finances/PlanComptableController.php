@@ -16,6 +16,7 @@ use Domains\Finances\PlansComptable\Services\RESTful\Contracts\PlanComptableREST
 use Domains\Finances\PlansComptable\Accounts\Services\RESTful\Contracts\AccountRESTfulReadWriteServiceContract;
 use Domains\Finances\PlansComptable\Accounts\Services\RESTful\Contracts\AccountRESTfulQueryServiceContract;
 use Domains\Finances\PlansComptable\Accounts\SubAccounts\DataTransfertObjects\CreateSubAccountDTO;
+use Domains\Finances\PlansComptable\Accounts\SubAccounts\DataTransfertObjects\UpdateSubAccountDTO;
 use Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulReadWriteServiceContract;
 use Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulQueryServiceContract;
 use Illuminate\Http\JsonResponse;
@@ -188,6 +189,28 @@ class PlanComptableController extends RESTfulResourceController
 
         // Call the service method to add the accounts to the Plan Comptable
         return $this->accountRESTfulReadWriteService->addNewSubAccountsToAPlanAccount($planComptableId, $accountId, $createRequest->getDto());
+    }
+
+    /**
+     * Add new sub-accounts to a plan comptable account.
+     *
+     * @param  Request                          $request            The request object containing the data for deleting the accounts.
+     * @param  string                           $planComptableId    The identifier of the Plan Comptable from which accounts will be deleted.
+     * @param  string                           $accountId          The identifier of an account in a specific Plan Comptable from which sub-accounts will be deleted.
+     * @return \Illuminate\Http\JsonResponse                        The JSON response indicating the status of the operation.
+     */
+    public function updateSubAccountsOfAPlanAccount(Request $request, string $planComptableId, string $accountId): JsonResponse
+    {
+        // Instantiate the ResourceRequest with a UpdateSubAccountDTO instance
+        $createRequest = app(ResourceRequest::class, ["dto" => new UpdateSubAccountDTO]);
+
+        // Validate the incoming request using the ResourceRequest rules
+        if ($createRequest) {
+            $createRequest->validate($createRequest->rules());
+        }
+
+        // Call the service method to add the accounts to the Plan Comptable
+        return $this->accountRESTfulReadWriteService->updateSubAccountsOfAPlanAccount($planComptableId, $accountId, $createRequest->getDto());
     }
 
     /**

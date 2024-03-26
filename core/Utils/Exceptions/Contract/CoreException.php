@@ -63,6 +63,8 @@ class CoreException extends \Exception
     {
         parent::__construct(message: $message, code: $code, previous: $previous);
 
+        dd($previous);
+
         $this->error_code    = $error_code ?? $this->code;
         $this->status_code = $status_code;
         $this->error        = $error;

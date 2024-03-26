@@ -6,14 +6,12 @@ namespace Domains\Finances\PlansComptable\Repositories;
 
 use App\Models\Finances\PlanComptable;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
-use Core\Utils\Exceptions\QueryException;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\Comptes\Repositories\CompteReadWriteRepository;
 use Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
 
 /**
  * ***`PlanComptableReadWriteRepository`***
@@ -74,10 +72,9 @@ class PlanComptableReadWriteRepository extends EloquentReadWriteRepository
             }
 
             return $this->model->refresh();
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while creating the record.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a RepositoryException if there is an issue with the repository operation
+            throw new RepositoryException(message: "Error while creating accounts records in a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -125,15 +122,9 @@ class PlanComptableReadWriteRepository extends EloquentReadWriteRepository
             }
 
             return true;
-        } catch (ModelNotFoundException $exception) {
-            // Throw a QueryException if the Plan Comptable is not found
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            // Throw a QueryException if there is an error while attaching accounts
-            throw new QueryException(message: "Error while attaching accounts to Plan Comptable.", previous: $exception);
-        } catch (Throwable $exception) {
-            // Throw a RepositoryException if there is an issue with the repository operation
-            throw new RepositoryException(message: "Error while attaching accounts to Plan Comptable.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while attaching accounts to Plan Comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -161,15 +152,9 @@ class PlanComptableReadWriteRepository extends EloquentReadWriteRepository
             $result = $this->accountRepositoryReadWrite->updateMultiple($updatedAccountsData, filters: ["where" => [["plan_comptable_id", "=", $this->model->id]]]);
 
             return count($result) === count($updatedAccountsData);
-        } catch (ModelNotFoundException $exception) {
-            // Throw a QueryException if the Plan Comptable or any of the accounts are not found
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            // Throw a QueryException if there is an error while updating accounts
-            throw new QueryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Throw a RepositoryException if there is an issue with the repository operation
-            throw new RepositoryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
+            throw new RepositoryException(message: "Error while updating accounts in a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -198,15 +183,9 @@ class PlanComptableReadWriteRepository extends EloquentReadWriteRepository
             $result = $this->accountRepositoryReadWrite->softDelete([], filters: ["where" => [["plan_comptable_id", "=", $this->model->id]], "whereIn" => [["compte_id", $deletedAccountIds]]]);
 
             return $result;
-        } catch (ModelNotFoundException $exception) {
-            // Throw a QueryException if the Plan Comptable or any of the accounts are not found
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            // Throw a QueryException if there is an error while updating accounts
-            throw new QueryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Throw a RepositoryException if there is an issue with the repository operation
-            throw new RepositoryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
+            throw new RepositoryException(message: "Error while updating accounts in a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -229,15 +208,9 @@ class PlanComptableReadWriteRepository extends EloquentReadWriteRepository
             $result = $this->update($planComptableId, ["est_valider" => true]);
 
             return $result ? true : false;
-        } catch (ModelNotFoundException $exception) {
-            // Throw a QueryException if the Plan Comptable or any of the accounts are not found
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            // Throw a QueryException if there is an error while updating accounts
-            throw new QueryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Throw a RepositoryException if there is an issue with the repository operation
-            throw new RepositoryException(message: "Error while updating accounts in Plan Comptable.", previous: $exception);
+            throw new RepositoryException(message: "Error while updating accounts in a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }
