@@ -59,6 +59,7 @@ class PlanComptableRESTfulQueryService extends RestJsonQueryService implements P
                 data: $accounts,
                 status_code: Response::HTTP_OK
             );
+            
         } catch (Throwable $exception) {
             // Throw a ServiceException if there is an issue with fetching the accounts
             throw new ServiceException(message: 'Failed to fetch accounts for the Plan Comptable: ' . $exception->getMessage(), previous: $exception);

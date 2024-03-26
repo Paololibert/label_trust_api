@@ -82,19 +82,39 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
      *
      * @return  bool                                Whether the taux were attached successfully.
      */
-    public function attachSubAccounts(string $accountId, array $subAccountDataArray): bool
+    public function attachSubAccounts(string $accountId, array $subAccountDataArray, array $filters = []): bool
     {
         try {
 
-            $this->model = $this->find($accountId);
+            $query = $this->find($accountId);
+
+            if ($filters) {
+                foreach ($filters as $filterName => $filter) {
+                    foreach ($filter as $condition) {
+                        switch ($filterName) {
+                            case 'whereIn':
+                                $query = $query->{$filterName}($condition[0], $condition[1]);
+                                break;
+
+                            default:
+                                $query = $query->{$filterName}($condition[0], $condition[1], $condition[2]);
+                                
+                                break;
+                        }
+                    }
+                }
+            }
+
+            $this->model = $query->first();
 
             foreach ($subAccountDataArray as $subAccountItem) {
 
                 if(isset($subAccountItem['sous_compte_id'])){
                     if (!parent::relationExists(relation: $this->model->sous_comptes(), ids: [$subAccountItem['sous_compte_id']], isPivot: false)) {
                         
-                        // Attach the sous compte to principal compte
-                        $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
+                        // Attach the sous compte to principal compte                        
+                       $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
+
                     }
                 }else {
 
@@ -109,9 +129,9 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
         } catch (ModelNotFoundException $exception) {
             throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while attaching taux to category of employee.", previous: $exception);
+            throw new QueryException(message: "Error while attaching sub-accounts to a plan comptable account.", previous: $exception);
         } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while attaching taux to category of employee.", previous: $exception);
+            throw new RepositoryException(message: "Error while attaching sub-accounts to a plan comptable account.", previous: $exception);
         }        
     }
 

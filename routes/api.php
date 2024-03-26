@@ -236,7 +236,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                     });
 
                     Route::group(['prefix' => 'plans_comptable'], function () {
-                        Route::put('{plan_comptable_id}/accounts/{account_id}/attach-sub-accounts-to-an-account', 'PlanComptableController@addNewSubAccountsToAPlanAccount')->name('plans_comptable.account.attach');
+                        Route::put('{plan_comptable_id}/accounts/{account_id}/attach-sub-accounts-to-an-account', 'PlanComptableController@addNewAccountsToAPlanAccount')->name('plans_comptable.account.attach-sub-account');
                         Route::patch('{plan_comptable_id}/accounts/{account_id}/update-attach-sub-accounts-of-an-account', 'PlanComptableController@updateSubAccountsInPlanAccount')->name('plans_comptable.account.update-attach');
                         Route::patch('{plan_comptable_id}/accounts/{account_id}/detach-sub-accounts-from-an-account', 'PlanComptableController@deleteSubAccountsFromAPlanAccount')->name('plans_comptable.account.detach');
                         Route::get('{plan_comptable_id}/accounts/{account_id}/sub-accounts', 'PlanComptableController@fetchSubAccountsOfAPlanAccount')->name('plans_comptable.account.sub-accounts');

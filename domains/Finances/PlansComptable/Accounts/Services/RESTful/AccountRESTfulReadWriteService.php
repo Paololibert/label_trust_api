@@ -35,6 +35,39 @@ class AccountRESTfulReadWriteService extends RestJsonReadWriteService implements
     }
 
     /**
+     * Add new sub-accounts to a plan comptable account.
+     *
+     * @param  string                                           $planComptableId    The unique identifier of the plan comptable to add sub-accounts to.
+     * @param  string                                           $accountId          The unique identifier of the account to add sub-accounts to.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $subAccountsData    Data of the sub-accounts to be added.
+     * @return \Illuminate\Http\JsonResponse                                        The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                              If there is an issue with adding the accounts.
+     */
+    public function addNewSubAccountsToAPlanAccount(string $planComptableId, string $accountId, \Core\Utils\DataTransfertObjects\DTOInterface $subAccountsData): \Illuminate\Http\JsonResponse
+    {
+        try {
+
+            // Logic to add accounts to the specified Plan Comptable
+            $result = $this->readWriteService->getRepository()->attachSubAccounts(accountId: $accountId, subAccountDataArray: $subAccountsData->toArray()['sub_accounts'], filters: ["where" => [["plan_comptable_id", "=", $planComptableId]]]);
+
+            // If the result is false, throw a custom exception
+            if (!$result) {
+                throw new QueryException("Failed to attach accounts to a Plan Comptable. The accounts were not detach.", 1);
+            }
+
+            return JsonResponseTrait::success(
+                message: 'Accounts added successfully to the Plan Comptable.',
+                data: $result,
+                status_code: Response::HTTP_CREATED
+            );
+        } catch (Throwable $exception) {
+            // Throw a ServiceException if there is an issue with adding the accounts
+            throw new ServiceException(message: 'Failed to add accounts to the Plan Comptable: ' . $exception->getMessage(), previous: $exception);
+        }
+    }
+
+    /**
      * Deletes accounts from a Plan Comptable.
      *
      * @param  string                                           $planComptableId    The unique identifier of the Plan Comptable to delete accounts from.

@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Schema;
 class AddNewColumnsToTables extends Migration
 {
     use CanDeleteTrait, HasCompositeKey, HasForeignKey, HasTimestampsAndSoftDeletes, HasUuidPrimaryKey;
-    
+
     /**
      * Run the migrations.
      *
@@ -178,6 +178,39 @@ class AddNewColumnsToTables extends Migration
         DB::beginTransaction();
 
         try {
+
+            if (Schema::hasTable('roles')) {
+                // Check if the "created_by" column exist in the "roles" table 
+                if (Schema::hasColumn('roles', 'created_by')) {
+                    // Modify the "roles" table
+                    Schema::table('roles', function (Blueprint $table) {
+                        $table->dropForeign('created_by');
+                        $table->dropColumn('created_by');
+                    });
+                }
+            }
+
+            if (Schema::hasTable('role_has_permissions')) {
+                // Check if the "attached_by" column exist in the "role_has_permissions" table 
+                if (Schema::hasColumn('role_has_permissions', 'attached_by')) {
+                    // Modify the "role_has_permissions" table
+                    Schema::table('role_has_permissions', function (Blueprint $table) {
+                        $table->dropForeign('attached_by');
+                        $table->dropColumn('attached_by');
+                    });
+                }
+            }
+
+            if (Schema::hasTable('users')) {
+                // Check if the "created_by" column exist in the "users" table 
+                if (Schema::hasColumn('users', 'created_by')) {
+                    // Modify the "users" table
+                    Schema::table('users', function (Blueprint $table) {
+                        $table->dropForeign('created_by');
+                        $table->dropColumn('created_by');
+                    });
+                }
+            }
 
             // Commit the transaction
             DB::commit();
