@@ -77,8 +77,24 @@ class UpdateUserDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "type_of_account.required"  => "Le type de compte est requis.",
+            "type_of_account.string"    => "Le type de compte doit être une chaîne de caractères.",
+            "type_of_account.enum"      => "Le type de compte doit être l'une des valeurs prédéfinies.",
+            "username.string"           => "Le nom d'utilisateur doit être une chaîne de caractères.",
+            "username.min"              => "Le nom d'utilisateur doit comporter au moins :min caractères.",
+            "username.max"              => "Le nom d'utilisateur ne peut pas dépasser :max caractères.",
+            "username.unique"           => "Ce nom d'utilisateur est déjà utilisé.",
+            "login_channel.required"    => "Le canal de connexion est requis.",
+            "login_channel.string"      => "Le canal de connexion doit être une chaîne de caractères.",
+            "login_channel.in"          => "Le canal de connexion doit être l'une des valeurs prédéfinies.",
+            "email.required_if"         => "L'adresse e-mail est requise lorsque le canal de connexion est l'e-mail.",
+            "email.email"               => "L'adresse e-mail doit être une adresse e-mail valide.",
+            "email.max"                 => "L'adresse e-mail ne peut pas dépasser :max caractères.",
+            "email.unique"              => "Cette adresse e-mail est déjà utilisée.",
+            "phone_number.required_if"  => "Le numéro de téléphone est requis lorsque le canal de connexion est le numéro de téléphone.",
+            "role_id.required"          => "Le rôle est requis.",
+            "role_id.exists"            => "Le rôle sélectionné est invalide.",
+            "address.string"            => "L'adresse doit être une chaîne de caractères."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

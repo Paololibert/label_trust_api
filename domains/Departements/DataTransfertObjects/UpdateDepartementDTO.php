@@ -23,7 +23,7 @@ class UpdateDepartementDTO extends BaseDTO
     {
         parent::__construct();
     }
-    
+
     /**
      * Get the class name of the model associated with the DTO.
      *
@@ -42,8 +42,8 @@ class UpdateDepartementDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:departements,name,' . request()->route("departement_id") . ',id'],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "name"                    => ["string", "required", 'unique_ignore_case:departements,name,' . request()->route("departement_id") . ',id'],
+            'can_be_deleted'        => ['sometimes', 'boolean', 'in:' . true . ',' . false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -57,8 +57,11 @@ class UpdateDepartementDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "name.string"               => "Le nom du département doit être une chaîne de caractères.",
+            "name.required"             => "Le nom du département est requis.",
+            "name.unique_ignore_case"   => "Le nom du département est déjà utilisé.", // Personnaliser le message pour l"unicité
+            "can_be_deleted.boolean"    => "Le champ peut être supprimé doit être un booléen.",
+            "can_be_deleted.in"         => "Le champ peut être supprimé doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

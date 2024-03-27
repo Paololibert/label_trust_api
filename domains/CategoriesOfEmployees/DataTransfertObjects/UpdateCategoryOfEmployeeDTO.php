@@ -42,7 +42,7 @@ class UpdateCategoryOfEmployeeDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            	  => ["string", "required", 'unique:categories_of_employees,name,' . request()->route("category_of_employee_id"). ',id'],
+            "name"            	  => ["string", "required", 'unique_ignore_case:categories_of_employees,name,' . request()->route("category_of_employee_id"). ',id'],
             'can_be_deleted'      => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
@@ -57,8 +57,12 @@ class UpdateCategoryOfEmployeeDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "name.required"             => "Le nom de la catégorie d'employé est requis.",
+            "name.string"               => "Le nom de la catégorie d'employé doit être une chaîne de caractères.",
+            "name.unique_ignore_case"   => "Le nom de la catégorie d'employé est déjà utilisé.",
+            "category_id.exists"        => "La catégorie parente sélectionnée est invalide.",
+            'can_be_deleted.boolean'    => "La catégorie peut être supprimé et la valeur doit être un booléen.",
+            'can_be_deleted.in'         => "La catégorie peut être supprimé et la valeur doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

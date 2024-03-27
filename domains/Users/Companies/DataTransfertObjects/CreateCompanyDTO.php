@@ -41,8 +41,8 @@ class CreateCompanyDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:companies,name'],
-			"registration_number"   => ["string", "nullable"],
+            "name"            		=> ["string", "required", 'unique_ignore_case:companies,name'],
+			"registration_number"   => ["string", "nullable", 'unique_ignore_case:companies,registration_number'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
@@ -57,8 +57,13 @@ class CreateCompanyDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "name.string"                               => "Le nom de l'entreprise doit être une chaîne de caractères.",
+            "name.required"                             => "Le nom de l'entreprise est requis.",
+            "name.unique_ignore_case"                   => "Le nom de l'entreprise est déjà utilisé.",
+            "registration_number.string"                => "Le numéro d'immatriculation doit être une chaîne de caractères.",
+            "registration_number.unique_ignore_case"    => "Le numéro d'immatriculation est déjà utilisé.",
+            "can_be_deleted.boolean"                    => "Le champ peut être supprimé doit être un booléen.",
+            "can_be_deleted.in"                         => "Le champ peut être supprimé doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);
