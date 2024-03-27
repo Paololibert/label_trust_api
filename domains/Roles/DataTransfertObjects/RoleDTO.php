@@ -41,8 +41,8 @@ class RoleDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            'roles'           => 'required|array|min:1',
-            'roles.*'         => ['distinct', "exists:roles,id"]
+            "roles"           => "required|array|min:1",
+            "roles.*"         => ["distinct", "exists:roles,id"]
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -56,8 +56,11 @@ class RoleDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "roles.required"                => "Le champ roles est requis.",
+            "roles.array"                   => "Le champ roles doit être un tableau.",
+            "roles.min"                     => "Le champ roles doit contenir au moins un élément.",
+            "roles.*.distinct"              => "Les éléments du tableau roles ne doivent pas être en double.",
+            "roles.*.exists"                => "Les éléments du tableau roles doivent correspondre à des identifiants valides de rôles."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

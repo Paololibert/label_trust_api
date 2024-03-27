@@ -42,8 +42,8 @@ class UpdateDeviseDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", "max:25", 'unique:devises,name,' . request()->route("devise_id") . ',id'],
-            "symbol"            	=> ["string", "required", "max:25", 'unique:devises,symbol,' . request()->route("devise_id") . ',id'],
+            "name"            		=> ["string", "required", "max:25", 'unique_ignore_case:devises,name,' . request()->route("devise_id") . ',id'],
+            "symbol"            	=> ["string", "required", "max:25", 'unique_ignore_case:devises,symbol,' . request()->route("devise_id") . ',id'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
@@ -58,8 +58,16 @@ class UpdateDeviseDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "name.required"             => "Le nom de la devise est requis.",
+            "name.string"               => "Le nom de la devise doit être une chaîne de caractères.",
+            "name.max"                  => "Le nom de la devise ne peut pas dépasser :max caractères.",
+            "name.unique_ignore_case"   => "Ce nom de devise est déjà utilisé.",
+            "symbol.required"           => "Le symbole de la devise est requis.",
+            "symbol.string"             => "Le symbole de la devise doit être une chaîne de caractères.",
+            "symbol.max"                => "Le symbole de la devise ne peut pas dépasser :max caractères.",
+            "symbol.unique_ignore_case" => "Ce symbole de devise est déjà utilisé.",
+            "can_be_deleted.boolean"    => "La devise peut être supprimé et la devise doit être un booléen.",
+            "can_be_deleted.in"         => "a devise peut être supprimé et la devise doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

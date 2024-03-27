@@ -42,7 +42,7 @@ class CreateJournalDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", "max:25", 'unique:journaux,name'],
+            "name"            		=> ["string", "required", "max:25", 'unique_ignore_case:journaux,name'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
@@ -57,8 +57,12 @@ class CreateJournalDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "name.required"             => "Le nom du journal est requis.",
+            "name.string"               => "Le nom du journal doit être une chaîne de caractères.",
+            "name.max"                  => "Le nom du journal ne peut pas dépasser :max caractères.",
+            "name.unique_ignore_case"   => "Ce nom de journal est déjà utilisé.",
+            "can_be_deleted.boolean"    => "Le champ can_be_delete doit être un booléen.",
+            "can_be_deleted.in"         => "Le can_be_delete doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

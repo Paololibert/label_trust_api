@@ -57,8 +57,11 @@ class PosteSalaryDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            'salaries.required'    => 'Le champ salaries est requis.',
+            'salaries.array'       => 'Le champ salaries doit être un tableau.',
+            'salaries.min'         => 'Le champ salaries doit contenir au moins un élément.',
+            'salaries.*.distinct'  => 'Les éléments du tableau salaries ne doivent pas être en double.',
+            'salaries.*.exists'    => 'Les éléments du tableau salaries doivent correspondre à des identifiants valides de taux_and_salaries.'
         ], $messages);
 
         $messages = array_merge([], $default_messages);

@@ -42,8 +42,8 @@ class CreateRoleDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"                    => ["string", "required", 'unique_ignore_case:roles,name'],
-            "description"             => ["string", "sometimes"],
+            "name"                  => ["string", "required", 'unique_ignore_case:roles,name'],
+            "description"           => ["string", "sometimes"],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:' . true . ',' . false],
             'permissions'           => 'required|array|min:1',
             'permissions.*'         => ['distinct', "exists:permissions,id"]

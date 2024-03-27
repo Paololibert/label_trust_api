@@ -61,12 +61,12 @@ class UpdatePlanComptableDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            "name.required"             => "Le champ name est requis.",
-            "name.string"               => "Le champ name doit être une chaîne de caractères.",
-            "name.max"                  => "Le champ name ne doit pas dépasser :max caractères.",
-            "name.unique_ignore_case"   => "La valeur saisie pour le champ name est déjà utilisée.", // Customize the message as needed
-            "can_be_delete.boolean"     => "Le champ can_be_delete doit être un booléen.",
-            "can_be_delete.in"          => 'Le can_be_delete doit être "true" ou "false".'
+            'name.required'             => 'Le nom du plan comptable est requis.',
+            'name.string'               => 'Le nom du plan comptable doit être une chaîne de caractères.',
+            'name.max'                  => 'Le nom du plan comptable ne peut pas dépasser :max caractères.',
+            'name.unique_ignore_case'   => 'Ce nom de plan comptable est déjà utilisé.',
+            'can_be_deleted.boolean'    => 'Le champ indiquant si le plan comptable peut être supprimé doit être un booléen.',
+            'can_be_deleted.in'         => 'Le champ indiquant si le plan comptable peut être supprimé doit être "true" ou "false".'
         ], $messages);
 
         $messages = array_merge([], $default_messages);

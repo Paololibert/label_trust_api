@@ -60,8 +60,16 @@ class UpdateCategoryOfEmployeeTauxDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "taux.required"                     => "Le champ taux est requis.",
+            "taux.array"                        => "Le champ taux doit être un tableau.",
+            "taux.*.distinct"                   => "Les éléments du tableau taux ne doivent pas être en double.",
+            "taux.*.min"                        => "Chaque élément du tableau taux doit contenir au moins un élément.",
+            "taux.*.est_le_taux_de_base.boolean"=> "Le champ est_le_taux_de_base doit être un booléen.",
+            "taux.*.est_le_taux_de_base.in"     => "Le champ est_le_taux_de_base doit être 'true' ou 'false'.",
+            "taux.*.taux_id.required"           => "Le champ taux_id est requis.",
+            "taux.*.taux_id.exists"             => "Chaque élément du tableau taux doit correspondre à un identifiant valide de taux et salaire.",
+            "taux.*.can_be_deleted.boolean"     => "Le champ can_be_deleted doit être un booléen.",
+            "taux.*.can_be_deleted.in"          => "Le champ can_be_delete doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

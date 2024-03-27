@@ -7,6 +7,7 @@ namespace Domains\Finances\PlansComptable\Accounts\SubAccounts\DataTransfertObje
 use App\Models\Finances\SubAccount;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Domains\Finances\Comptes\DataTransfertObjects\CreateCompteDTO;
+use Domains\Finances\PlansComptable\Accounts\SubAccounts\SubDivisions\DataTransfertObjects\CreateSubDivisionDTO;
 use Illuminate\Validation\Rule;
 
 /**
@@ -24,7 +25,13 @@ class CreateSubAccountDTO extends BaseDTO
     {
         parent::__construct();
 
-        //dd(request()['accounts']);
+        if (!array_key_exists('accounts.*.sub_accounts.*.sub_account_id', $this->rules())) {
+            $this->merge(new CreateCompteDTO(), 'accounts.*.sub_accounts.*.compte_data');
+        }
+
+        if (array_key_exists('sub_accounts.*.sub_accounts.*.sub_divisions', $this->rules())) {
+            $this->merge(new CreateSubDivisionDTO());
+        }
 
         /* if(!isset(request()['sub_accounts']['sous_compte_id']) && !request('sous_compte_id')){
             $this->merge(new CreateCompteDTO(), 'accounts.*.sub_accounts.*.compte_data');
@@ -69,8 +76,16 @@ class CreateSubAccountDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            'accounts.*.sub_accounts.required'                          => 'The sub_accounts field is required.',
+            'accounts.*.sub_accounts.array'                             => 'The sub_accounts must be an array.',
+            'accounts.*.sub_accounts.*.distinct'                        => 'Each sub account must be unique in the list.',
+            'accounts.*.sub_accounts.*.account_number.required'         => 'The account number is required.',
+            'accounts.*.sub_accounts.*.account_number.string'           => 'The account number must be a string.',
+            'accounts.*.sub_accounts.*.account_number.max'              => 'The account number may not be greater than :max characters.',
+            'accounts.*.sub_accounts.*.account_number.unique'           => 'This account number has already been taken.',
+            'accounts.*.sub_accounts.*.sub_account_id.exists'           => 'The selected sub account does not exist.',
+            'accounts.*.sub_accounts.*.principal_account_id.exists'     => 'The selected principal account does not exist.',
+            'accounts.*.sub_accounts.*.sous_compte_id.exists'           => 'The selected sub account does not exist.',
         ], $messages);
 
         $messages = array_merge([], $default_messages);

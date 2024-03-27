@@ -7,7 +7,6 @@ namespace Domains\Finances\CategoriesDeCompte\DataTransfertObjects;
 use App\Models\Finances\CategorieDeCompte;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
-
 /**
  * Class ***`UpdateCategorieDeCompteDTO`***
  *
@@ -42,7 +41,7 @@ class UpdateCategorieDeCompteDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", "max:25", 'unique:categories_de_compte,name,' . request()->route("categorie_de_compte_id") . ',id'],
+            "name"            		=> ["string", "required", "max:25", 'unique_ignore_case:categories_de_compte,name,' . request()->route("categorie_de_compte_id") . ',id'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
@@ -57,8 +56,12 @@ class UpdateCategorieDeCompteDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "name.string"                          => "Le nom de la catégorie de compte doit être une chaîne de caractères.",
+            "name.required"                        => "Le nom de la catégorie de compte est requis.",
+            "name.max"                             => "Le nom de la catégorie de compte ne peut pas dépasser :max caractères.",
+            "name.unique_ignore_case"              => "Le nom de la catégorie de compte doit être unique, en ignorant la casse.",
+            "can_be_deleted.boolean"               => "Le champ indiquant si la catégorie de compte peut être supprimée doit être un booléen.",
+            "can_be_deleted.in"                    => "Le champ indiquant si la catégorie de compte peut être supprimée doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

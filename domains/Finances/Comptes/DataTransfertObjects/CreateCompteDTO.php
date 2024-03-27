@@ -43,10 +43,10 @@ class CreateCompteDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            'type_de_compte'            => ['required', "string", new Enum(TypeCompteEnum::class)],
-            "name"            		    => ["string", "required", "max:120", 'unique:comptes,name'],
+            "type_de_compte"            => ["required", "string", new Enum(TypeCompteEnum::class)],
+            "name"            		    => ["string", "required", "max:120", "unique_ignore_case:comptes,name"],
             "categorie_de_compte_id"    => ["required", "exists:categories_de_compte,id"],
-            'can_be_deleted'            => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "can_be_deleted"            => ["sometimes", "boolean", "in:".true.",".false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -60,8 +60,20 @@ class CreateCompteDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "type_de_compte.required"             => "Le type de compte est requis.",
+            "type_de_compte.string"               => "Le type de compte doit être une chaîne de caractères.",
+            "type_de_compte.enum"                 => "Le type de compte n'est pas valide.",
+        
+            "name.string"                         => "Le nom du compte doit être une chaîne de caractères.",
+            "name.required"                       => "Le nom du compte est requis.",
+            "name.max"                            => "Le nom du compte ne peut pas dépasser :max caractères.",
+            "name.unique_ignore_case"             => "Ce nom de compte est déjà utilisé.",
+        
+            "categorie_de_compte_id.required"     => "La catégorie de compte est requise.",
+            "categorie_de_compte_id.exists"       => "La catégorie de compte sélectionnée n'existe pas.",
+        
+            "can_be_deleted.boolean"              => "Le champ indiquant si le compte peut être supprimé doit être un booléen.",
+            "can_be_deleted.in"                   => "Le champ indiquant si le compte peut être supprimé doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

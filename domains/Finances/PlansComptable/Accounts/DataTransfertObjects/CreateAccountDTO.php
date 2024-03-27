@@ -25,12 +25,10 @@ class CreateAccountDTO extends BaseDTO
     {
         parent::__construct();
 
-        //if(!isset(request()['compte_id']) && !request('compte_id')){
         if (!array_key_exists('accounts.*.compte_id', $this->rules())) {
             $this->merge(new CreateCompteDTO(), 'accounts.*.compte_data');
         }
 
-        //if(!isset(request()['sub_accounts'])){
         if (array_key_exists('accounts.*.sub_accounts', $this->rules())) {
             $this->merge(new CreateSubAccountDTO());
         }
@@ -73,8 +71,18 @@ class CreateAccountDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "accounts.required"                     => "Les comptes sont requis.",
+            "accounts.array"                        => "Les comptes doivent être un tableau.",
+            "accounts.*.distinct"                   => "Chaque compte doit être unique dans la liste.",
+            "accounts.*.account_number.required"    => "Le numéro de compte est requis.",
+            "accounts.*.account_number.string"      => "Le numéro de compte doit être une chaîne de caractères.",
+            "accounts.*.account_number.max"         => "Le numéro de compte ne peut pas dépasser :max caractères.",
+            "accounts.*.account_number.unique"      => "Ce numéro de compte est déjà utilisé.",
+            "accounts.*.classe_id.required"         => "La classe de compte est requise.",
+            "accounts.*.classe_id.exists"           => "La classe de compte sélectionnée n'existe pas.",
+            "accounts.*.compte_id.exists"           => "Le compte sélectionné n'existe pas.",
+            "accounts.*.can_be_deleted.boolean"     => "Le champ indiquant si le compte peut être supprimé doit être un booléen.",
+            "accounts.*.can_be_deleted.in"          => "Le champ indiquant si le compte peut être supprimé doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);
