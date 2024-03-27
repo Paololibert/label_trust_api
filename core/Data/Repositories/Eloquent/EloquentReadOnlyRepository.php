@@ -53,6 +53,7 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
     public function all(array $columns = ['*']): Collection
     {
         try {
+
             return $this->model->select($columns)->get();
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while retrieving records.", previous: $exception);

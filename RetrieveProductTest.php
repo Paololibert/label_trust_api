@@ -136,6 +136,22 @@ class RetrieveProductTest extends TestCase
 
         // Assert that the response is a bad request
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
+
+        // Assert the JSON structure of the response
+        $response->assertJsonStructure([
+            "status",
+            "message",
+            "errors",
+            "status_code"
+        ]);
+
+        // Assert the type of data returned in the JSON response
+        $response->assertJson([
+            "status" => false,
+            "message" => "Invalid UUID provided.",
+            "errors" => null,
+            "status_code" => Response::HTTP_BAD_REQUEST
+        ]);
         
         // Additional assertions can be added here
     }
@@ -156,6 +172,22 @@ class RetrieveProductTest extends TestCase
         // Assert that the response is unauthorized
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
 
+        // Assert the JSON structure of the response
+        $response->assertJsonStructure([
+            "status",
+            "message",
+            "errors",
+            "status_code"
+        ]);
+
+        // Assert the type of data returned in the JSON response
+        $response->assertJson([
+            "status" => false,
+            "message" => "You are unauthenticated.",
+            "errors" => null,
+            "status_code" => Response::HTTP_UNAUTHORIZED
+        ]);
+
         // Additional assertions can be added here
     }
 
@@ -167,7 +199,7 @@ class RetrieveProductTest extends TestCase
     public function testRetrieveProductWithInsufficientPermissions()
     {
         // Mock the authorization check to always return false
-        Gate::shouldReceive('allows')->andReturn(false);
+        Gate::shouldReceive('allows')->with('view-product', $this->product)->andReturn(false);
 
         // Assuming we have a user with insufficient permissions
         $user = User::create([
@@ -181,14 +213,31 @@ class RetrieveProductTest extends TestCase
             'userable_type' => 'App\Models\Person', // Adjust as per your application structure
             'userable_id' => Uuid::uuid4()->toString(), // Adjust as per your application structure
         ]);
-
-
         
         // Send a GET request to retrieve the product as the user with insufficient permissions
         $response = $this->actingAs($user)->get("api/products/" . $this->product->id);
 
+        // Assert that the response status is forbidden
+        $response->assertForbidden();
+        
         // Assert that the response is forbidden
         $response->assertStatus(Response::HTTP_FORBIDDEN);
+
+        // Assert the JSON structure of the response
+        $response->assertJsonStructure([
+            "status",
+            "message",
+            "errors",
+            "status_code"
+        ]);
+
+        // Assert the type of data returned in the JSON response
+        $response->assertJson([
+            "status" => false,
+            "message" => "You are not authorize to execute this action.",
+            "errors" => null,
+            "status_code" => Response::HTTP_FORBIDDEN
+        ]);
 
         // Additional assertions can be added here
     }
@@ -205,6 +254,22 @@ class RetrieveProductTest extends TestCase
 
         // Assert that the response status is "Method Not Allowed"
         $response->assertStatus(Response::HTTP_METHOD_NOT_ALLOWED);
+
+        // Assert the JSON structure of the response
+        $response->assertJsonStructure([
+            "status",
+            "message",
+            "errors",
+            "status_code"
+        ]);
+
+        // Assert the type of data returned in the JSON response
+        $response->assertJson([
+            "status" => false,
+            "message" => "The http method is not supported.",
+            "errors" => null,
+            "status_code" => Response::HTTP_METHOD_NOT_ALLOWED
+        ]);
     }
 
     /**
@@ -219,8 +284,54 @@ class RetrieveProductTest extends TestCase
         $this->expectException(HttpTimeoutException::class);
         $response = $this->get("api/products/" . $this->product->id);
         $response->assertStatus(Response::HTTP_REQUEST_TIMEOUT);
+
+        // Assert the JSON structure of the response
+        $response->assertJsonStructure([
+            "status",
+            "message",
+            "errors",
+            "status_code"
+        ]);
+
+        // Assert the type of data returned in the JSON response
+        $response->assertJson([
+            "status" => false,
+            "message" => "Request timeout occurred.",
+            "errors" => null,
+            "status_code" => Response::HTTP_REQUEST_TIMEOUT
+        ]);
     }
 
+
+    /**
+     * Test retrieving a product with request timeout.
+     *
+     * @return void
+     */
+    public function testRetrieveProductWithTooManyAttempts()
+    {
+        // Mocking a request timeout scenario (example)
+        // This might require additional setup and mocking
+        $this->expectException(HttpTimeoutException::class);
+        $response = $this->get("api/products/" . $this->product->id);
+        $response->assertStatus(Response::HTTP_TOO_MANY_REQUESTS);
+
+        // Assert the JSON structure of the response
+        $response->assertJsonStructure([
+            "status",
+            "message",
+            "errors",
+            "status_code"
+        ]);
+
+        // Assert the type of data returned in the JSON response
+        $response->assertJson([
+            "status" => false,
+            "message" => "Too Many Attempts.",
+            "errors" => null,
+            "status_code" => Response::HTTP_TOO_MANY_REQUESTS
+        ]);
+    }
     /**
      * Test retrieving a product with internal server error.
      *
@@ -228,10 +339,25 @@ class RetrieveProductTest extends TestCase
      */
     public function testRetrieveProductWithInternalServerError()
     {
-        $response = $this->get("api/products/" . $this->product->id);
         // Mocking an internal server error scenario (example)
         // This might require additional setup and mocking
+        $response = $this->get("api/products/" . $this->product->id);
         $response->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
+
+        // Assert the JSON structure of the response
+        $response->assertJsonStructure([
+            "status",
+            "message",
+            "errors",
+            "status_code"
+        ]);
+
+        // Assert the type of data returned in the JSON response
+        $response->assertJson([
+            "status" => false,
+            "errors" => null,
+            "status_code" => Response::HTTP_INTERNAL_SERVER_ERROR
+        ]);
 
         // Additional assertions can be added here
     }
@@ -247,6 +373,21 @@ class RetrieveProductTest extends TestCase
         // This might require additional setup and mocking
         $response = $this->get("api/products/" . $this->product->id);
         $response->assertStatus(Response::HTTP_SERVICE_UNAVAILABLE);
+
+        // Assert the JSON structure of the response
+        $response->assertJsonStructure([
+            "status",
+            "message",
+            "errors",
+            "status_code"
+        ]);
+
+        // Assert the type of data returned in the JSON response
+        $response->assertJson([
+            "status" => false,
+            "errors" => null,
+            "status_code" => Response::HTTP_SERVICE_UNAVAILABLE
+        ]);
 
         // Additional assertions can be added here
     }
