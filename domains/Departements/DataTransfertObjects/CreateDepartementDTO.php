@@ -60,7 +60,7 @@ class CreateDepartementDTO extends BaseDTO
         $default_messages = array_merge([
             'name.string'               => 'Le nom du département doit être une chaîne de caractères.',
             'name.required'             => 'Le nom du département est requis.',
-            'name.unique_ignore_case'   => 'Le nom du département est déjà utilisé.', // Personnaliser le message pour l'unicité
+            'name.unique_ignore_case'   => 'Le nom du département est déjà utilisé.',
             'can_be_deleted.boolean'    => 'Le département peut être supprimé doit être un booléen.',
             'can_be_deleted.in'         => 'Le département peut être supprimé doit être "true" ou "false".'
         ], $messages);
