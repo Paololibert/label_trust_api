@@ -213,7 +213,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                 Route::group(['namespace' => 'Finances'], function () {
 
 
-                    Route::apiResource('devises', 'DeviseController')->parameters(['devises' => 'devise_id']);
+                    Route::apiResource('devises', 'DeviseController')->parameters(['devises' => 'devise_id'])->middleware(['throttle:10,0.8']);
 
                     Route::apiResource('categories_de_compte', 'CategorieDeCompteController')->parameters(['categories_de_compte' => 'categorie_de_compte_id']);
 
