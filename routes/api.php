@@ -158,7 +158,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                 Route::group(['prefix' => 'postes'], function () {
                     Route::put('{poste_id}/attach-salaries', 'PosteController@attachSalariesToAPoste')->name('postes.attach');
-                    Route::delete('{poste_id}/detach-salaries', 'PosteController@detachSalariesFromAPoste')->name('postes.detach');
+                    Route::patch('{poste_id}/detach-salaries', 'PosteController@detachSalariesFromAPoste')->name('postes.detach');
                     Route::get('{poste_id}/salaries', 'PosteController@fetchPosteSalaries')->name('postes.salaries');
                 });
 
@@ -169,14 +169,14 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                 Route::group(['prefix' => 'unite_travailles'], function () {
                     Route::put('{unite_travaille_id}/add-taux', 'UniteTravailleController@addTaux')->name('unite_travailles.addTaux');
                     Route::patch('{unite_travaille_id}/edit-taux', 'UniteTravailleController@editTaux')->name('unite_travailles.editTaux');
-                    Route::delete('{unite_travaille_id}/remove-taux', 'UniteTravailleController@removeTaux')->name('unite_travailles.removeTaux');
+                    Route::patch('{unite_travaille_id}/remove-taux', 'UniteTravailleController@removeTaux')->name('unite_travailles.removeTaux');
                 });
 
                 Route::apiResource('categories_of_employees', 'CategoryOfEmployeeController')->parameters(['categories_of_employees' => 'category_of_employee_id']);
 
                 Route::group(['prefix' => 'categories_of_employees'], function () {
                     Route::put('{category_of_employee_id}/attach-taux', 'CategoryOfEmployeeController@attachTauxToACategoryOfEmployee')->name('categories_of_employees.attach');
-                    Route::delete('{category_of_employee_id}/detach-taux', 'CategoryOfEmployeeController@detachTauxFromACategoryOfEmployee')->name('categories_of_employees.detach');
+                    Route::patch('{category_of_employee_id}/detach-taux', 'CategoryOfEmployeeController@detachTauxFromACategoryOfEmployee')->name('categories_of_employees.detach');
                     Route::get('{category_of_employee_id}/taux', 'CategoryOfEmployeeController@fetchCategoryOfEmployeeTaux')->name('categories_of_employees.taux');
                 });
 

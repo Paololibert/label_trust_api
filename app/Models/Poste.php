@@ -87,11 +87,11 @@ class Poste extends ModelContract
     /**
      * Get the user's full name attribute.
      *
-     * @return string The user's full name.
+     * @return string|null The user's full name.
      */
-    public function getDepartementNameAttribute(): string
+    public function getDepartementNameAttribute(): ?string
     {
-        return $this->departement->name ;
+        return $this->departement?->name ;
     }
     
     /**
