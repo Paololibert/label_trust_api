@@ -51,6 +51,18 @@ class ExerciceComptableJournal extends ModelContract
         'total', 'total_debit', 'total_credit'
     ];
 
+
+    /**
+     * The model's default attribute values.
+     *
+     * @var array<string, mixed>
+     */
+    protected $default_attributes = [
+        'total'         => 0.00,
+        'total_debit'   => 0.00,
+        'total_credit'  => 0.00
+    ];
+
     /**
      * The attributes that should be cast to native types.
      *

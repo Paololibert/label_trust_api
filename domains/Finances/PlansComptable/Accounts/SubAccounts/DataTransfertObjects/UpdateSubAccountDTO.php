@@ -49,11 +49,11 @@ class UpdateSubAccountDTO extends BaseDTO
         $rules = array_merge([
             "accounts.*.sub_accounts"                           => ["required", "array"],
             "accounts.*.sub_accounts.*"                         => ["distinct", "array"],
-            "accounts.*.sub_accounts.*.id"                      => ["required", "exists:plan_comptable_compte_sous_comptes,id"],
+            "accounts.*.sub_accounts.*.id"                      => ["required", "distinct", "exists:plan_comptable_compte_sous_comptes,id"],
             "accounts.*.sub_accounts.*.account_number"          => ["required", "string", "max:120", Rule::unique('plan_comptable_compte_sous_comptes', 'account_number')->ignore(request()->route("sub_account_id") )->whereNull('deleted_at')],
             "accounts.*.sub_accounts.*.sub_account_id"          => ["sometimes", "exists:plan_comptable_compte_sous_comptes,id"],
             "accounts.*.sub_accounts.*.principal_account_id"    => ["sometimes", "exists:plan_comptable_comptes,id"],
-            "accounts.*.sub_accounts.*.sous_compte_id"          => ["sometimes", "exists:comptes,id"],
+            "accounts.*.sub_accounts.*.sous_compte_id"          => ["sometimes", "distinct", "exists:comptes,id"],
             'accounts.*.sub_accounts.*.can_be_deleted'          => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

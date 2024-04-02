@@ -71,6 +71,34 @@ class UniteTravailleReadWriteRepository extends EloquentReadWriteRepository
     }
 
     /**
+     * Update an existing record.
+     *
+     * @param  Model|string $id       The ID of the record to update.
+     * @param  array        $data     The data for updating the record.
+     * @return bool|Model|null        Whether the update was successful or not.
+     *
+     * @throws ModelNotFoundException If the record with the given ID is not found.
+     * @throws \Core\Utils\Exceptions\RepositoryException    If there is an error while updating the record.
+     */
+    public function update($id, array $data)
+    {
+        try {
+            
+            $this->model = parent::update($id, $data);
+
+            if(isset($data['taux'])){
+                // Perform create operation
+                $this->editTaux($this->model->id, $data['taux']);
+            }
+
+            return $this->model->refresh();
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while creating the record." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }
+    }
+
+    /**
      * Create taux for unite travailles.
      *
      * @param string            $uniteTravailleId

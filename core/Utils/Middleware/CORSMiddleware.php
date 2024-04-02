@@ -27,9 +27,8 @@ class CORSMiddleware
      */
     public function handle(Request $request, Closure $next): JsonResponse
     {
-
         // Perform header value validation
-        $allowedOrigins = ['http://localhost', 'http://localhost:8000', 'http://localhost:8080', 'http://127.0.0.1', 'http://127.0.0.1:8000', 'http://127.0.0.1:8080', 'https://pms.labelstrust.com/'];
+        $allowedOrigins = ['http://localhost', 'http://localhost:8000', 'http://localhost:8080', 'http://127.0.0.1', 'http://127.0.0.1:8000', 'http://127.0.0.1:8080', 'https://pms.labelstrust.com'];
 
         // Check if the request origin is in the list of allowed origins
         $origin = $request->header('Origin');

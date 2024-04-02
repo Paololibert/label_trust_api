@@ -60,7 +60,7 @@ class CreateSubDivisionDTO extends BaseDTO
             "accounts.*.sub_accounts.*.sub_divisions.*.account_number"          => ["required", "string", "max:120", Rule::unique('plan_comptable_compte_sous_comptes', 'account_number')->whereNull('deleted_at')],
             "accounts.*.sub_accounts.*.sub_divisions.*.sub_account_id"          => ["sometimes", "exists:plan_comptable_compte_sous_comptes,id"],
             "accounts.*.sub_accounts.*.sub_divisions.*.principal_account_id"    => ["sometimes", "exists:plan_comptable_comptes,id"],
-            "accounts.*.sub_accounts.*.sub_divisions.*.sous_compte_id"          => ["sometimes", "exists:comptes,id"],
+            "accounts.*.sub_accounts.*.sub_divisions.*.sous_compte_id"          => ["sometimes", "distinct", "exists:comptes,id"],
             'can_be_deleted'                                    => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

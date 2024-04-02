@@ -7,9 +7,6 @@ namespace Core\Data\Eloquent\ORMs;
 use App\Models\Finances\BalanceDeCompte;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-/**
- * 
- */
 trait Balanceable
 {
     /**
@@ -20,6 +17,15 @@ trait Balanceable
     public function balances(): MorphMany
     {
         return $this->morphMany(BalanceDeCompte::class, 'balanceable');
+    }
+
+    /**
+     * Get the user of the employee.
+     *
+     */
+    public function balance()
+    {
+        return $this->morphOne(BalanceDeCompte::class, 'balanceable')->whereNull("date_cloture")->orWhereNotNull("date_cloture")->orderByDesc("created_at");
     }
 
     /**

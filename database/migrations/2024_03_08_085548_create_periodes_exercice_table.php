@@ -46,12 +46,10 @@ class CreatePeriodesExerciceTable extends Migration
                 
                 // the starting date of the contrat
                 $table->date('date_debut_periode')
-                    ->format('d/m')
                     ->comment('Indicate when an exercice comptable should start');
 
                 // Indicathe the ending date
                 $table->date('date_fin_periode')
-                    ->format('d/m')
                     ->comment('Indicate when an exercice comptable will end');
 
                 // Add a boolean column 'status' to the table

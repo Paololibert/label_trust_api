@@ -51,10 +51,15 @@ class CreateLigneEcritureComptableDTO extends BaseDTO
     {
         // 'libelle', 'montant', 'type_ecriture_compte', 'ligneable_id', 'ligneable_type', 'accountable_id', 'accountable_type'
         $rules = array_merge([
-            'type_ecriture_compte'      => ['required', "string", new Enum(TypeEcritureCompteEnum::class)],
-            "montant"                   => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            "ligneable_id"              => ["required", "exists:".$this->ligneableRule],
-            "compte_id"                 => ["required", "exists:comptes,id"],
+            "lignes_ecriture"                          => ["required", "array", "min:2"],
+            "lignes_ecriture.*"                        => ["distinct", "array"],
+            'lignes_ecriture.*.type_ecriture_compte'   => ['required', "string", new Enum(TypeEcritureCompteEnum::class)],
+            "lignes_ecriture.*.montant"                => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
+            //"ligneable_type"            => ["required", "in:ecriture_comptable,operation_disponible"/* , "exists:".$this->ligneableRule */],
+            "lignes_ecriture.*.account_number"         => ["required", "exists:plan_comptable_comptes,account_number"],
+            "lignes_ecriture.*.account_number"         => ["required", "exists:plan_comptable_comptes,account_number"],
+            "lignes_ecriture.*.account_number"         => ["required", "exists:plan_comptable_comptes,account_number"],
+            "lignes_ecriture.*.account_number"         => ["required", "exists:plan_comptable_comptes,account_number"],
             'can_be_deleted'            => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

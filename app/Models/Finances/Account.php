@@ -7,9 +7,7 @@ namespace App\Models\Finances;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Accountable;
 use Core\Data\Eloquent\ORMs\Balanceable;
-use Core\Utils\Traits\CPivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -64,7 +62,7 @@ class Account extends ModelContract
      * @var array<int, string>
      */
     protected $appends = [
-        'intitule', 'classe_name'
+        'intitule', 'classe_de_compte', 'categorie_de_compte'
     ];
 
     /**
@@ -93,9 +91,19 @@ class Account extends ModelContract
      *
      * @return string The user's full name.
      */
-    public function getClasseNameAttribute(): string
+    public function getClasseDeCompteAttribute(): string
     {
         return $this->classe->name ;
+    }
+
+    /**
+     * Get the user's full name attribute.
+     *
+     * @return string The user's full name.
+     */
+    public function getCategorieDeCompteAttribute(): string
+    {
+        return $this->compte->categorie_de_compte ;
     }
 
     /**

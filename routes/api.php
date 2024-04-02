@@ -243,6 +243,13 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                     });
 
                     Route::apiResource('exercices_comptable', 'ExerciceComptableController')->parameters(['exercices_comptable' => 'exercice_comptable_id']);
+                    Route::group(['prefix' => 'exercices_comptable'], function () {
+                        Route::put('{exercice_comptable_id}/report-des-soldes-aux-comptes', 'ExerciceComptableController@reportDesSoldesAuxComptes')->name('exercices_comptable.report');
+                        Route::get('{exercice_comptable_id}/balance-des-comptes', 'ExerciceComptableController@balanceDesComptes')->name('exercices_comptable.balance');
+                        Route::get('{exercice_comptable_id}/ecritures-comptable', 'ExerciceComptableController@fetchEcrituresComptable')->name('exercices_comptable.list-ecritures');
+                        Route::put('{exercice_comptable_id}/ecritures-comptable', 'ExerciceComptableController@registerANewEcritureComptable')->name('exercices_comptable.register-ecriture');
+                        Route::get('{exercice_comptable_id}/ecritures-comptable/{ecriture_comptable_id}', 'ExerciceComptableController@fetchDetailsOfAnEcritureComptable')->name('exercices_comptable.details-of-an-ecriture');
+                    });
                 });
             });
         });

@@ -47,7 +47,7 @@ class SubAccount extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'account_number', 'subaccountable_id', 'subaccountable_type', /* 'sub_account_id',  */'sous_compte_id'
+        'account_number', 'subaccountable_id', 'subaccountable_type', 'sous_compte_id'
     ];
 
     /**
@@ -75,7 +75,6 @@ class SubAccount extends ModelContract
      */
     protected $casts = [
         'account_number'            => 'string',
-        //'sub_account_id'            => 'string',
         'sous_compte_id'            => 'string',
         'subaccountable_id'         => 'string',
         'subaccountable_type'       => 'string'

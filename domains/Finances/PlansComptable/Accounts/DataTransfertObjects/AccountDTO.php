@@ -42,7 +42,10 @@ class AccountDTO extends BaseDTO
     {
         $rules = array_merge([
             "accounts"                          => ["required", "array"],
-            "accounts.*"                        => ["distinct", "exists:plan_comptable_comptes,id"],
+            "accounts.*"                        => ["distinct", "array"],
+            "accounts.*.id"                     => ["required", "distinct", "exists:plan_comptable_comptes,id"],
+            "accounts.*.solde_debit"            => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            "accounts.*.solde_credit"           => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             'accounts.*.can_be_deleted'         => ['sometimes', 'boolean', 'in:'.true.','.false]
         ], $rules);
 

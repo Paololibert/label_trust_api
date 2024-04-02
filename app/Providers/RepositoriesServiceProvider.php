@@ -321,24 +321,6 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Finances\ClassesDeCompte\Repositories\ClasseDeCompteReadOnlyRepository::class);
 
-
-
-        // Bind ReadWriteRepositoryInterface to PeriodesExerciceReadWriteRepository
-        $this->app->when(\Domains\Finances\PeriodesExercice\Services\RESTful\PeriodeExerciceRESTfulReadWriteService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\PeriodesExercice\Repositories\PeriodeExerciceReadWriteRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to PeriodesExerciceReadOnlyRepository
-        $this->app->when(\Domains\Finances\PeriodesExercice\Services\RESTful\PeriodeExerciceRESTfulQueryService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\PeriodesExercice\Repositories\PeriodeExerciceReadOnlyRepository::class);
-
-
-
         // Bind ReadWriteRepositoryInterface to CompteReadWriteRepository
         $this->app->when(\Domains\Finances\Comptes\Services\RESTful\CompteRESTfulReadWriteService::class)
             ->needs(
@@ -352,80 +334,6 @@ class RepositoriesServiceProvider extends ServiceProvider
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
             ->give(\Domains\Finances\Comptes\Repositories\CompteReadOnlyRepository::class);
-
-
-        // Bind ReadWriteRepositoryInterface to JournalReadWriteRepository
-        $this->app->when(\Domains\Finances\Journaux\Services\RESTful\JournalRESTfulReadWriteService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\Journaux\Repositories\JournalReadWriteRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to JournauxReadOnlyRepository
-        $this->app->when(\Domains\Finances\Journaux\Services\RESTful\JournalRESTfulQueryService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\Journaux\Repositories\JournalReadOnlyRepository::class);
-
-
-        // Bind ReadWriteRepositoryInterface to PlanComptableReadWriteRepository
-        $this->app->when(\Domains\Finances\PlansComptable\Services\RESTful\PlanComptableRESTfulReadWriteService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\PlansComptable\Repositories\PlanComptableReadWriteRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to PlansComptableReadOnlyRepository
-        $this->app->when(\Domains\Finances\PlansComptable\Services\RESTful\PlanComptableRESTfulQueryService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\PlansComptable\Repositories\PlanComptableReadOnlyRepository::class);
-
-
-        // Bind ReadWriteRepositoryInterface to AccountReadWriteRepository
-        $this->app->when(\Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulReadWriteService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to AccountReadOnlyRepository
-        $this->app->when(\Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulQueryService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadOnlyRepository::class);
-
-
-        // Bind ReadWriteRepositoryInterface to AccountReadWriteRepository
-        $this->app->when(\Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\SubAccountRESTfulReadWriteService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories\SubAccountReadWriteRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to AccountReadOnlyRepository
-        $this->app->when(\Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\SubAccountRESTfulQueryService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories\SubAccountReadOnlyRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to ExerciceComptableReadWriteRepository
-        $this->app->when(\Domains\Finances\ExercicesComptable\Services\RESTful\ExerciceComptableRESTfulReadWriteService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\ExercicesComptable\Repositories\ExerciceComptableReadWriteRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to ExercicesComptableReadOnlyRepository
-        $this->app->when(\Domains\Finances\ExercicesComptable\Services\RESTful\ExerciceComptableRESTfulQueryService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\ExercicesComptable\Repositories\ExerciceComptableReadOnlyRepository::class);
     }
 
     /**

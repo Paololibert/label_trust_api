@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Core\Data\Eloquent\ORMs;
 
 use App\Models\Finances\LigneEcritureComptable;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * 
@@ -16,11 +16,11 @@ trait Ligneable
     /**
      * Get the user of the employee.
      *
-     * @return MorphOne
+     * @return MorphMany
      */
-    public function ligne(): MorphOne
+    public function lignes_ecriture(): MorphMany
     {
-        return $this->morphOne(LigneEcritureComptable::class, 'ligneable');
+        return $this->morphMany(LigneEcritureComptable::class, 'ligneable');
     }
 
     /**
@@ -28,8 +28,5 @@ trait Ligneable
      */
     public static function bootLigneable()
     {
-        static::deleting(function ($model) {
-            $model->ligne()->delete();
-        });
     }
 }

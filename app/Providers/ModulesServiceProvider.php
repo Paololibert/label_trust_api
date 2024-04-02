@@ -379,11 +379,15 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\PeriodesExercice\Services\RESTful\Contracts\PeriodeExerciceRESTfulReadWriteServiceContract::class,
             function ($app) {
-                // Resolve the necessary dependencies for PeriodeExerciceRESTfulReadWriteService
-                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
-
-                // Create and return an instance of PeriodeExerciceRESTfulReadWriteService
-                return new \Domains\Finances\PeriodesExercice\Services\RESTful\PeriodeExerciceRESTfulReadWriteService($readWriteService);
+                /**
+                 * Resolve the necessary dependencies for PeriodeExerciceRESTfulReadWriteService
+                 * Create and return an instance of PeriodeExerciceRESTfulReadWriteService
+                 */
+                return new \Domains\Finances\PeriodesExercice\Services\RESTful\PeriodeExerciceRESTfulReadWriteService(
+                    new \Core\Logic\Services\Manager\ReadWriteService(
+                        $app->make( \Domains\Finances\PeriodesExercice\Repositories\PeriodeExerciceReadWriteRepository::class)
+                    )
+                );
             }
         );
 
@@ -391,11 +395,15 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\PeriodesExercice\Services\RESTful\Contracts\PeriodeExerciceRESTfulQueryServiceContract::class,
             function ($app) {
-                // Resolve the necessary dependencies for PeriodeExerciceRESTfulQueryService
-                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
-
-                // Create and return an instance of PeriodeExerciceRESTfulQueryService
-                return new \Domains\Finances\PeriodesExercice\Services\RESTful\PeriodeExerciceRESTfulQueryService($queryService);
+                /**
+                 * Resolve the necessary dependencies for PeriodeExerciceRESTfulQueryService
+                 * Create and return an instance of PeriodeExerciceRESTfulQueryService
+                 */
+                return new \Domains\Finances\PeriodesExercice\Services\RESTful\PeriodeExerciceRESTfulQueryService(
+                    new \Core\Logic\Services\Manager\QueryService(
+                        $app->make( \Domains\Finances\PeriodesExercice\Repositories\PeriodeExerciceReadOnlyRepository::class)
+                    )
+                );
             }
         );
 
@@ -404,7 +412,6 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\PlansComptable\Services\RESTful\Contracts\PlanComptableRESTfulReadWriteServiceContract::class,
             function ($app) {
-
                 /**
                  * Resolve the necessary dependencies for PlanComptableRESTfulReadWriteService
                  * Create and return an instance of PlanComptableRESTfulReadWriteService
@@ -421,7 +428,6 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\PlansComptable\Services\RESTful\Contracts\PlanComptableRESTfulQueryServiceContract::class,
             function ($app) {
-
                 /**
                  * Resolve the necessary dependencies for PlanComptableRESTfulQueryService
                  * Create and return an instance of PlanComptableRESTfulQueryService
@@ -456,7 +462,6 @@ class ModulesServiceProvider extends ServiceProvider
             \Domains\Finances\PlansComptable\Accounts\Services\RESTful\Contracts\AccountRESTfulQueryServiceContract::class,
             function ($app) {
                 // Resolve the necessary dependencies for AccountRESTfulQueryService
-
                 return new \Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulQueryService(
                     new \Core\Logic\Services\Manager\QueryService(
                         new \Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadOnlyRepository(new \App\Models\Finances\Account)
@@ -469,18 +474,11 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulReadWriteServiceContract::class,
             function ($app) {
-
                 return new \Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\SubAccountRESTfulReadWriteService(
                     new \Core\Logic\Services\Manager\ReadWriteService(
                         $app->make(\Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories\SubAccountReadWriteRepository::class)
                     )
                 );
-
-                // Resolve the necessary dependencies for SubAccountRESTfulReadWriteService
-                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
-
-                // Create and return an instance of SubAccountRESTfulReadWriteService
-                return new \Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\SubAccountRESTfulReadWriteService($readWriteService);
             }
         );
 
@@ -488,8 +486,6 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulQueryServiceContract::class,
             function ($app) {
-                // Resolve the necessary dependencies for SubAccountRESTfulQueryService
-
                 // Create and return an instance of SubAccountRESTfulQueryService
                 return new \Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\SubAccountRESTfulQueryService(
                     new \Core\Logic\Services\Manager\QueryService(
@@ -529,11 +525,15 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\Journaux\Services\RESTful\Contracts\JournalRESTfulReadWriteServiceContract::class,
             function ($app) {
-                // Resolve the necessary dependencies for JournalRESTfulReadWriteService
-                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
-
-                // Create and return an instance of JournalRESTfulReadWriteService
-                return new \Domains\Finances\Journaux\Services\RESTful\JournalRESTfulReadWriteService($readWriteService);
+                /**
+                 * Resolve the necessary dependencies for JournalRESTfulReadWriteService
+                 * Create and return an instance of JournalRESTfulReadWriteService
+                 */
+                return new \Domains\Finances\Journaux\Services\RESTful\JournalRESTfulReadWriteService(
+                    new \Core\Logic\Services\Manager\ReadWriteService(
+                        $app->make( \Domains\Finances\Journaux\Repositories\JournalReadWriteRepository::class)
+                    )
+                );
             }
         );
 
@@ -541,11 +541,15 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\Journaux\Services\RESTful\Contracts\JournalRESTfulQueryServiceContract::class,
             function ($app) {
-                // Resolve the necessary dependencies for JournalRESTfulQueryService
-                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
-
-                // Create and return an instance of JournalRESTfulQueryService
-                return new \Domains\Finances\Journaux\Services\RESTful\JournalRESTfulQueryService($queryService);
+                /**
+                 * Resolve the necessary dependencies for JournalRESTfulQueryService
+                 * Create and return an instance of JournalRESTfulQueryService
+                 */
+                return new \Domains\Finances\Journaux\Services\RESTful\JournalRESTfulQueryService(
+                    new \Core\Logic\Services\Manager\QueryService(
+                        $app->make( \Domains\Finances\Journaux\Repositories\JournalReadOnlyRepository::class)
+                    )
+                );
             }
         );
 
@@ -554,11 +558,16 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\ExercicesComptable\Services\RESTful\Contracts\ExerciceComptableRESTfulReadWriteServiceContract::class,
             function ($app) {
-                // Resolve the necessary dependencies for ExerciceComptableRESTfulReadWriteService
-                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
 
-                // Create and return an instance of ExerciceComptableRESTfulReadWriteService
-                return new \Domains\Finances\ExercicesComptable\Services\RESTful\ExerciceComptableRESTfulReadWriteService($readWriteService);
+                /**
+                 * Resolve the necessary dependencies for ExerciceComptableRESTfulReadWriteService
+                 * Create and return an instance of ExerciceComptableRESTfulReadWriteService
+                 */
+                return new \Domains\Finances\ExercicesComptable\Services\RESTful\ExerciceComptableRESTfulReadWriteService(
+                    new \Core\Logic\Services\Manager\ReadWriteService(
+                        $app->make( \Domains\Finances\ExercicesComptable\Repositories\ExerciceComptableReadWriteRepository::class)
+                    )
+                );
             }
         );
 
@@ -566,11 +575,15 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\ExercicesComptable\Services\RESTful\Contracts\ExerciceComptableRESTfulQueryServiceContract::class,
             function ($app) {
-                // Resolve the necessary dependencies for ExerciceComptableRESTfulQueryService
-                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
-
-                // Create and return an instance of ExerciceComptableRESTfulQueryService
-                return new \Domains\Finances\ExercicesComptable\Services\RESTful\ExerciceComptableRESTfulQueryService($queryService);
+                /**
+                 * Resolve the necessary dependencies for ExerciceComptableRESTfulQueryService
+                 * Create and return an instance of ExerciceComptableRESTfulQueryService
+                 */
+                return new \Domains\Finances\ExercicesComptable\Services\RESTful\ExerciceComptableRESTfulQueryService(
+                    new \Core\Logic\Services\Manager\QueryService(
+                        $app->make( \Domains\Finances\ExercicesComptable\Repositories\ExerciceComptableReadOnlyRepository::class)
+                    )
+                );
             }
         );
 
@@ -579,6 +592,16 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\EcrituresComptable\Services\RESTful\Contracts\EcritureComptableRESTfulReadWriteServiceContract::class,
             function ($app) {
+                /**
+                 * Resolve the necessary dependencies for EcritureComptableRESTfulReadWriteService
+                 * Create and return an instance of EcritureComptableRESTfulReadWriteService
+                 */
+                return new \Domains\Finances\EcrituresComptable\Services\RESTful\EcritureComptableRESTfulReadWriteService(
+                    new \Core\Logic\Services\Manager\ReadWriteService(
+                        $app->make( \Domains\Finances\EcrituresComptable\Repositories\EcritureComptableReadWriteRepository::class)
+                    )
+                );
+
                 // Resolve the necessary dependencies for EcritureComptableRESTfulReadWriteService
                 $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
 
@@ -591,6 +614,15 @@ class ModulesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Domains\Finances\EcrituresComptable\Services\RESTful\Contracts\EcritureComptableRESTfulQueryServiceContract::class,
             function ($app) {
+                /**
+                 * Resolve the necessary dependencies for EcritureComptableRESTfulQueryService
+                 * Create and return an instance of EcritureComptableRESTfulQueryService
+                 */
+                return new \Domains\Finances\EcrituresComptable\Services\RESTful\EcritureComptableRESTfulQueryService(
+                    new \Core\Logic\Services\Manager\QueryService(
+                        $app->make( \Domains\Finances\EcrituresComptable\Repositories\EcritureComptableReadOnlyRepository::class)
+                    )
+                );
                 // Resolve the necessary dependencies for EcritureComptableRESTfulQueryService
                 $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
 

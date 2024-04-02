@@ -29,5 +29,4 @@ class JournalRESTfulQueryService extends RestJsonQueryService implements Journal
     {
         parent::__construct($queryService);
     }
-
 }

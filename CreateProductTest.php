@@ -91,7 +91,7 @@ class CreateProductTest extends TestCase
                 "created_at"    => $this->product->created_at,
                 // Add other expected values as necessary
             ],
-            "status_code" => Response::HTTP_OK
+            "status_code" => Response::HTTP_CREATED
         ]);
 
         // Assert that the product was actually created in the database

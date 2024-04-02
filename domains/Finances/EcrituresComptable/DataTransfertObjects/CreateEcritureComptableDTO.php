@@ -22,7 +22,7 @@ class CreateEcritureComptableDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
-        $this->merge(new CreateLigneEcritureComptableDTO('ecritures_comptable'), 'lignes_ecriture', ['array', 'min:2']);
+        $this->merge(new CreateLigneEcritureComptableDTO('ecritures_comptable'));
     }
 
     /**
@@ -44,10 +44,9 @@ class CreateEcritureComptableDTO extends BaseDTO
     {
         $rules = array_merge([
             "libelle"                   => ["required", "string", "max:25"],
-            "total_debit"               => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            "total_credit"              => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            "date_ecriture"             => ["required", "date", 'date_format:d/m/y'],
-            "exercice_comptable_id"     => ["required", "exists:periodes_exercice,id"],
+            /* "total_debit"               => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
+            "total_credit"              => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'], */
+            "date_ecriture"             => ["required", 'date_format:Y-m-d'],
             "journal_id"                => ["required", "exists:journaux,id"],
             'can_be_deleted'            => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);

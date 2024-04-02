@@ -23,5 +23,26 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
  */
 interface EcritureComptableRESTfulQueryServiceContract extends RestJsonQueryServiceContract
 {
+    /**
+     * Retrieve list of ecritures comptable.
+     *
+     * @param  array $exerciceComptableId               The criteria for filtering the records.
+     * @param  array $columns                           The columns to select.
+     * @return \Illuminate\Http\JsonResponse            The JSON response containing the collection of filtered records.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException  If there is an error retrieving the filtered records.
+     */
+    public function ecritures_comptable(string $exerciceComptableId, array $columns = ['*']): \Illuminate\Http\JsonResponse;
 
+    /**
+     * Retrieve details of an ecritures comptable.
+     *
+     * @param  array $exerciceComptableId               The criteria for filtering the records.
+     * @param  array $ecritureComptablId               The criteria for filtering the records.
+     * @param  array $columns                           The columns to select.
+     * @return \Illuminate\Http\JsonResponse            The JSON response containing the collection of filtered records.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException  If there is an error retrieving the filtered records.
+     */
+    public function retrieveDetailsOfEcritureComptable(string $exerciceComptableId, $ecritureComptablId, array $columns = ['*']): \Illuminate\Http\JsonResponse;
 }

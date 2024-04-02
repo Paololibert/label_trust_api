@@ -136,9 +136,7 @@ class ModelContract extends Model
      *
      * @var array<int, string>
      */
-    protected $dates = [
-
-    ];
+    protected $dates = [];
 
     public $default_dates = [
         'created_at', 'updated_at', 'deleted_at'
@@ -182,9 +180,7 @@ class ModelContract extends Model
      *
      * @var array<string, string>
      */
-    protected $defaultDispatchesEvents = [
-
-    ];
+    protected $defaultDispatchesEvents = [];
 
     /**
      * Create a new ModelContract model instance.
@@ -198,8 +194,10 @@ class ModelContract extends Model
         parent::__construct($attributes);
 
         $this->attributes       = array_merge($this->default_attributes,       $this->attributes);
-        $this->attributes       = array_merge($this->attributes,               ["{$this->deleteable()}"=> TRUE]);
-        if($this->authorable()){
+        if ($this->deleteable()) {
+            $this->attributes       = array_merge($this->attributes,               ["{$this->deleteable()}" => TRUE]);
+        }
+        if ($this->authorable()) {
             $this->default_fillable = array_merge($this->default_fillable,         ["{$this->deleteable()}", "{$this->authorable()}"]);
         }
         $this->fillable         = array_merge($this->default_fillable,         $this->fillable);
@@ -208,21 +206,22 @@ class ModelContract extends Model
         $this->appends          = array_merge($this->default_appends,          $this->appends);
         $this->with             = array_merge($this->default_with,             $this->with);
 
-        if($this->authorable()){
+        if ($this->authorable()) {
             $this->default_hidden   = array_merge($this->default_hidden,          ["{$this->deleteable()}", "{$this->authorable()}"]);
         }
 
         $this->hidden           = array_merge($this->default_hidden,           $this->hidden);
-        
-        if($this->authorable()){
-            $this->default_casts    = array_merge($this->default_casts,            ["{$this->deleteable()}"=> 'boolean', "{$this->authorable()}"=> 'string']);
+
+        if ($this->authorable()) {
+            $this->default_casts    = array_merge($this->default_casts,            ["{$this->deleteable()}" => 'boolean', "{$this->authorable()}" => 'string']);
         }
-        
+
         $this->casts            = array_merge($this->default_casts,            $this->casts);
         $this->default_visible  = array_merge($this->default_visible,          ["{$this->deleteable()}"]);
         $this->visible          = array_merge($this->default_visible,          $this->visible);
         $this->visible          = array_merge($this->visible,                  $this->appends);
         $this->visible          = array_merge($this->visible,                  $this->with);
+        $this->visible          = array_merge($this->visible,                  $this->relations);
         $this->dates            = array_merge($this->default_dates,            $this->dates);
         $this->dispatchesEvents = array_merge($this->defaultDispatchesEvents, $this->dispatchesEvents);
     }
@@ -263,22 +262,27 @@ class ModelContract extends Model
         return "created_by";
     }
 
-    public function deleteable(): string
+    /**
+     * @return string|null
+     */
+    public function deleteable(): ?string
     {
         return "can_be_delete";
     }
 
-    public function getConditionallyUpdatableAttributes(): array {
+    public function getConditionallyUpdatableAttributes(): array
+    {
         return [];
     }
 
-    public function getUnmodifiableAttributes() {
+    public function getUnmodifiableAttributes()
+    {
         return [];
     }
 
     public function shouldNotBeDeleted(): bool
     {
-        if(in_array($this->deleteable(), $this->getFillable())){
+        if (in_array($this->deleteable(), $this->getFillable())) {
             return !$this->{$this->deleteable()};
         }
 
@@ -296,7 +300,8 @@ class ModelContract extends Model
     }
 
 
-    public function getActivitylogOptions(){
+    public function getActivitylogOptions()
+    {
 
         // You can configure additional options here
         return [
@@ -316,5 +321,4 @@ class ModelContract extends Model
             'subject' => $this->id, // Set the subject (the model) for the activity
         ];
     }
-    
 }

@@ -39,7 +39,7 @@ class LigneEcritureComptable extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'libelle', 'montant', 'type_ecriture_compte', 'ligneable_id', 'ligneable_type', 'accountable_id', 'accountable_type'
+        'montant', 'type_ecriture_compte', 'ligneable_id', 'ligneable_type', 'accountable_id', 'accountable_type'
     ];
 
     /**
@@ -56,8 +56,17 @@ class LigneEcritureComptable extends ModelContract
      *
      * @var array<int, string>
      */
+    protected $appends = [
+        'intitule'
+    ];
+
+    /**
+     * The attributes that should be visible in arrays.
+     *
+     * @var array<int, string>
+     */
     protected $visible = [
-        'libelle', 'montant', 'type_ecriture_compte'
+        'montant', 'type_ecriture_compte'
     ];
 
     /**
@@ -66,7 +75,6 @@ class LigneEcritureComptable extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
-        'libelle'                   => 'string',
         'montant'                   => 'decimal:2',
         'ligneable_id'              => 'string',
         'ligneable_type'            => 'string',
@@ -74,6 +82,16 @@ class LigneEcritureComptable extends ModelContract
         'accountable_type'          => 'string',
         'type_ecriture_compte'      => TypeEcritureCompteEnum::class
     ];
+
+    /**
+     * Get account related
+     *
+     * @return string The user's full name.
+     */
+    public function getIntituleAttribute(): string
+    {
+        return $this->accountable->intittule;
+    }
     
     /**
      * Get the associate parent details.

@@ -9,6 +9,7 @@ use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\Comptes\Repositories\CompteReadWriteRepository;
+use Domains\Finances\ExercicesComptable\Repositories\ExerciceComptableReadWriteRepository;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,6 +25,11 @@ class SubAccountReadWriteRepository extends EloquentReadWriteRepository
      * @var CompteReadWriteRepository
      */
     protected $compteReadWriteRepository;
+
+    /**
+     * @var ExerciceComptableReadWriteRepository
+     */
+    protected $exerciceComptableReadWriteRepository;
     
     /**
      * Create a new SubAccountReadWriteRepository instance.
@@ -31,10 +37,11 @@ class SubAccountReadWriteRepository extends EloquentReadWriteRepository
      * @param  \App\Models\Finances\SubAccount $model
      * @return void
      */
-    public function __construct(SubAccount $model, CompteReadWriteRepository $compteReadWriteRepository)
+    public function __construct(SubAccount $model, CompteReadWriteRepository $compteReadWriteRepository/* , ExerciceComptableReadWriteRepository $exerciceComptableReadWriteRepository */)
     {
         parent::__construct($model);
         $this->compteReadWriteRepository = $compteReadWriteRepository;
+        //$this->exerciceComptableReadWriteRepository = $exerciceComptableReadWriteRepository;
     }
 
     /**
@@ -96,6 +103,33 @@ class SubAccountReadWriteRepository extends EloquentReadWriteRepository
             // Throw a NotFoundException with an error message and the caught exception
             throw new RepositoryException(message: "Error while attaching sub-divisions accounts to a plan comptable account a sub-account." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }    
+    }
+
+    /**
+     * Report de solde a un compte
+     *
+     * @param   string                                      $accountId              The unique identifier of the account.
+     * @param   array                                       $balanceArrayData       The balance data.
+     *
+     * @return  bool                                                                Whether the account balance are report.
+     *
+     * @throws  \Core\Utils\Exceptions\QueryException                               If there is an error while reporting account balance.
+     * @throws  \Core\Utils\Exceptions\RepositoryException                          If there is an issue with the repository operation.
+     */
+    public function reportDeSolde(string $subAccountId, array $balanceArrayData): bool
+    {
+        try {
+            // Find the account by ID
+            $this->model = $this->model->find($subAccountId);
+
+            //change the account balance
+            $this->model->balances()->create($balanceArrayData);
+
+            return true;
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while reporting an account balance." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }
     }
     
 }

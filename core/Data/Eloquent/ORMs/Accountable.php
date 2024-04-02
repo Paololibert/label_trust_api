@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Core\Data\Eloquent\ORMs;
 
 use App\Models\Finances\LigneEcritureComptable;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * 
@@ -13,13 +13,13 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 trait Accountable
 {
     /**
-     * Get the user of the employee.
+     * Get an account transactions
      *
-     * @return MorphOne
+     * @return MorphMany
      */
-    public function lignes_ecriture_comptable(): MorphOne
+    public function transactions(): MorphMany
     {
-        return $this->morphOne(LigneEcritureComptable::class, 'accountable');
+        return $this->morphMany(LigneEcritureComptable::class, 'accountable');
     }
 
     /**
@@ -27,8 +27,5 @@ trait Accountable
      */
     public static function bootAccountable()
     {
-        static::deleting(function ($model) {
-            $model->lignes_ecriture_comptable()->delete();
-        });
     }
 }

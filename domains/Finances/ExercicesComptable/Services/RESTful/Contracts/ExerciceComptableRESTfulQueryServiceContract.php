@@ -24,4 +24,14 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
 interface ExerciceComptableRESTfulQueryServiceContract extends RestJsonQueryServiceContract
 {
 
+    /**
+     * Query la balance des comptes a une periode donnee
+     *
+     * @param  string                                           $exerciceComptableId                    The unique identifier of the exercice comptable accounts balance.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountsBalanceOfAPeriodeArrayData     Accounts balance array data.
+     * @return \Illuminate\Http\JsonResponse                                                            The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                                  If there is an issue with quering accounts balance.
+     */
+    public function balanceDesComptes(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsBalanceOfAPeriodeArrayData): \Illuminate\Http\JsonResponse;
 }

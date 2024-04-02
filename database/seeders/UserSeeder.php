@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
             'password'  => Hash::make("password"), 'identifier' => "{$user->{$user->login_channel}}"
         ]);
 
-        $client = OauthClient::create([
+        $client = new OauthClient([
             "id" => Str::orderedUuid(),
             "user_id" => $credential->id,
             "secret" =>   bin2hex(random_bytes(32)),
@@ -50,6 +50,7 @@ class UserSeeder extends Seeder
             "personal_access_client" => 0,
             "redirect" => config('app.url'),
         ]);
+        $client->save();
 
         /*OauthPersonalAccessClient::create(["client_id" => $client->id]); */
     }

@@ -6,6 +6,7 @@ namespace App\Models\Finances;
 
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Ligneable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -21,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class EcritureComptable extends ModelContract
 {
     use Ligneable;
-    
+
     /**
      * The database connection that should be used by the model.
      *
@@ -63,6 +64,16 @@ class EcritureComptable extends ModelContract
     ];
 
     /**
+     * The model's default attribute values.
+     *
+     * @var array<string, mixed>
+     */
+    protected $default_attributes = [
+        'total_debit'   => 0.00,
+        'total_credit'  => 0.00
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array<string, string>
@@ -71,10 +82,22 @@ class EcritureComptable extends ModelContract
         'libelle'                           => 'string',
         'total_debit'                       => 'decimal:2',
         'total_credit'                      => 'decimal:2',
-        'date_ecriture'                     => 'datetime',
+        'date_ecriture'                     => 'datetime:Y-m-d H:i:s',
         'exercice_comptable_journal_id'     => 'string',
         'operation_disponible_id'           => 'string'
     ];
+
+    /**
+     * Interact with the Compte's name.
+     */
+    protected function date_ecriture(): Attribute
+    {
+        return Attribute::make(
+            set: function (string $value) {
+                $this->date_ecriture = \Carbon\Carbon::createFromFormat("Y-m-d", $value)->format('Y-m-d H:i:s');
+            }
+        );
+    }
 
     /**
      * Get the ecriture journal of the work unit for a poste

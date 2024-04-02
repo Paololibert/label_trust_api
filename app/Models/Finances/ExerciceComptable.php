@@ -83,10 +83,34 @@ class ExerciceComptable extends ModelContract
         'fiscal_year'               => 'string',
         'periode_exercice_id'       => 'string',
         'plan_comptable_id'         => 'string',
-        'date_ouverture'            => 'datetime',
-        'date_fermeture'            => 'datetime',
+        'date_ouverture'            => 'datetime:Y-m-d',
+        'date_fermeture'            => 'datetime:Y-m-d',
         'status_exercice'           => StatusExerciceEnum::class
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        static::observe(\App\Observers\ExerciceComptableObserver::class);
+    }
+
+    public function getUnmodifiableAttributes()
+    {
+        return [
+            "date_ouverture"/* , "date_fermeture" */
+        ];
+    }
+
+    public function getConditionallyUpdatableAttributes(): array
+    {
+        return [
+            'date_fermeture'
+        ];
+    }
 
     /**
      * Get the plan_comptable
@@ -126,10 +150,10 @@ class ExerciceComptable extends ModelContract
     public function journaux(): BelongsToMany
     {
         return $this->belongsToMany(Journal::class, 'exercice_comptable_journaux', 'journal_id', 'exercice_comptable_id')
-                    ->withPivot('status', 'deleted_at', 'can_be_delete')
-                    ->withTimestamps() // Enable automatic timestamps for the pivot table
-                    ->wherePivot('status', true) // Filter records where the status is true
-                    ->using(ExerciceComptableJournal::class); // Specify the intermediate model for the pivot relationship
+            ->withPivot('status', 'deleted_at', 'can_be_delete')
+            ->withTimestamps() // Enable automatic timestamps for the pivot table
+            ->wherePivot('status', true) // Filter records where the status is true
+            ->using(ExerciceComptableJournal::class); // Specify the intermediate model for the pivot relationship
     }
 
     /**
@@ -142,4 +166,13 @@ class ExerciceComptable extends ModelContract
         return $this->hasManyThrough(EcritureComptable::class, ExerciceComptableJournal::class);
     }
 
+    /**
+     * Define a method to access the accounts associated with the Exercice through its PlanComptable.
+     *
+     * @return
+     */
+    public function accounts()
+    {
+        return $this->plan_comptable()->getEager()->first()->accounts();
+    }
 }

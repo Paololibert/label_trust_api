@@ -56,7 +56,7 @@ class CreateAccountDTO extends BaseDTO
             "accounts.*"                        => ["distinct", "array"],
             "accounts.*.account_number"         => ["required", "string", "max:120", Rule::unique('plan_comptable_comptes', 'account_number')->whereNull('deleted_at')],
             "accounts.*.classe_id"              => ["required", "exists:classes_de_compte,id"],
-            "accounts.*.compte_id"              => ["sometimes", "exists:comptes,id"],
+            "accounts.*.compte_id"              => ["sometimes", "distinct", "exists:comptes,id"],
             'accounts.*.can_be_deleted'         => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

@@ -69,7 +69,6 @@ enum StatusExerciceEnum: string implements EnumContract
         return [
             self::OPEN->value                => 'Exercice en cours',
             self::CLOSE->value               => 'Exercice cloturer'
-
         ];
     }
 

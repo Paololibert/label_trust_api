@@ -42,10 +42,10 @@ class CreatePeriodeExerciceDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["required", "max:25", 'unique_ignore_case:periodes_exercice,name'],
-            "date_debut_periode"    => ["required", "date", 'date_format:d/m'],
-            "date_fin_periode"      => ["required", "date", 'date_format:d/m'],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false]
+            "name"            		=> ["required", "max:25", "unique_ignore_case:periodes_exercice,name"],
+            "date_debut_periode"    => ["required", "date_format:d/m"],
+            "date_fin_periode"      => ["required", "date_format:d/m"],
+            "can_be_deleted"        => ["sometimes", "boolean", "in:".true.",".false]
         ], $rules);
 
         return $this->rules = parent::rules($rules);

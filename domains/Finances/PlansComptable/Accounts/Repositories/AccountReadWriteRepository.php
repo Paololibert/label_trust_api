@@ -10,6 +10,7 @@ use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\NotFoundException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\Comptes\Repositories\CompteReadWriteRepository;
+use Domains\Finances\ExercicesComptable\Repositories\ExerciceComptableReadWriteRepository;
 use Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories\SubAccountReadWriteRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,8 +42,8 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
     public function __construct(Account $model, CompteReadWriteRepository $compteReadWriteRepository, SubAccountReadWriteRepository $subAcountRepositoryReadWrite)
     {
         parent::__construct($model);
-        $this->compteReadWriteRepository = $compteReadWriteRepository;
-        $this->subAcountRepositoryReadWrite = $subAcountRepositoryReadWrite;
+        $this->compteReadWriteRepository            = $compteReadWriteRepository;
+        $this->subAcountRepositoryReadWrite         = $subAcountRepositoryReadWrite;
     }
 
     /**
@@ -59,7 +60,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
 
             $this->model = parent::create($data);
 
-            if(isset($data['sub_accounts'])){
+            if (isset($data['sub_accounts'])) {
                 $this->attachSubAccounts($this->model->id, $data['sub_accounts']);
             }
 
@@ -83,7 +84,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
     public function attachSubAccounts(string $accountId, array $subAccountDataArray, array $filters = []): bool
     {
         try {
-            
+
             $query = $this->model;
 
             if ($filters) {
@@ -96,7 +97,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
 
                             default:
                                 $query = $query->{$filterName}($condition[0], $condition[1], $condition[2]);
-                                
+
                                 break;
                         }
                     }
@@ -107,27 +108,25 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
 
             foreach ($subAccountDataArray as $subAccountItem) {
 
-                if(isset($subAccountItem['sous_compte_id'])){
+                if (isset($subAccountItem['sous_compte_id'])) {
                     if (!parent::relationExists(relation: $this->model->sous_comptes(), ids: [$subAccountItem['sous_compte_id']], isPivot: false)) {
-                        
-                        // Attach the sous compte to principal compte                        
-                       $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
 
+                        // Attach the sous compte to principal compte                        
+                        $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
                     }
-                }else {
+                } else {
 
                     $compte = $this->compteReadWriteRepository->create(array_merge($subAccountItem, $subAccountItem["compte_data"]));
 
                     $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["sous_compte_id" => $compte->id, "subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
                 }
             }
-    
+
             return true;
-            
         } catch (CoreException $exception) {
             // Throw a NotFoundException with an error message and the caught exception
             throw new RepositoryException(message: "Error while attaching sub-accounts to a plan comptable account." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
-        }      
+        }
     }
 
     /**
@@ -146,7 +145,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
     public function updateSubAccounts(string $accountId, array $updatedSubAccountsData, array $filters = []): bool
     {
         try {
-            
+
             $query = $this->model;
 
             if ($filters) {
@@ -159,7 +158,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
 
                             default:
                                 $query = $query->{$filterName}($condition[0], $condition[1], $condition[2]);
-                                
+
                                 break;
                         }
                     }
@@ -168,7 +167,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
 
             $this->model = $query->where("id", $accountId)->first();
 
-            if(!$this->model) throw new NotFoundException("Error Processing Request", 1);
+            if (!$this->model) throw new NotFoundException("Error Processing Request", 1);
 
             $result = $this->subAcountRepositoryReadWrite->updateMultiple($updatedSubAccountsData, filters: ["where" => [["subaccountable_id", "=", $this->model->id]]]);
 
@@ -208,7 +207,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
 
                             default:
                                 $query = $query->{$filterName}($condition[0], $condition[1], $condition[2]);
-                                
+
                                 break;
                         }
                     }
@@ -217,7 +216,7 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
 
             $this->model = $query->where("id", $accountId)->first();
 
-            if(!$this->model) throw new NotFoundException("Error Processing Request", 1);
+            if (!$this->model) throw new NotFoundException("Error Processing Request", 1);
 
             // Soft-delete sub-accounts
             $result = $this->subAcountRepositoryReadWrite->softDelete([], filters: ["where" => [["subaccountable_id", "=", $this->model->id]], "whereIn" => [["sous_compte_id", $deletedSubAccountIds]]]);
@@ -226,6 +225,33 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
         } catch (CoreException $exception) {
             // Throw a NotFoundException with an error message and the caught exception
             throw new RepositoryException(message: "Error while deleting sub-accounts from a plan comptable account." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }
+    }
+
+    /**
+     * Report de solde a un compte
+     *
+     * @param   string                                      $accountId              The unique identifier of the account.
+     * @param   array                                       $balanceArrayData       The balance data.
+     *
+     * @return  bool                                                                Whether the account balance are report.
+     *
+     * @throws  \Core\Utils\Exceptions\QueryException                               If there is an error while reporting account balance.
+     * @throws  \Core\Utils\Exceptions\RepositoryException                          If there is an issue with the repository operation.
+     */
+    public function reportDeSolde(string $accountId, array $balanceArrayData): bool
+    {
+        try {
+            // Find the account by ID
+            $this->model = $this->model->find($accountId);
+
+            //change the account balance
+            $this->model->balances()->create($balanceArrayData);
+
+            return true;
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while reporting an account balance." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }
