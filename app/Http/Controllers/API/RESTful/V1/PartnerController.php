@@ -33,6 +33,7 @@ class PartnerController extends RESTfulResourceController
         // Set specific request classes for store and update methods
         $this->setRequestClass('store', CreatePartnerRequest::class);
         $this->setRequestClass('update', UpdatePartnerRequest::class);
+        
     }
 
 }

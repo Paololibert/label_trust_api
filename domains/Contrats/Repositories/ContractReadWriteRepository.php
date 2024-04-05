@@ -46,8 +46,6 @@ class ContractReadWriteRepository extends EloquentReadWriteRepository
         try {
 
             $theparent =  $this->model = parent::create($data);
-
-            $employeDetail = null;
             
             if (!isset($data['poste_salaire_id'])){
                 $salary = $theparent->salaires()->create($data);

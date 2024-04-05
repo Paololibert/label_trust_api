@@ -100,4 +100,48 @@ class PartnerReadWriteRepository extends EloquentReadWriteRepository
             throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
         }
     }
+    
+    public function update($id, array $data): Partner
+    {
+        
+        try {
+            $partner = $this->model->find($id); // Retrieve the partner with the specified ID
+
+            // Update specific partner details based on partner type
+            if ($data['type_partner'] === TypePartnerEnum::CLIENT->value) {
+
+                if(!$partner->clients()->exists()){
+                    throw new Exception("Unknown type of Partner", 1);
+                }
+
+            } elseif ($data['type_partner'] === TypePartnerEnum::SUPPLIER->value) {
+
+                if(!$partner->suppliers()->exists()){
+                    throw new Exception("Unknown type of Partner", 1);
+                }
+
+            } else {
+                throw new Exception("Unknown type of Partner", 1);
+            }
+            // Update partner data with the provided data
+    
+            $partner->update($data);
+            // Update associated user information
+            $user_update = $this->userReadWriteRepository->update($partner->user->id,array_merge($data['user'], ["profilable_type"=>$this->model::class, "profilable_id"=>$partner->id]));
+
+
+            if ($partner->user->id != $user_update->id) {
+                $partner->user->associate($user_update);
+            }
+    
+            return $partner->refresh(); // Refresh the model after update
+    
+        } catch (QueryException $exception) {
+            throw new QueryException(message: "Error while updating the record.", previous: $exception);
+        } catch (Throwable $exception) {
+            
+            throw new RepositoryException(message: "Error while updating the record.", previous: $exception);
+        }
+    }
+    
 }

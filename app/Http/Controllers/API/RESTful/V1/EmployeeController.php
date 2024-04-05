@@ -12,7 +12,7 @@ use Domains\Employees\Services\RESTful\Contracts\EmployeeRESTfulReadWriteService
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\ResourceRequest;
-use Domains\Employees\EmployeeContractuels\DataTransfertObjects\CreateEmployeeContractuelAssignmentDTO;
+use Domains\Employees\DataTransfertObjects\ChangingTypeEmployeeDTO;
 use Domains\Employees\EmployeeContractuels\Repositories\EmployeeContractuelReadWriteRepository;
 
 /**

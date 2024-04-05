@@ -2,27 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Models\Magasins;
 
 use Core\Data\Eloquent\Contract\ModelContract;
-use Core\Data\Eloquent\ORMs\HasPermissions;
-use Core\Utils\Helpers\Sluggable\HasSlug;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Class ***`Article`***
+ * Class ***`StorageSpace`***
  *
- * This model represents the `Articles` table in the database.
+ * This model represents the `storage_spaces` table in the database.
  * It extends the ModelContract class and provides access to the database table associated with the model.
  *
  * @property  string    $name;
  *
  * @package ***`\App\Models`***
  */
-class Article extends ModelContract
+class StorageSpace extends ModelContract
 {
-    use HasSlug;
-
     /**
      * The database connection that should be used by the model.
      *
@@ -35,7 +32,8 @@ class Article extends ModelContract
      *
      * @var string
      */
-    protected $table = 'articles';
+    protected $table = 'storage_spaces';
+
 
     /**
      * The attributes that are mass assignable.
@@ -44,24 +42,10 @@ class Article extends ModelContract
      */
     protected $fillable = [
         'name',
+        'code',
+        'magasin_id'
     ];
 
-    /**
-     * The attributes that should be treated as dates.
-     *
-     * @var array<int, string>
-     */
-    protected $dates = [
-        
-    ];
-
-    /**
-     * The model's default attribute values.
-     *
-     * @var array<string, mixed>
-     */
-    protected $attributes = [
-    ];
 
     /**
      * The attributes that should be visible in arrays.
@@ -69,20 +53,23 @@ class Article extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'name'
+        'name',
+        'code'
     ];
 
     /**
-     * The accessors to append to the model's array and JSON representation.
+     * The attributes that should be cast to native types.
      *
-     * @var array<int, string>
+     * @var array<string, string>
      */
-    protected $appends = [
-
+    protected $casts = [
+        'name'              => 'string',
+        'code'              => 'string',
+        'magasin_id'        => 'string'
     ];
 
     /**
-     * Interact with the Article's name.
+     * Interact with the StorageSpace's name.
      */
     protected function name(): Attribute
     {
@@ -91,4 +78,24 @@ class Article extends ModelContract
             set: fn (string $value) => strtolower($value)
         );
     }
+
+    /**
+     * Interact with the StorageSpace's address.
+     */
+    protected function code(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => strtolower($value),
+            set: fn (string $value) => strtolower($value)
+        );
+    }
+    
+    /**
+     * Get the magasin to whom belong the storage_space
+     */
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(Magasin::class, 'magasin_id');
+    }
+
 }

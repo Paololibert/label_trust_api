@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Migrations;
+namespace Tests\Integration\Migrations;
 
 use App\Models\UniteMesure;
 use App\Models\User;
@@ -125,18 +125,74 @@ class CreateUniteMesuresTableTest extends TestCase
     $this->assertEquals($symbol, $retrievedunite->symbol);
   }
 
-  /**
-   * Test if the migration can be rolled back.
-   *
-   *
-   */
-  /* public function test_migration_can_be_rolled_back()
+  /** @test */
+  /* public function test_unite_mesures_table_has_correct_columns()
   {
-      // Roll back the migration for users table only
-      $this->artisan('migrate:rollback', ['--path' => 'database/migrations']);
+      // Retrieve column details from the database schema
+      $columns = Schema::getColumnListing('unite_mesures');
 
-      // Assert that the users table does not exist in the database
-      $this->assertFalse(Schema::hasTable('unite_mesures'));
+      
+      $tableDetails = Schema::getConnection()->getDoctrineSchemaManager()->listTableDetails('unite_mesures');
+      dd($tableDetails);
+
+      // Define expected column definitions
+      $expectedColumns = [
+          'id' => 'string',
+          'name' => 'string',
+          'symbol' => 'string',
+          'status' => 'boolean',
+          'can_be_delete' => 'boolean',
+          'created_by' => 'unsignedBigInteger',
+          'created_at' => 'timestamp',
+          'updated_at' => 'timestamp',
+          'deleted_at' => 'timestamp',
+      ];
+
+      // Assert that each column exists and has the correct data type
+      foreach ($expectedColumns as $column => $expectedDataType) {
+        
+        dd([$expectedColumns,$column,$expectedDataType, $columns]);
+        $this->assertTrue(isset($columns[$column]));
+
+        $this->assertEquals($expectedDataType, $columns[$column]->getType()->getName());
+      }
+  } */
+
+  /* foreach ($columns as $key => $value) {
+    dd([$expectedColumns,$column,$expectedDataType, $columns]);
+  } */
+
+  /** @test */
+ /*  public function test_unite_mesures_table_has_correct_default_values()
+  {
+      // Retrieve column details from the database schema
+      $columns = Schema::getConnection()->getDoctrineSchemaManager()->listTableColumns('unite_mesures');
+
+      // Define expected default values
+      $expectedDefaultValues = [
+          'status' => true,
+      ];
+
+      // Assert that each column has the correct default value
+      foreach ($expectedDefaultValues as $column => $defaultValue) {
+          $this->assertEquals($defaultValue, $columns[$column]->getDefault());
+      }
+  } */
+
+  /** @test */
+  /* public function test_unite_mesures_table_has_primary_key()
+  {
+      $primaryKey = (new UniteMesure())->getKeyName();
+      $this->assertEquals('id', $primaryKey);
+      //$this->assertTrue(Schema::hasPrimary('unite_mesures', 'id'));
+  } */
+  
+
+  
+  /** @test */
+  /* public function test_unite_mesures_table_has_unique_name_constraint()
+  {
+      $this->assertTrue(Schema::hasUnique('unite_mesures', 'name'));
   } */
 
   /** @test */
@@ -154,6 +210,5 @@ class CreateUniteMesuresTableTest extends TestCase
       // Assert that the unite_mesure table no longer exists
       $this->assertFalse(Schema::hasTable('unite_mesures'));
   }
-
 
 }

@@ -28,6 +28,7 @@ class CreateEmployeeDTO extends BaseDTO
     {
         parent::__construct();
         
+       
         if(request('type_employee')){
             switch (request()->type_employee) {
                 case TypeEmployeeEnum::NON_REGULIER->value:
@@ -38,7 +39,6 @@ class CreateEmployeeDTO extends BaseDTO
                     break;
             }
         }
-        
         $this->merge(new CreateUserDTO, 'user', ["required", "array"]);
     }
 

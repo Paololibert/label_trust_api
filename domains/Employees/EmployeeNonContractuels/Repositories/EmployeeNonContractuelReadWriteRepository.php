@@ -60,10 +60,13 @@ class EmployeeNonContractuelReadWriteRepository extends EloquentReadWriteReposit
             // Get the ID of the current category
             $currentCategoryId = $employee->categories()->wherePivot('date_fin', null)->wherePivot('category_of_employee_id', $data['category_of_employee_id'])->first();
 
-            if(!$currentCategoryId) throw new Exception("Impossible to get the current categorie of the employee.");
+
+            if(!$currentCategoryId) throw new Exception("Impossible  hear to get the current categorie of the employee.");
     
             // Check if the new category exists
-               $emp_Cont_rep = $this->categoryOfEmployeeTauxReadWriteRepository->find($newCategoryId);
+            $emp_Cont_rep = CategoryOfEmployee::find($newCategoryId);
+            if(!$emp_Cont_rep) throw new Exception("Impossible to get the categorie of the employee.");
+              
 
             //CategoryOfEmployee::findOrFail($newCategoryId);
 
@@ -79,7 +82,6 @@ class EmployeeNonContractuelReadWriteRepository extends EloquentReadWriteReposit
             $categoryEmployeeTauxId = $data['category_of_employee_taux_id'] ?? null;
 
             $attributes = [
-                
                 'date_debut' => $data['date_debut'],
 
                 'category_of_employee_taux_id' =>$categoryEmployeeTauxId
@@ -92,8 +94,11 @@ class EmployeeNonContractuelReadWriteRepository extends EloquentReadWriteReposit
             return true;
             
         } catch (QueryException $exception) {
+
             throw new QueryException(message: "Error while creating the record.", previous: $exception);
+
         } catch (Throwable $exception) {
+
             throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
         }
     }

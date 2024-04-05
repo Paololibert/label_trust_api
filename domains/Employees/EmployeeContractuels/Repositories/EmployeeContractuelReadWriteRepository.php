@@ -101,7 +101,7 @@ class EmployeeContractuelReadWriteRepository extends EloquentReadWriteRepository
     public function terminateContract(string $contractId, $employeeId): bool
     {
         try {
-
+            
             $employee = $this->model::findOrFail($employeeId);
 
             $contract = $employee->contracts()->findOrFail($contractId);
