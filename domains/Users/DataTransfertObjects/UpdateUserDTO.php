@@ -26,7 +26,6 @@ class UpdateUserDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
-
         if(request('type_of_account')){
             switch (request()->type_of_account) {
                 case TypeOfAccountEnum::MORAL->value:
@@ -56,13 +55,12 @@ class UpdateUserDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
-
         $rules = array_merge([
             'type_of_account'       => ['required', "string", new Enum(TypeOfAccountEnum::class)],
             'username'              => ['sometimes', 'string', 'min:6', 'max:30', 'unique:users,username,' . request()->route('user_id') . ',id'],
-            'email'                 => ['sometimes', 'email', 'max:120', 'unique:users,email'. request()->route('user_id') . ',id' ],
+            'email'                 => ['sometimes', 'email', 'max:120', 'unique:users,email,'. request()->route('user_id') . ',id' ],
 			"address"     		    => ["string", "sometimes"],
-            'phone_number'          => ['sometimes', new PhoneNumberRule(), 'unique:users,phone_number,'. request()->route('user_id') . ',id'],
+            'phone_number'          => ['sometimes', new PhoneNumberRule(ignore_value: request()->route('user_id'))],
             'role_id'               => 'required|exists:roles,id'
         ], $rules);
 

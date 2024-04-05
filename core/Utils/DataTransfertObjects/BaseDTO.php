@@ -276,7 +276,7 @@ class BaseDTO implements DTOInterface
      * @return self             The new instance of the DTO.
      */
     public static function fromRequest(Request $request): self
-    {
+    {  
         $dto = new static();
         $dto->mergeArray($request->all());
         return $dto;

@@ -805,6 +805,102 @@ class ModulesServiceProvider extends ServiceProvider
                 return new \Domains\Partners\Clients\Services\RESTful\ClientRESTfulQueryService($queryService);
             }
         );
+
+        // Binds the implementation of MagasinRESTfulReadWriteServiceContract to the MagasinRESTfulReadWriteService class.
+        $this->app->bind(
+            \Domains\Magasins\Magasin\Services\RESTful\Contracts\MagasinRESTfulReadWriteServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for MagasinRESTfulReadWriteService
+                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
+
+                // Create and return an instance of MagasinRESTfulReadWriteService
+                return new \Domains\Magasins\Magasin\Services\RESTful\MagasinRESTfulReadWriteService($readWriteService);
+            }
+        );
+
+        // Binds the implementation of MagasinRESTfulQueryServiceContract to the MagasinRESTfulQueryService class.
+        $this->app->bind(
+            \Domains\Magasins\Magasin\Services\RESTful\Contracts\MagasinRESTfulQueryServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for MagasinRESTfulQueryService
+                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
+
+                // Create and return an instance of MagasinRESTfulQueryService
+                return new \Domains\Magasins\Magasin\Services\RESTful\MagasinRESTfulQueryService($queryService);
+            }
+        );
+
+        // Binds the implementation of StorageSpaceRESTfulReadWriteServiceContract to the StorageSpaceRESTfulReadWriteService class.
+        $this->app->bind(
+            \Domains\Magasins\StorageSpace\Services\RESTful\Contracts\StorageSpaceRESTfulReadWriteServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for StorageSpaceRESTfulReadWriteService
+                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
+
+                // Create and return an instance of StorageSpaceRESTfulReadWriteService
+                return new \Domains\Magasins\StorageSpace\Services\RESTful\StorageSpaceRESTfulReadWriteService($readWriteService);
+            }
+        );
+
+        // Binds the implementation of StorageSpaceRESTfulQueryServiceContract to the StorageSpaceRESTfulQueryService class.
+        $this->app->bind(
+            \Domains\Magasins\StorageSpace\Services\RESTful\Contracts\StorageSpaceRESTfulQueryServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for StorageSpaceRESTfulQueryService
+                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
+
+                // Create and return an instance of StorageSpaceRESTfulQueryService
+                return new \Domains\Magasins\StorageSpace\Services\RESTful\StorageSpaceRESTfulQueryService($queryService);
+            }
+        );
+
+        // Binds the implementation of ArticleRESTfulReadWriteServiceContract to the ArticleRESTfulReadWriteService class.
+        $this->app->bind(
+            \Domains\Articles\Article\Services\RESTful\Contracts\ArticleRESTfulReadWriteServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for ArticleRESTfulReadWriteService
+                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
+
+                // Create and return an instance of ArticleRESTfulReadWriteService
+                return new \Domains\Articles\Article\Services\RESTful\ArticleRESTfulReadWriteService($readWriteService);
+            }
+        );
+
+        // Binds the implementation of ArticleRESTfulQueryServiceContract to the ArticleRESTfulQueryService class.
+        $this->app->bind(
+            \Domains\Articles\Article\Services\RESTful\Contracts\ArticleRESTfulQueryServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for ArticleRESTfulQueryService
+                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
+
+                // Create and return an instance of ArticleRESTfulQueryService
+                return new \Domains\Articles\Article\Services\RESTful\ArticleRESTfulQueryService($queryService);
+            }
+        );
+        
+        // Binds the implementation of CategorieArticleRESTfulReadWriteServiceContract to the CategorieArticleRESTfulReadWriteService class.
+        $this->app->bind(
+            \Domains\Articles\CategorieArticle\Services\RESTful\Contracts\CategorieArticleRESTfulReadWriteServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for CategorieArticleRESTfulReadWriteService
+                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
+
+                // Create and return an instance of CategorieArticleRESTfulReadWriteService
+                return new \Domains\Articles\CategorieArticle\Services\RESTful\CategorieArticleRESTfulReadWriteService($readWriteService);
+            }
+        );
+
+        // Binds the implementation of CategorieArticleRESTfulQueryServiceContract to the CategorieArticleRESTfulQueryService class.
+        $this->app->bind(
+            \Domains\Articles\CategorieArticle\Services\RESTful\Contracts\CategorieArticleRESTfulQueryServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for CategorieArticleRESTfulQueryService
+                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
+
+                // Create and return an instance of CategorieArticleRESTfulQueryService
+                return new \Domains\Articles\CategorieArticle\Services\RESTful\CategorieArticleRESTfulQueryService($queryService);
+            }
+        );
     }
 
     /**

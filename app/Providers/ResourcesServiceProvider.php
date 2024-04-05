@@ -271,6 +271,65 @@ class ResourcesServiceProvider extends ServiceProvider
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
             ->give(\Domains\Finances\Comptes\Repositories\CompteReadWriteRepository::class);
+
+        // Bind ReadOnlyRepositoryInterface to MagasinReadOnlyRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\MagasinController::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+            )
+            ->give(\Domains\Magasins\Magasin\Repositories\MagasinReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to MagasinReadWriteRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\MagasinController::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Magasins\Magasin\Repositories\MagasinReadWriteRepository::class);
+            
+
+        // Bind ReadOnlyRepositoryInterface to StorageSpaceReadOnlyRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\StorageSpaceController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+        )
+        ->give(\Domains\Magasins\StorageSpace\Repositories\StorageSpaceReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to StorageSpaceReadWriteRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\StorageSpaceController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+        )
+        ->give(\Domains\Magasins\StorageSpace\Repositories\StorageSpaceReadWriteRepository::class);
+
+        // Bind ReadOnlyRepositoryInterface to ArticleReadOnlyRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Articles\ArticleController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+        )
+        ->give(\Domains\Articles\Article\Repositories\ArticleReadOnlyRepository::class);
+
+
+        
+        // Bind ReadWriteRepositoryInterface to ArticleReadWriteRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Articles\ArticleController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+        )
+        ->give(\Domains\Articles\Article\Repositories\ArticleReadWriteRepository::class);
+
+        // Bind ReadOnlyRepositoryInterface to CategorieArticleReadOnlyRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Articles\CategorieArticleController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+        )
+        ->give(\Domains\Articles\CategorieArticle\Repositories\CategorieArticleReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to CategorieArticleReadWriteRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Articles\CategorieArticleController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+        )
+        ->give(\Domains\Articles\CategorieArticle\Repositories\CategorieArticleReadWriteRepository::class);
     }
 
     /**
