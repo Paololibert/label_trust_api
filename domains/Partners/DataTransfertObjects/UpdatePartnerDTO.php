@@ -11,6 +11,7 @@ use Domains\Partners\Clients\DataTransfertObjects\UpdateClientDTO;
 use Domains\Partners\Suppliers\DataTransfertObjects\UpdateSupplierDTO;
 use Domains\Users\DataTransfertObjects\UpdateUserDTO;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class ***`UpdatePartnerDTO`***
@@ -26,21 +27,14 @@ class UpdatePartnerDTO extends BaseDTO
     public function __construct()
     {
         parent::__construct();
-        
-        if(request('type_Partner')){
-            switch (request()->type_Partner) {
-                case TypePartnerEnum::CLIENT->value:
-                    $this->merge(new UpdateClientDTO, 'data', ["required", "array"]);
-                    break;                
-                default:
-                    $this->merge(new UpdateSupplierDTO, 'data', ["required", "array"]);
-                    break;
-            }
+        if (!($id = Partner::find(request()->route("partner_id"))?->user?->id)){
+            throw ValidationException::withMessages(["User not found"]);
         }
+         
+        request()->route()->setParameter('user_id', $id);
         
         $this->merge(new UpdateUserDTO, 'user', ["required", "array"]);
     }
-    
     /**
      * Get the class name of the model associated with the DTO.
      *
@@ -58,16 +52,17 @@ class UpdatePartnerDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
+
         $rules = array_merge([
             'company'               => ['sometimes',"string"],
             'country'               => ['sometimes',"string"],
-            "type_Partner"          => ['sometimes', "string", new Enum(TypePartnerEnum::class)],
+            "type_partner"          => ['required', "string", new Enum(TypePartnerEnum::class)],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
-
+         
         return $this->rules = parent::rules($rules);
     }
-
+    
     /**
      * Get the validation error messages for the DTO object.
      *

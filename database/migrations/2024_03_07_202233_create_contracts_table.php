@@ -153,9 +153,39 @@ class CreateContractsTable extends Migration
 
         try {
             
-            // Drop the "contrats" table if it exists
-            Schema::dropIfExists('contrats');
+            if (Schema::hasTable('contracts')) {
+                // Check if the "employee_contractuel_id" column exist in the "contracts" table
+                if (Schema::hasColumn('contracts', 'employee_contractuel_id')) {
+                    Schema::table('contracts', function (Blueprint $table) {
+                        $table->dropForeign(['employee_contractuel_id']);
+                    });
+                }
 
+                // Check if the "poste_id" column exist in the "contracts" table
+                if (Schema::hasColumn('contracts', 'poste_id')) {
+                    Schema::table('contracts', function (Blueprint $table) {
+                        $table->dropForeign(['poste_id']);
+                    });
+                }
+                
+                // Check if the "unite_mesures_id" column exist in the "contracts" table
+                if (Schema::hasColumn('contracts', 'unite_mesures_id')) {
+                    Schema::table('contracts', function (Blueprint $table) {
+                        $table->dropForeign(['unite_mesures_id']);
+                    });
+                }
+                
+                // Check if the "created_by" column exist in the "contracts" table 
+                if (Schema::hasColumn('contracts', 'created_by')) {
+                    Schema::table('contracts', function (Blueprint $table) {
+                        $table->dropForeign(['created_by']);
+                    });
+                }
+            }
+
+            // Drop the "contrats" table if it exists 
+            Schema::dropIfExists('contrats');
+            
             // Commit the transaction
             DB::commit();
         } catch (\Throwable $exception) {

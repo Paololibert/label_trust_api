@@ -184,6 +184,12 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                     'employees' => 'employee_id' //
                 ]);
 
+
+                /* 
+                Route::group(['prefix'=>'employees'],function(){
+                    Route::put('{employee_id}/chaging_type', 'EmployeeController@changing_type_employee')->name('changing_type');
+                }); */
+
                 Route::apiResource('partners', 'PartnerController')->parameters([
                     'partners' => 'partner_id' //
                 ]);
@@ -193,7 +199,6 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                     Route::post('/new-post', 'EmployeeContractuelController@assignmentOfPost')->name('employeecontractuels.assignmentOfPost');
 
                     Route::get('{contract_id}/{employee_contractuel_id}/terminate-contract', 'EmployeeContractuelController@terminateContract')->name('employeecontractuels.terminateContract');
-                    //
                 });
 
                 Route::group(['prefix' => 'employeenoncontractuels'], function () {
@@ -204,11 +209,9 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                 Route::apiResource('contracts', 'ContractController')->parameters([
                     'contracts' => 'contract_id' //
                 ]);
-                Route::apiResource('employees', 'CategoryOfEmployeeController')->parameters([
-                    'employees' => 'employee_id'
-                ]);
 
-                Route::apiResource('employees', 'CategoryOfEmployeeController');
+
+                /*Route::apiResource('employees', 'CategoryOfEmployeeController'); */
 
                 Route::group(['namespace' => 'Finances'], function () {
 
@@ -251,6 +254,26 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                         Route::get('{exercice_comptable_id}/ecritures-comptable/{ecriture_comptable_id}', 'ExerciceComptableController@fetchDetailsOfAnEcritureComptable')->name('exercices_comptable.details-of-an-ecriture');
                     });
                 });
+                
+                Route::group(['namespace' => 'Magasins'], function () {
+
+                    Route::apiResource('magasins', 'MagasinController')->parameters(['magasins' => 'magasin_id']);
+
+                    Route::apiResource('storagespaces', 'StorageSpaceController')->parameters(['storagespaces' => 'storage_space_id']);
+
+                });
+
+                Route::group(['namespace' => 'Articles'], function () {                
+                    Route::apiResource('articles', 'ArticleController')->parameters([
+                        'articles' => 'article_id'
+                    ]);
+    
+                    Route::apiResource('categorie_articles', 'CategorieArticleController')->parameters([
+                        'categorie_articles' => 'categorie_article_id'
+                    ]);
+
+                });
+
             });
         });
     });

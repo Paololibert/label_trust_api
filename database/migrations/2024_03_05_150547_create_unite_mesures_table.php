@@ -38,6 +38,7 @@ class CreateUniteMesuresTable extends Migration
         try {
 
             Schema::create('unite_mesures', function (Blueprint $table) {
+                
                 // Define a UUID primary key for the 'unite_mesures' table
                 $this->uuidPrimaryKey($table);
                 
