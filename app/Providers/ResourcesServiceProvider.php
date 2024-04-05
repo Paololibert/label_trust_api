@@ -2,12 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Requests\Roles\v1\CreateRoleRequest;
-use App\Http\Requests\Roles\v1\UpdateRoleRequest;
-use App\Http\Requests\Users\v1\CreateUserRequest;
-use App\Http\Requests\Users\v1\UpdateUserRequest;
-use Core\Utils\Requests\CreateResourceRequest;
-use Core\Utils\Requests\UpdateResourceRequest;
 use Illuminate\Support\ServiceProvider;
 
 class ResourcesServiceProvider extends ServiceProvider
@@ -209,68 +203,6 @@ class ResourcesServiceProvider extends ServiceProvider
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
             ->give(\Domains\CategoriesOfEmployees\Repositories\CategoryOfEmployeeReadWriteRepository::class);
-
-
-
-        // Bind ReadOnlyRepositoryInterface to DeviseReadOnlyRepository
-        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Finances\DeviseController::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\Devises\Repositories\DeviseReadOnlyRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to DeviseReadWriteRepository
-        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Finances\DeviseController::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\Devises\Repositories\DeviseReadWriteRepository::class);
-
-
-        // Bind ReadOnlyRepositoryInterface to CategorieDeCompteReadOnlyRepository
-        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Finances\CategorieDeCompteController::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\CategoriesDeCompte\Repositories\CategorieDeCompteReadOnlyRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to CategorieDeCompteReadWriteRepository
-        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Finances\CategorieDeCompteController::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\CategoriesDeCompte\Repositories\CategorieDeCompteReadWriteRepository::class);
-
-
-
-        // Bind ReadOnlyRepositoryInterface to ClasseDeCompteReadOnlyRepository
-        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Finances\ClasseDeCompteController::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\ClassesDeCompte\Repositories\ClasseDeCompteReadOnlyRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to ClasseDeCompteReadWriteRepository
-        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Finances\ClasseDeCompteController::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\ClassesDeCompte\Repositories\ClasseDeCompteReadWriteRepository::class);
-
-
-        // Bind ReadOnlyRepositoryInterface to CompteReadOnlyRepository
-        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Finances\CompteController::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\Comptes\Repositories\CompteReadOnlyRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to CompteReadWriteRepository
-        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Finances\CompteController::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\Comptes\Repositories\CompteReadWriteRepository::class);
 
         // Bind ReadOnlyRepositoryInterface to MagasinReadOnlyRepository
         $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\MagasinController::class)

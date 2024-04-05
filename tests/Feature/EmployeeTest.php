@@ -36,7 +36,7 @@ class EmployeeTest extends TestCase
       "name" => $faker->name()
     ];
 
-    $response_depart = $this->post('/api/departements', $data_dematement);
+    $response_depart = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->post('/api/departements', $data_dematement);
 
     $response_depart->assertStatus(201);
 
@@ -47,7 +47,7 @@ class EmployeeTest extends TestCase
       "department_id" => $dematementId
     ];
 
-    $response_poste = $this->post('/api/postes', $data_poste);
+    $response_poste = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->post('/api/postes', $data_poste);
 
     $response_poste->assertStatus(201);
 
@@ -55,7 +55,7 @@ class EmployeeTest extends TestCase
 
     $data_category_employee = ["name" => $faker->name()];
 
-    $response_category_employee = $this->post('/api/categories_de_compte', $data_category_employee);
+    $response_category_employee = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->post('/api/categories_de_compte', $data_category_employee);
 
     $response_category_employee->assertStatus(201);
 
@@ -101,7 +101,7 @@ class EmployeeTest extends TestCase
     ];
 
     // Envoyer une requête POST pour créer un nouveau partenaire
-    $response = $this->postJson('/api/employees', $employeeData);
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->postJson('/api/employees', $employeeData);
 
     return $response;
   }
@@ -114,7 +114,7 @@ class EmployeeTest extends TestCase
   public function test_get_all_employees()
   {
     // Envoyer une requête GET pour récupérer tous les employés
-    $response = $this->get('/api/employees');
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->get('/api/employees');
 
     // Assurer que le code de statut HTTP est 200
     $response->assertStatus(200);
@@ -201,7 +201,7 @@ class EmployeeTest extends TestCase
     $employeeID = $response->json('data.id');
 
     // Envoyer une requête GET pour récupérer le partenaire spécifique par son identifiant
-    $response = $this->get('/api/employees/' . $employeeID);
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->get('/api/employees/' . $employeeID);
 
     // Assurer que le code de statut HTTP est 200
     $response->assertStatus(200);

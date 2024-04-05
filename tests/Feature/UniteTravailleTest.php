@@ -40,7 +40,7 @@ class UniteTravailleTest extends TestCase
     ];
 
     // Send POST request to create a worked unit
-    $response = $this->post('/api/unite_travailles', $data);
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->post('/api/unite_travailles', $data);
     // Extracting the JSON data from the response
     $jsonData = $response->json();
 
@@ -57,7 +57,7 @@ class UniteTravailleTest extends TestCase
   public function test_get_all_unite_travailles()
   {
     // Envoyer une requête GET pour récupérer toutes les unités travaillées
-    $response = $this->get('/api/unite_travailles');
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->get('/api/unite_travailles');
 
     // Assurer que le code de statut HTTP est 200
     $response->assertStatus(200);
@@ -171,7 +171,7 @@ class UniteTravailleTest extends TestCase
    
 
     // Envoyer une requête GET pour récupérer une seule unité travaillée
-    $response = $this->get("/api/unite_travailles/{$workedUnitId}");
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->get("/api/unite_travailles/{$workedUnitId}");
 
     // Assurer que le code de statut HTTP est 200
     $response->assertStatus(200);
@@ -213,7 +213,7 @@ class UniteTravailleTest extends TestCase
     $workedUnitId = $jsonData['data']['id'];
 
     // Envoyer une requête GET pour récupérer une seule unité travaillée
-    $response = $this->get("/api/unite_travailles/{$workedUnitId}");
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->get("/api/unite_travailles/{$workedUnitId}");
 
     
     //dd($jsonData['data']['id']);
@@ -253,7 +253,7 @@ class UniteTravailleTest extends TestCase
 
 
     // Sending the request
-    $response = $this->put("/api/unite_travailles/{$workedUnitId}", $updatedData);
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->put("/api/unite_travailles/{$workedUnitId}", $updatedData);
 
     // Assert HTTP status code 201
     $response->assertStatus(201);

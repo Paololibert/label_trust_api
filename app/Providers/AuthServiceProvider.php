@@ -34,8 +34,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-
-        try {
+        /* try {
             Permission::get()->map(function ($permission) {
                 Gate::define($permission->slug, function ($user) use ($permission) {
                     dd($user);
@@ -46,7 +45,7 @@ class AuthServiceProvider extends ServiceProvider
             throw new ApplicationException(previous: $exception);
             
             report($exception);
-        }
+        } */
 
         Passport::tokensExpireIn(now()->addDays(15));
         Passport::refreshTokensExpireIn(now()->addDays(30));

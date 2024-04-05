@@ -40,6 +40,7 @@ class CreateArticleRequest extends CreateResourceRequest
      */
     public function authorize(): bool
     {
+        dd($this->dto);
         return parent::authorize();
     }
 

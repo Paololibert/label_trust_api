@@ -36,7 +36,7 @@ class AddNewColumnsToCategorieArticlesTable extends Migration
                             column: 'categorie_article_id',        // The column to which the foreign key is added ('category_id' in this case)
                             references: 'categorie_articles',    // The referenced table (categorie_articles) to establish the foreign key relationship
                             onDelete: 'cascade',         // Action to perform when the referenced record is deleted (cascade deletion)
-                            nullable: false              // Specify whether the foreign key column can be nullable (false means it is not allows to be NULL)
+                            nullable: true              // Specify whether the foreign key column can be nullable (false means it is not allows to be NULL)
                         );
                     }
                 });

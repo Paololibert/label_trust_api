@@ -42,7 +42,7 @@ class CreateCategorieArticleDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:magasins,name'],
+            "name"            		=> ["string", "required", 'unique:categorie_articles,name'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

@@ -58,7 +58,7 @@ class PartnerTest extends TestCase
 
 
     // Envoyer une requête POST pour créer un nouveau partenaire
-    $response = $this->postJson('/api/partners', $partnerData);
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->postJson('/api/partners', $partnerData);
     return $response;
   }
 
@@ -70,7 +70,7 @@ class PartnerTest extends TestCase
   public function test_get_all_partners()
   {
     // Envoyer une requête GET pour récupérer tous les partenaires
-    $response = $this->get('/api/partners');
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->get('/api/partners');
 
     // Assurer que le code de statut HTTP est 200
     $response->assertStatus(200);
@@ -247,7 +247,7 @@ class PartnerTest extends TestCase
     $partnerId = $response->json('data.id');
     
     // Envoyer une requête GET pour récupérer le partenaire spécifique par son identifiant
-    $response = $this->get('/api/partners/' . $partnerId);
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->get('/api/partners/' . $partnerId);
 
     // Assurer que le code de statut HTTP est 200
     $response->assertStatus(200);
