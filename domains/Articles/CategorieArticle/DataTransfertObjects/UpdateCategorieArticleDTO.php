@@ -42,7 +42,7 @@ class UpdateCategorieArticleDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:magasins,name,' . request()->route('magasin_id') . ',id'],
+            "name"            		=> ["string", "required", 'unique:categorie_articles,name,' . request()->route('categorie_article_id') . ',id'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

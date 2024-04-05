@@ -43,9 +43,11 @@ class Article extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'name','price','stock',
+        'description','magasin_id','categorie_article_id'
     ];
-
+    
+    
     /**
      * The attributes that should be treated as dates.
      *

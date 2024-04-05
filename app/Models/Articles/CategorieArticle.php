@@ -43,7 +43,7 @@ class CategorieArticle extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'name','categorie_article_id'
     ];
 
     /**
