@@ -601,12 +601,6 @@ class ModulesServiceProvider extends ServiceProvider
                         $app->make( \Domains\Finances\EcrituresComptable\Repositories\EcritureComptableReadWriteRepository::class)
                     )
                 );
-
-                // Resolve the necessary dependencies for EcritureComptableRESTfulReadWriteService
-                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
-
-                // Create and return an instance of EcritureComptableRESTfulReadWriteService
-                return new \Domains\Finances\EcrituresComptable\Services\RESTful\EcritureComptableRESTfulReadWriteService($readWriteService);
             }
         );
 
@@ -623,11 +617,6 @@ class ModulesServiceProvider extends ServiceProvider
                         $app->make( \Domains\Finances\EcrituresComptable\Repositories\EcritureComptableReadOnlyRepository::class)
                     )
                 );
-                // Resolve the necessary dependencies for EcritureComptableRESTfulQueryService
-                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
-
-                // Create and return an instance of EcritureComptableRESTfulQueryService
-                return new \Domains\Finances\EcrituresComptable\Services\RESTful\EcritureComptableRESTfulQueryService($queryService);
             }
         );
 
