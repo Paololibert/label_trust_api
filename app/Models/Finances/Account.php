@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models\Finances;
 
+use App\Models\Scopes\FindAccountByScope;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Accountable;
 use Core\Data\Eloquent\ORMs\Balanceable;
-use Core\Utils\Traits\CPivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -26,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Account extends ModelContract
 {
     use AsPivot, Balanceable, Accountable;
-    
+
     /**
      * The database connection that should be used by the model.
      *
@@ -64,7 +63,7 @@ class Account extends ModelContract
      * @var array<int, string>
      */
     protected $appends = [
-        'intitule', 'classe_name'
+        'intitule', 'classe_de_compte', 'categorie_de_compte'
     ];
 
     /**
@@ -73,7 +72,7 @@ class Account extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
-        'account_number'    => 'string', 
+        'account_number'    => 'string',
         'classe_id'         => 'string',
         'compte_id'         => 'string',
         'plan_comptable_id' => 'string'
@@ -93,9 +92,19 @@ class Account extends ModelContract
      *
      * @return string The user's full name.
      */
-    public function getClasseNameAttribute(): string
+    public function getClasseDeCompteAttribute(): string
     {
-        return $this->classe->name ;
+        return $this->classe->name;
+    }
+
+    /**
+     * Get the user's full name attribute.
+     *
+     * @return string The user's full name.
+     */
+    public function getCategorieDeCompteAttribute(): string
+    {
+        return $this->compte->categorie_de_compte;
     }
 
     /**
@@ -105,7 +114,7 @@ class Account extends ModelContract
      */
     public function getIntituleAttribute(): string
     {
-        return $this->compte->name ;
+        return $this->compte->name;
     }
 
     /**
@@ -162,4 +171,26 @@ class Account extends ModelContract
                     ->wherePivot('status', true) // Filter records where the status is true
                     ->using(SubAccount::class); // Specify the intermediate model for the pivot relationship
     } */
+
+    public function findAccountHierarchyByAccountNumber($accountNumber)
+    {
+        // Query the Account model to find by account_number
+        $account = Account::where('account_number', $accountNumber)->first();
+
+        return $account;
+        if (!$account) {
+            // Account not found, try finding in SubAccount model
+            $subAccount = SubAccount::where('account_number', $accountNumber)->first();
+
+            if (!$subAccount) {
+                // SubAccount not found, try finding in SubDivision model
+                $subDivision = SubDivision::where('account_number', $accountNumber)->first();
+                return $subDivision;
+            }
+
+            return $subAccount;
+        }
+
+        return $account;
+    }
 }

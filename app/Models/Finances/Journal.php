@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Models\Finances;
 
 use Core\Data\Eloquent\Contract\ModelContract;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Str;
 
 /**
  * Class ***`Journal`***
@@ -62,6 +62,31 @@ class Journal extends ModelContract
         'code'         => 'string',
         'name'         => 'string'
     ];
+    
+    /**
+     * Interact with the PlanComptable's name.
+     */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => ucfirst($value),
+            set: fn (string $value) => strtolower($value)
+        );
+    }
+
+    /**
+     * The "boot" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+        
+        static::creating(function (Journal $model) {
+            $model->code = $model->generateCodeFromName(name: $model->name);
+        });
+    }
 
     /**
      * Define a many-to-many relationship with the Compte model.
@@ -85,5 +110,29 @@ class Journal extends ModelContract
     public function ecritures_comptable(): HasManyThrough
     {
         return $this->hasManyThrough(EcritureComptable::class, ExerciceComptableJournal::class);
+    }
+
+    private function generateCodeFromName(int $randomLength = 2, string $name = null): string {
+
+        $name = $this->name ?? $name;
+
+        // Split the phrase into words
+        $words = explode(' ', $name);
+    
+        // Extract the first letter of each word
+        $firstLetters = "J" ;
+        foreach ($words as $word) {
+            $firstLetters .= "" . strtoupper(substr($word, 0, 1));
+        }
+    
+        // Concatenate the first letters and the random code
+        $generatedCode = $firstLetters;
+
+        // Check if the generated code already exists in the database
+        if ($this->where('code', $generatedCode)->exists()) {
+            $this->generateCodeFromName(name: $name . "_" . Str::random($randomLength));
+        }
+    
+        return strtoupper($generatedCode);
     }
 }

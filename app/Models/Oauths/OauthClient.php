@@ -53,4 +53,12 @@ class OauthClient extends ModelContract
     {
         return null;
     }
+
+    /**
+     * @return string|null
+     */
+    public function deleteable(): ?string
+    {
+        return null;
+    }
 }

@@ -192,6 +192,24 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
     public function where(array $conditions, array $columns = ['*']): Collection
     {
         try {
+            $query = $this->model;
+
+            if ($conditions) {
+                foreach ($conditions as $filterName => $filter) {
+                    foreach ($filter as $condition) {
+                        switch ($filterName) {
+                            case 'whereIn':
+                                $query = $query->{$filterName}($condition[0], $condition[1]);
+                                break;
+
+                            default:
+                                $query = $query->{$filterName}($condition[0], $condition[1], $condition[2]);
+                                break;
+                        }
+                    }
+                }
+            }
+            return $query->get($columns);
             // return parent::filter($conditions)->select($columns)->get();
             return $this->model->select($columns)->where($conditions)->get();
         } catch (QueryException $exception) {

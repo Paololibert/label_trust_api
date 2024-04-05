@@ -86,6 +86,22 @@ class BalanceDeCompte extends ModelContract
     ];
 
     /**
+     * The "boot" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (BalanceDeCompte $model) {
+            if (!$model->date_report) {
+                $model->date_report = \Carbon\Carbon::now();
+            }
+        });
+    }
+
+    /**
      * Get the exercice_comptable of the work unit for a poste
      *
      * @return BelongsTo
@@ -94,7 +110,7 @@ class BalanceDeCompte extends ModelContract
     {
         return $this->belongsTo(ExerciceComptable::class, 'exercice_comptable_id');
     }
-    
+
     /**
      * Get the user details.
      *

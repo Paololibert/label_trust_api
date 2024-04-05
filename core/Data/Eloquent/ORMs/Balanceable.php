@@ -7,13 +7,10 @@ namespace Core\Data\Eloquent\ORMs;
 use App\Models\Finances\BalanceDeCompte;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-/**
- * 
- */
 trait Balanceable
 {
     /**
-     * Get the user of the employee.
+     * Get balances of an account.
      *
      * @return MorphMany
      */
@@ -23,7 +20,25 @@ trait Balanceable
     }
 
     /**
-     * Delete the user associate with the employee
+     * Get an account balance.
+     *
+     */
+    public function balance()
+    {
+        return $this->morphOne(BalanceDeCompte::class, 'balanceable')->whereNull("date_cloture")->orderBy("created_at", "asc");
+    }
+
+    /**
+     * Get an account balance.
+     *
+     */
+    public function close_balance()
+    {
+        return $this->morphOne(BalanceDeCompte::class, 'balanceable')->whereNotNull("date_cloture")->orderBy("created_at", "desc");
+    }
+
+    /**
+     *  
      */
     public static function bootBalanceable()
     {

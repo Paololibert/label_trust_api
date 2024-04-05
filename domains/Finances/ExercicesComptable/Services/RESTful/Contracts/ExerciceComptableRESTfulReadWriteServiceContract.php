@@ -19,5 +19,14 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonReadWriteServiceContract;
  */
 interface ExerciceComptableRESTfulReadWriteServiceContract extends RestJsonReadWriteServiceContract
 {
-    
+    /**
+     * Report de solde aux comptes
+     *
+     * @param  string                                           $exerciceComptableId        The unique identifier of the exercice comptable accounts balance will be report.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountsBalanceArrayData   Accounts balance array data.
+     * @return \Illuminate\Http\JsonResponse                                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                      If there is an issue with reporting accounts balance.
+     */
+    public function reportDesSoldesAuxComptes(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsBalanceArrayData): \Illuminate\Http\JsonResponse;
 }

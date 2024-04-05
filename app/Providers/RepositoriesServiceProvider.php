@@ -321,24 +321,6 @@ class RepositoriesServiceProvider extends ServiceProvider
             )
             ->give(\Domains\Finances\ClassesDeCompte\Repositories\ClasseDeCompteReadOnlyRepository::class);
 
-
-
-        // Bind ReadWriteRepositoryInterface to PeriodesExerciceReadWriteRepository
-        $this->app->when(\Domains\Finances\PeriodesExercice\Services\RESTful\PeriodeExerciceRESTfulReadWriteService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\PeriodesExercice\Repositories\PeriodeExerciceReadWriteRepository::class);
-
-        // Bind ReadWriteRepositoryInterface to PeriodesExerciceReadOnlyRepository
-        $this->app->when(\Domains\Finances\PeriodesExercice\Services\RESTful\PeriodeExerciceRESTfulQueryService::class)
-            ->needs(
-                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-            )
-            ->give(\Domains\Finances\PeriodesExercice\Repositories\PeriodeExerciceReadOnlyRepository::class);
-
-
-
         // Bind ReadWriteRepositoryInterface to CompteReadWriteRepository
         $this->app->when(\Domains\Finances\Comptes\Services\RESTful\CompteRESTfulReadWriteService::class)
             ->needs(

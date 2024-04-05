@@ -81,7 +81,7 @@ class Compte extends ModelContract
      * @var array<int, string>
      */
     protected $appends = [
-        'categorie_name'
+        'categorie_de_compte'
     ];
     
     /**
@@ -105,7 +105,7 @@ class Compte extends ModelContract
         return $this->belongsTo(CategorieDeCompte::class, 'categorie_de_compte_id');
     }
 
-    public function getCategorieNameAttribute(){
+    public function getCategorieDeCompteAttribute(){
         return $this->categorie->name;
     }
 

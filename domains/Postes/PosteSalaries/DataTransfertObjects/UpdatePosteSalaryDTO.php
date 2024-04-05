@@ -60,8 +60,16 @@ class UpdatePosteSalaryDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            'salaries.required'                         => 'Le champ salaries est requis.',
+            'salaries.array'                            => 'Le champ salaries doit être un tableau.',
+            'salaries.min'                              => 'Le champ salaries doit contenir au moins un élément.',
+            'salaries.*.distinct'                       => 'Les éléments du tableau salaries ne doivent pas être en double.',
+            'salaries.*.est_le_salaire_de_base.boolean' => 'Le champ est_le_salaire_de_base doit être un booléen.',
+            'salaries.*.est_le_salaire_de_base.in'      => 'Le champ est_le_salaire_de_base doit être "true" ou "false".',
+            'salaries.*.salary_id.required'             => 'Le champ salary_id est requis.',
+            'salaries.*.salary_id.exists'               => 'Les éléments du tableau salaries doivent correspondre à des identifiants valides de taux_and_salaries.',
+            'salaries.*.can_be_deleted.boolean'         => 'Le champ can_be_deleted doit être un booléen.',
+            'salaries.*.can_be_deleted.in'              => 'Le champ can_be_deleted doit être "true" ou "false".'
         ], $messages);
 
         $messages = array_merge([], $default_messages);

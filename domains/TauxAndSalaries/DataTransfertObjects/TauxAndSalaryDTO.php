@@ -7,7 +7,6 @@ namespace Domains\TauxAndSalaries\DataTransfertObjects;
 use App\Models\TauxAndSalary;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
-
 /**
  * Class ***`TauxAndSalaryDTO`***
  *
@@ -42,8 +41,8 @@ class TauxAndSalaryDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            'taux'           => 'required|array|min:1',
-            'taux.*'         => ['distinct', "exists:taux_and_salaries,id"]
+            "taux"           => "required|array|min:1",
+            "taux.*"         => ["distinct", "exists:taux_and_salaries,id"]
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -57,8 +56,11 @@ class TauxAndSalaryDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "taux.required"                 => "Le champ taux est requis.",
+            "taux.array"                    => "Le champ taux doit être un tableau.",
+            "taux.min"                      => "Le champ taux doit contenir au moins un élément.",
+            "taux.*.distinct"               => "Les éléments du tableau taux ne doivent pas être en double.",
+            "taux.*.exists"                 => "Chaque élément du tableau taux doit correspondre à un identifiant valide de taux et salaire."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

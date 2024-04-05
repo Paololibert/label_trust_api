@@ -42,10 +42,10 @@ class CreatePeriodeExerciceDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["required", "max:25", 'unique:periodes_exercice,name'],
-            "date_debut_periode"    => ["required", "date", 'date_format:d/m'],
-            "date_fin_periode"      => ["required", "date", 'date_format:d/m'],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false]
+            "name"            		=> ["required", "max:25", "unique_ignore_case:periodes_exercice,name"],
+            "date_debut_periode"    => ["required", "date_format:d/m"],
+            "date_fin_periode"      => ["required", "date_format:d/m"],
+            "can_be_deleted"        => ["sometimes", "boolean", "in:".true.",".false]
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -59,8 +59,17 @@ class CreatePeriodeExerciceDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "name.required"                     => "Le nom de la période est requis.",
+            "name.max"                          => "Le nom de la période ne peut pas dépasser :max caractères.",
+            "name.unique_ignore_case"           => "Ce nom de période est déjà utilisé.",
+            "date_debut_periode.required"       => "La date de début de la période est requise.",
+            "date_debut_periode.date"           => "La date de début de la période doit être une date valide.",
+            "date_debut_periode.date_format"    => "Le format de la date de début de la période doit être :format.",
+            "date_fin_periode.required"         => "La date de fin de la période est requise.",
+            "date_fin_periode.date"             => "La date de fin de la période doit être une date valide.",
+            "date_fin_periode.date_format"      => "Le format de la date de fin de la période doit être :format.",
+            "can_be_deleted.boolean"            => "Le champ indiquant si la période peut être supprimée doit être un booléen.",
+            "can_be_deleted.in"                 => "Le champ indiquant si la période peut être supprimée doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

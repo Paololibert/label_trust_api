@@ -11,10 +11,12 @@ use Core\Utils\Exceptions\HttpMethodNotAllowedException;
 use Core\Utils\Exceptions\NotFoundException;
 use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Exceptions\TooManyAttemptsException;
+use Core\Utils\Exceptions\UnprocessableException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -44,6 +46,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        dd($exception);
         if ($exception instanceof MethodNotAllowedHttpException) {
             throw new HttpMethodNotAllowedException();
         }
@@ -55,6 +58,9 @@ class Handler extends ExceptionHandler
         }
         else if($exception instanceof NotFoundHttpException){
             throw new NotFoundException(message: "Route not be found", previous: $exception);            
+        }
+        else if($exception instanceof ValidationException){
+            throw new UnprocessableException(message: $exception->getMessage(), status_code: $exception->status, error: $exception->errors(), previous: $exception); 
         }
         else if($exception instanceof ThrottleRequestsException){
             throw new TooManyAttemptsException(previous: $exception);            

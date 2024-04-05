@@ -19,7 +19,6 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonReadWriteServiceContract;
  */
 interface PlanComptableRESTfulReadWriteServiceContract extends RestJsonReadWriteServiceContract
 {
-    
     /**
      * Adds new accounts to a Plan Comptable.
      *

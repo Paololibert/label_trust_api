@@ -22,7 +22,7 @@ class UpdateTauxAndSalaryDTO extends BaseDTO
     {
         parent::__construct();
     }
-    
+
     /**
      * Get the class name of the model associated with the DTO.
      *
@@ -47,7 +47,7 @@ class UpdateTauxAndSalaryDTO extends BaseDTO
             "taux.*.rate"               => ["sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             "taux.*.hint"               => ["sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             "taux.*.unite_mesure_id"    => ["sometimes", "uuid", "exists:unite_mesures,id"],
-            'taux.*.can_be_deleted'     => ['nullable', 'boolean', 'in:'.true.','.false]
+            'taux.*.can_be_deleted'     => ['nullable', 'boolean', 'in:' . true . ',' . false]
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -62,8 +62,22 @@ class UpdateTauxAndSalaryDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+
+            "taux.required"                 => "Le champ taux est requis.",
+            "taux.array"                    => "Le champ taux doit être un tableau.",
+            "taux.min"                      => "Le champ taux doit contenir au moins deux éléments.",
+            "taux.*.distinct"               => "Les éléments du tableau taux ne doivent pas être en double.",
+            "taux.*.taux_id.required"       => "Le champ taux_id de chaque élément de taux est requis.",
+            "taux.*.taux_id.uuid"           => "Le champ taux_id de chaque élément de taux doit être un UUID valide.",
+            "taux.*.taux_id.exists"         => "Le champ taux_id de chaque élément de taux doit correspondre à un identifiant valide de taux et salaire.",
+            "taux.*.rate.numeric"           => "Le champ rate de chaque élément de taux doit être un nombre.",
+            "taux.*.rate.regex"             => "Le champ rate de chaque élément de taux doit être au format numérique avec deux décimales au maximum.",
+            "taux.*.hint.numeric"           => "Le champ hint de chaque élément de taux doit être un nombre.",
+            "taux.*.hint.regex"             => "Le champ hint de chaque élément de taux doit être au format numérique avec deux décimales au maximum.",
+            "taux.*.unite_mesure_id.uuid"   => "Le champ unite_mesure_id de chaque élément de taux doit être un UUID valide.",
+            "taux.*.unite_mesure_id.exists" => "Le champ unite_mesure_id de chaque élément de taux doit correspondre à un identifiant valide d'unité de mesure.",
+            "taux.*.can_be_deleted.boolean" => "Le champ can_be_deleted de chaque élément de taux doit être un booléen.",
+            "taux.*.can_be_deleted.in"      => "Le champ can_be_deleted de chaque élément de taux doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

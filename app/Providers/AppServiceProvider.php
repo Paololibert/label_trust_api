@@ -18,7 +18,9 @@ use Core\Utils\Controllers\RESTful\Contracts\RESTfulResourceControllerContract;
 use Core\Utils\Controllers\RESTful\RESTfulResourceController;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Core\Utils\DataTransfertObjects\DTOInterface;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Binds ReadWriteRepositoryInterface to EloquentReadWriteRepository
         $this->app->bind(ReadWriteRepositoryInterface::class, EloquentReadWriteRepository::class);
-        
+
         /**
          * Binds implementations to their respective interfaces in the application's service container.
          * This allows for dependency injection and facilitates the use of interfaces throughout the application.
@@ -101,6 +103,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+
+        // Define your custom validation rule
+        Validator::extend('unique_ignore_case', function ($attribute, $value, $parameters, $validator) {
+            $table = $parameters[0];
+            $column = $parameters[1];
+            $ignoreId = isset($parameters[2]) ? $parameters[2] : null;
+
+            $query = DB::table($table)
+                ->whereRaw('LOWER(' . $column . ') = ?', [strtolower($value)]);
+
+            if ($ignoreId !== null) {
+                $query->where(isset($parameters[3]) ? $parameters[3] : 'id', '!=', $ignoreId);
+            }
+
+            $query->whereNull('deleted_at');
+
+            return $query->count() === 0;
+        });
     }
 }

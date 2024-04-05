@@ -28,5 +28,4 @@ class JournalRESTfulReadWriteService extends RestJsonReadWriteService implements
     {
         parent::__construct($readWriteService);
     }
-
 }

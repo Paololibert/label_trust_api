@@ -6,6 +6,7 @@ namespace App\Models\Finances;
 
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Utils\Enums\TypeEcritureCompteEnum;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -39,7 +40,7 @@ class LigneEcritureComptable extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'libelle', 'montant', 'type_ecriture_compte', 'ligneable_id', 'ligneable_type', 'accountable_id', 'accountable_type'
+        'montant', 'type_ecriture_compte', 'ligneable_id', 'ligneable_type', 'accountable_id', 'accountable_type'
     ];
 
     /**
@@ -56,8 +57,17 @@ class LigneEcritureComptable extends ModelContract
      *
      * @var array<int, string>
      */
+    protected $appends = [
+        'intitule'
+    ];
+
+    /**
+     * The attributes that should be visible in arrays.
+     *
+     * @var array<int, string>
+     */
     protected $visible = [
-        'libelle', 'montant', 'type_ecriture_compte'
+        'montant', 'type_ecriture_compte'
     ];
 
     /**
@@ -66,7 +76,6 @@ class LigneEcritureComptable extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
-        'libelle'                   => 'string',
         'montant'                   => 'decimal:2',
         'ligneable_id'              => 'string',
         'ligneable_type'            => 'string',
@@ -74,6 +83,44 @@ class LigneEcritureComptable extends ModelContract
         'accountable_type'          => 'string',
         'type_ecriture_compte'      => TypeEcritureCompteEnum::class
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        static::observe(\App\Observers\LigneEcritureComptableObserver::class);
+    }
+
+    /**
+     * The "boot" method of the model.
+     *
+     * @return void
+     */
+    /* protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (LigneEcritureComptable $model) {
+            parent::creating($model);
+            dd($model->ligneable->plan_comptable);
+            if(!$model->ligneable->plan_comptable->findAccountOrSubAccount($model->accountable->account_number)){
+                throw new ModelNotFoundException('Veuillez preciser un numero de compte du plan comptable');
+            }
+        });
+    } */
+
+    /**
+     * Get account related
+     *
+     * @return string|null The user's full name.
+     */
+    public function getIntituleAttribute(): ?string
+    {
+        return $this->accountable?->intitule;
+    }
     
     /**
      * Get the associate parent details.

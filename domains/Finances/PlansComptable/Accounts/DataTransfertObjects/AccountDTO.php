@@ -42,7 +42,10 @@ class AccountDTO extends BaseDTO
     {
         $rules = array_merge([
             "accounts"                          => ["required", "array"],
-            "accounts.*"                        => ["distinct", "exists:plan_comptable_comptes,id"],
+            "accounts.*"                        => ["distinct", "array"],
+            "accounts.*.id"                     => ["required", "distinct", "exists:plan_comptable_comptes,id"],
+            "accounts.*.solde_debit"            => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            "accounts.*.solde_credit"           => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             'accounts.*.can_be_deleted'         => ['sometimes', 'boolean', 'in:'.true.','.false]
         ], $rules);
 
@@ -57,8 +60,12 @@ class AccountDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            'accounts.required'                     => 'The accounts field is required.',
+            'accounts.array'                        => 'The accounts must be an array.',
+            'accounts.*.distinct'                   => 'Each account must be unique in the list.',
+            'accounts.*.exists'                     => 'The selected account does not exist.',
+            'accounts.*.can_be_deleted.boolean'     => 'The can_be_delete field must be a boolean.',
+            'accounts.*.can_be_deleted.in'          => 'The can_be_delete field must be "true" or "false".'
         ], $messages);
 
         $messages = array_merge([], $default_messages);

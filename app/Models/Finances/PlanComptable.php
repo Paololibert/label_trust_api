@@ -8,7 +8,15 @@ use Core\Data\Eloquent\Contract\ModelContract;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Str;
+use App\Models\Finances\SubAccount as SubDivision;
+use App\Models\Scopes\FindAccountByScope;
+use App\Models\Scopes\FindAccountScope;
+use Core\Utils\Exceptions\ApplicationException;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * Class ***`PlanComptable`***
@@ -74,7 +82,7 @@ class PlanComptable extends ModelContract
     protected $with = [
         'accounts'
     ];
-    
+
     /**
      * Interact with the PlanComptable's name.
      */
@@ -94,11 +102,11 @@ class PlanComptable extends ModelContract
     public function comptes(): BelongsToMany
     {
         return $this->belongsToMany(Compte::class, 'plan_comptable_comptes', 'plan_comptable_id', 'compte_id')
-                    ->as('account')
-                    ->withPivot('account_number', 'classe_id', 'status', 'deleted_at', 'can_be_delete')
-                    ->withTimestamps() // Enable automatic timestamps for the pivot table
-                    ->wherePivot('status', true) // Filter records where the status is true
-                    ->using(Account::class); // Specify the intermediate model for the pivot relationship
+            ->as('account')
+            ->withPivot('account_number', 'classe_id', 'status', 'deleted_at', 'can_be_delete')
+            ->withTimestamps() // Enable automatic timestamps for the pivot table
+            ->wherePivot('status', true) // Filter records where the status is true
+            ->using(Account::class); // Specify the intermediate model for the pivot relationship
     }
 
     /**
@@ -107,6 +115,138 @@ class PlanComptable extends ModelContract
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class, 'plan_comptable_id');
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Eloquent\Builder|null $query
+     * 
+     * @return HasManyThrough|\Illuminate\Database\Eloquent\Collection
+     */
+    public function sub_accounts($query = null, bool $withSubDivision = false, array $columns = ["*"]): HasManyThrough|\Illuminate\Database\Eloquent\Collection
+    {
+        if ($query) {
+            if ($query->getModel() instanceof Account) {
+                return $this->sub_accounts_and_sub_divisions(query: $query, withSubDivision: $withSubDivision, columns: $columns);
+            }
+        }
+        return $this->hasManyThrough(SubAccount::class, Account::class, 'plan_comptable_id', 'subaccountable_id');
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Eloquent\Builder|null $query
+     *
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function sub_divisions($query = null, array $columns = ["*"])
+    {
+        $sub_divisions = new \Illuminate\Database\Eloquent\Collection(); // Create an empty Eloquent collection
+
+        $query = $query ?? $this->sub_accounts();
+
+        if ($query instanceof \Illuminate\Database\Eloquent\Collection) {
+            $this->recursiveSubAccounts(query: $query, sub_accounts_and_sub_divisions: $sub_divisions, columns: $columns);
+        } else if ($query instanceof \Illuminate\Database\Eloquent\Relations\Relation || $query instanceof \Illuminate\Database\Eloquent\Builder) {
+
+            if ($query->getModel() instanceof SubAccount) {
+                if ($query->whereHas("sub_divisions")) {
+                    return $this->recursiveSubAccounts(query: $query->whereHas("sub_divisions"), sub_accounts_and_sub_divisions: $sub_divisions, columns: $columns);
+                }
+            }
+        }
+
+        return $sub_divisions;
+    }
+
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Eloquent\Builder|null $query
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function sub_accounts_and_sub_divisions($query = null, $withSubDivision = true, array $columns = ["*"]): \Illuminate\Database\Eloquent\Collection
+    {
+        $sub_accounts_and_sub_divisions = new \Illuminate\Database\Eloquent\Collection(); // Create an empty Eloquent collection
+
+        $query = $query ?? $this->accounts();
+
+        if ($query instanceof \Illuminate\Database\Eloquent\Relations\Relation || $query instanceof \Illuminate\Database\Eloquent\Builder) {
+            $query = $query->get();
+        }
+
+        if ($query instanceof \Illuminate\Database\Eloquent\Collection || $query instanceof \Illuminate\Database\Eloquent\Collection) {
+
+            $query->each(function ($account) use (&$sub_accounts_and_sub_divisions, $withSubDivision, $columns) {
+
+                if ($account->sous_comptes) {
+
+                    // Concatenate each sub division to the $sub_divisions collection
+                    $sub_accounts_and_sub_divisions = $sub_accounts_and_sub_divisions->concat($account->sous_comptes()->select($columns)->get());
+
+                    if ($withSubDivision) {
+                        if ($account->sous_comptes()->whereHas("sub_divisions")->count()) {
+                            $sub_accounts_and_sub_divisions = $this->recursiveSubAccounts(query: $account->sous_comptes()->whereHas("sub_divisions"), sub_accounts_and_sub_divisions: $sub_accounts_and_sub_divisions, columns: $columns);
+                        }
+                    }
+                }
+            });
+        }
+
+        return $sub_accounts_and_sub_divisions;
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Eloquent\Builder|null $query
+     */
+    protected function recursiveSubAccounts($query, $sub_accounts_and_sub_divisions, array $columns = ["*"])
+    {
+        if ($query instanceof \Illuminate\Database\Eloquent\Collection) {
+            $query = $query;
+        } else if ($query instanceof \Illuminate\Database\Eloquent\Relations\Relation || $query instanceof \Illuminate\Database\Eloquent\Builder) {
+            $query = $query->get();
+        }
+
+        if ($query instanceof \Illuminate\Database\Eloquent\Collection) {
+            $query->each(function ($sub_account) use (&$sub_accounts_and_sub_divisions, $columns) {
+
+                if ($sub_account->sub_divisions) {
+
+                    // Concatenate each sub division to the $sub_divisions collection
+                    $sub_accounts_and_sub_divisions = $sub_accounts_and_sub_divisions->concat($sub_account->sub_divisions()->select($columns)->get());
+
+                    if ($sub_account->sub_divisions()->whereHas("sub_divisions")->count()) {
+                        $sub_accounts_and_sub_divisions = $this->recursiveSubAccounts(query: $sub_account->sub_divisions()->whereHas("sub_divisions"), sub_accounts_and_sub_divisions: $sub_accounts_and_sub_divisions, columns: $columns);
+                    }
+                }
+            });
+        }
+
+        return $sub_accounts_and_sub_divisions;
+    }
+
+
+
+    /**
+     * @param string $accountNumber
+     * @param \Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Collection|null $query
+     * 
+     * @return mixed
+     */
+    public function findAccountOrSubAccount(string $accountNumber, $query = null, $columns = ["*"])
+    {
+        if (strlen($accountNumber) < 2) throw new ApplicationException("Veuillez soumettre un numero de compte invalid", 1);
+        
+        if (strlen($accountNumber) === 2) {
+            $query = $query ?? $this->accounts();
+
+            return $query->whereNull('deleted_at')
+                ->select($columns)
+                ->where('account_number', '=', $accountNumber)->first();
+        } else {
+            $query = $query ?? $this->sub_accounts_and_sub_divisions(columns: $columns);
+            return $query->whereNull('deleted_at')
+                    ->where('account_number', '=', $accountNumber)->first();
+        }
+
+        return null;
     }
 
     /**
@@ -119,7 +259,8 @@ class PlanComptable extends ModelContract
         return $this->hasMany(ExerciceComptable::class, 'plan_comptable_id');
     }
 
-    private function generateCode(string $name){
+    private function generateCode(string $name)
+    {
 
         // Retrieve the first letter of the plan's name
         $firstLetter = strtoupper(substr($name, 0, 1));
@@ -143,9 +284,18 @@ class PlanComptable extends ModelContract
     protected static function boot(): void
     {
         parent::boot();
-        
+
         static::creating(function (PlanComptable $model) {
             $model->code = $model->generateCode($model->name);
         });
+    }
+
+    public function scopeFindAccount(Builder $query, string $accountNumber)
+    {
+        if (strlen($accountNumber) === 1) {
+            $this->accounts()->where('account_number', $accountNumber);
+        } else {
+            $this->sub_accounts()->where('account_number', $accountNumber);
+        }
     }
 }

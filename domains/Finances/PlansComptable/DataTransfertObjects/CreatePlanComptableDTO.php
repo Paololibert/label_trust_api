@@ -47,7 +47,7 @@ class CreatePlanComptableDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["required", "string", "max:25", Rule::unique('plans_comptable', 'name')->whereNull('deleted_at')],
+            "name"            		=> ["required", "string", "max:150", "unique_ignore_case:plans_comptable,name"],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
@@ -62,8 +62,12 @@ class CreatePlanComptableDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            'name.required'             => 'Le nom du plan comptable est requis.',
+            'name.string'               => 'Le nom du plan comptable doit être une chaîne de caractères.',
+            'name.max'                  => 'Le nom du plan comptable ne peut pas dépasser :max caractères.',
+            'name.unique_ignore_case'   => 'Ce nom de plan comptable est déjà utilisé.',
+            'can_be_deleted.boolean'    => 'Le champ indiquant si le plan comptable peut être supprimé doit être un booléen.',
+            'can_be_deleted.in'         => 'Le champ indiquant si le plan comptable peut être supprimé doit être "true" ou "false".'
         ], $messages);
 
         $messages = array_merge([], $default_messages);

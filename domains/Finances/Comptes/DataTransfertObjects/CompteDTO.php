@@ -42,8 +42,8 @@ class CompteDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            'comptes'           => 'required|array|min:1',
-            'comptes.*'         => ['distinct', "exists:comptes,id"]
+            "comptes"           => "required|array|min:1",
+            "comptes.*"         => ["distinct", "exists:comptes,id"]
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -57,8 +57,11 @@ class CompteDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "comptes.required"      => "La liste des comptes est requise.",
+            "comptes.array"         => "La liste des comptes doit être un tableau.",
+            "comptes.min"           => "La liste des comptes doit contenir au moins un élément.",
+            "comptes.*.distinct"    => "La liste des comptes ne doit pas contenir de doublons.",
+            "comptes.*.exists"      => "Un ou plusieurs comptes sélectionnés sont invalides."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

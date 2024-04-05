@@ -42,7 +42,7 @@ class UpdatePosteDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:postes,name,' . request()->route('poste_id') . ',id'],
+            "name"            		=> ["string", "required", 'unique_ignore_case:postes,name,' . request()->route('poste_id') . ',id'],
             "department_id"         => ["sometimes",'exists:departements,id'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
@@ -58,8 +58,13 @@ class UpdatePosteDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "name.required"             => "Le nom du poste est requis.",
+            "name.string"               => "Le nom du poste doit être une chaîne de caractères.",
+            "name.unique_ignore_case"   => "Ce nom de poste est déjà utilisé.",
+            "department_id.required"    => "Le département est requis.",
+            "department_id.exists"      => "Le département sélectionné est invalide.",
+            "can_be_deleted.boolean"    => "Le champ can_be_deleted doit être un booléen.",
+            "can_be_deleted.in"         => "Le can_be_delete doit être 'true' ou 'false'."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

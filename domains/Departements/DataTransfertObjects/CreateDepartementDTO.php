@@ -43,8 +43,8 @@ class CreateDepartementDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", 'unique:departements,name'],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "name"                    => ["string", "required", 'unique_ignore_case:departements,name'],
+            'can_be_deleted'        => ['sometimes', 'boolean', 'in:' . true . ',' . false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -58,8 +58,11 @@ class CreateDepartementDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            'name.string'               => 'Le nom du département doit être une chaîne de caractères.',
+            'name.required'             => 'Le nom du département est requis.',
+            'name.unique_ignore_case'   => 'Le nom du département est déjà utilisé.',
+            'can_be_deleted.boolean'    => 'Le département peut être supprimé doit être un booléen.',
+            'can_be_deleted.in'         => 'Le département peut être supprimé doit être "true" ou "false".'
         ], $messages);
 
         $messages = array_merge([], $default_messages);

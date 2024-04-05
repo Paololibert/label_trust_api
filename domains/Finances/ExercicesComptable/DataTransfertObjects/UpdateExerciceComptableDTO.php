@@ -6,6 +6,7 @@ namespace Domains\Finances\ExercicesComptable\DataTransfertObjects;
 
 use App\Models\Finances\ExerciceComptable;
 use Core\Utils\DataTransfertObjects\BaseDTO;
+use Illuminate\Validation\Rule;
 
 /**
  * Class ***`UpdateExerciceComptableDTO`***
@@ -41,7 +42,7 @@ class UpdateExerciceComptableDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "fiscal_year"           => ["required", "numeric", 'regex:/^0|[1-9]\d{3,}$/', 'unique:exercices_comptable,fiscal_year'],
+            "fiscal_year"           => ["required", "numeric", 'regex:/^0|[1-9]\d{3,}$/', Rule::unique('exercices_comptable', 'fiscal_year')->where('plan_comptable_id', request("plan_comptable_id"))->ignore(request("exercice_comptable_id"))->whereNull('deleted_at')],
             "periode_exercice_id"   => ["required", "exists:periodes_exercice,id"],
             "plan_comptable_id"     => ["required", "exists:plans_comptable,id"],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
@@ -58,8 +59,16 @@ class UpdateExerciceComptableDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
-            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+            "fiscal_year.required"              => "Le champ année fiscale est requis.",
+            "fiscal_year.numeric"               => "Le champ année fiscale doit être numérique.",
+            "fiscal_year.regex"                 => "Le champ année fiscale doit être au format valide.",
+            "fiscal_year.unique"                => "L'année fiscale spécifiée existe déjà dans la base de données.",
+            "periode_exercice_id.required"      => "Le champ période d'exercice est requis.",
+            "periode_exercice_id.exists"        => "La période d'exercice spécifiée est invalide.",
+            "plan_comptable_id.required"        => "Le champ plan comptable est requis.",
+            "plan_comptable_id.exists"          => "Le plan comptable spécifié est invalide.",
+            "can_be_deleted.boolean"            => "Le champ peut être supprimé doit être un booléen.",
+            "can_be_deleted.in"                 => "La valeur du champ peut être supprimée doit être vrai ou faux."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

@@ -75,6 +75,30 @@ class PeriodeExercice extends ModelContract
     }
 
     /**
+     * Interact with the user's middle name.
+     * 
+     * @return Attribute
+     */
+    protected function dateDebutPeriode(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => \Carbon\Carbon::createFromFormat('d/m', $value)
+        );
+    }
+
+    /**
+     * Interact with the user's middle name.
+     * 
+     * @return Attribute
+     */
+    protected function dateFinPeriode(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => \Carbon\Carbon::createFromFormat('d/m', $value)
+        );
+    }
+
+    /**
      *
      *
      * @return HasMany
