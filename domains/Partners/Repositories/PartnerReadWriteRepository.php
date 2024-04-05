@@ -66,9 +66,7 @@ class PartnerReadWriteRepository extends EloquentReadWriteRepository
     public function create(array $data): Partner
     {
         try {
-
-            //dd($data);
-
+            
             $theparent =  $this->model = parent::create($data);
 
             $partnerDetail = null;

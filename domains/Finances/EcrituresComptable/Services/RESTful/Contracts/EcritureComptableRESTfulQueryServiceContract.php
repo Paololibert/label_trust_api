@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Domains\Finances\EcrituresComptable\Services\RESTful\Contracts;
 
 use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
+use Core\Utils\DataTransfertObjects\DTOInterface;
 
 /**
  * Interface ***`EcritureComptableRESTfulQueryServiceContract`***
@@ -32,7 +33,7 @@ interface EcritureComptableRESTfulQueryServiceContract extends RestJsonQueryServ
      *
      * @throws \Core\Utils\Exceptions\ServiceException  If there is an error retrieving the filtered records.
      */
-    public function ecritures_comptable(string $exerciceComptableId, array $columns = ['*']): \Illuminate\Http\JsonResponse;
+    public function filter(DTOInterface $filterCondition, int $page = 1, int $perPage = 15, string $orderBy, string $order, string $pageName = 'page', array $columns = ['*']): \Illuminate\Http\JsonResponse;
 
     /**
      * Retrieve details of an ecritures comptable.
@@ -44,5 +45,5 @@ interface EcritureComptableRESTfulQueryServiceContract extends RestJsonQueryServ
      *
      * @throws \Core\Utils\Exceptions\ServiceException  If there is an error retrieving the filtered records.
      */
-    public function retrieveDetailsOfEcritureComptable(string $exerciceComptableId, $ecritureComptablId, array $columns = ['*']): \Illuminate\Http\JsonResponse;
+    public function retrieveDetailsOfEcritureComptable(string $ecritureComptablId, string $exerciceComptableId, array $columns = ['*']): \Illuminate\Http\JsonResponse;
 }

@@ -12,6 +12,7 @@ use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
 /**
@@ -77,10 +78,14 @@ class ExerciceComptableReadWriteRepository extends EloquentReadWriteRepository
             $this->model = $this->find($exerciceComptableId);
 
             foreach ($accountsDataArray as $key => $accountDataArray) {
-                $this->model->balances()->create(array_merge($accountDataArray, ["balanceable_id" => $accountDataArray["id"], "balanceable_type" => "App\Models\Finances\Account"]));
-                if(isset($accountDataArray["sub_accounts"])){
+                $account = $this->model->plan_comptable->findAccountOrSubAccount(accountNumber: $accountDataArray["account_number"], columns: ["id", "account_number"]);
+
+                if (!$account) throw new ModelNotFoundException("Compte inconnu : {$accountDataArray['account_number']}.", 1);
+
+                $this->model->balances()->create(array_merge($accountDataArray, ["balanceable_id" => $account->id, "balanceable_type" => $account::class]));
+                if (isset($accountDataArray["sub_accounts"])) {
                     $this->reportDeSoldeAuxSousCompte($accountDataArray["sub_accounts"]);
-                } 
+                }
             }
 
             return true;
@@ -95,14 +100,18 @@ class ExerciceComptableReadWriteRepository extends EloquentReadWriteRepository
      * 
      * @return void
      */
-    private function reportDeSoldeAuxSousCompte($accountsData): void{
+    private function reportDeSoldeAuxSousCompte($accountsData): void
+    {
         foreach ($accountsData as $key => $subAccountData) {
-            $this->model->balances()->create(array_merge($subAccountData, ["balanceable_id" => $subAccountData["id"], "balanceable_type" => "App\Models\Finances\SubAccount"]));
+            $subAccount = $this->model->plan_comptable->findAccountOrSubAccount(accountNumber: $subAccountData["account_number"], columns: ["id", "account_number"]);
 
-            if(isset($subAccountData["sub_divisions"])){
+            if (!$subAccount) throw new ModelNotFoundException("Compte inconnu : {$subAccountData['account_number']}.", 1);
+
+            $this->model->balances()->create(array_merge($subAccountData, ["balanceable_id" => $subAccount->id, "balanceable_type" => $subAccount::class]));
+
+            if (isset($subAccountData["sub_divisions"])) {
                 $this->reportDeSoldeAuxSousCompte($subAccountData["sub_divisions"]);
-            } 
+            }
         }
     }
-    
 }

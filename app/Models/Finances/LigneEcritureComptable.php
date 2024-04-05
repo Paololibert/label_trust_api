@@ -6,6 +6,7 @@ namespace App\Models\Finances;
 
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Utils\Enums\TypeEcritureCompteEnum;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -84,13 +85,41 @@ class LigneEcritureComptable extends ModelContract
     ];
 
     /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        static::observe(\App\Observers\LigneEcritureComptableObserver::class);
+    }
+
+    /**
+     * The "boot" method of the model.
+     *
+     * @return void
+     */
+    /* protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (LigneEcritureComptable $model) {
+            parent::creating($model);
+            dd($model->ligneable->plan_comptable);
+            if(!$model->ligneable->plan_comptable->findAccountOrSubAccount($model->accountable->account_number)){
+                throw new ModelNotFoundException('Veuillez preciser un numero de compte du plan comptable');
+            }
+        });
+    } */
+
+    /**
      * Get account related
      *
-     * @return string The user's full name.
+     * @return string|null The user's full name.
      */
-    public function getIntituleAttribute(): string
+    public function getIntituleAttribute(): ?string
     {
-        return $this->accountable->intittule;
+        return $this->accountable?->intitule;
     }
     
     /**

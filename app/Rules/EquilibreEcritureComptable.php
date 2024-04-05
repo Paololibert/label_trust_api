@@ -15,8 +15,8 @@ class EquilibreEcritureComptable implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // Calculer la somme des montants de crédit et de débit
-        $totalCredit = collect($value['lignes_ecriture'])->where('type_ecriture_compte', 'credit')->sum('montant');
-        $totalDebit = collect($value['lignes_ecriture'])->where('type_ecriture_compte', 'debit')->sum('montant');
+        $totalCredit = collect($value)->where('type_ecriture_compte', 'credit')->sum('montant');
+        $totalDebit = collect($value)->where('type_ecriture_compte', 'debit')->sum('montant');
         
         // Vérifier si les totaux sont équilibrés
         if ($totalCredit !== $totalDebit) {
@@ -25,19 +25,4 @@ class EquilibreEcritureComptable implements ValidationRule
         }
     }
     protected $message = 'Les totaux en crédit et en débit ne sont pas équilibrés.';
-
-    /* public function passes($attribute, $value)
-    {
-        // Calculer la somme des montants de crédit et de débit
-        $totalCredit = $value['lignes_ecriture']->where('type_ecriture_compte', 'credit')->sum('montant');
-        $totalDebit = $value['lignes_ecriture']->where('type_ecriture_compte', 'debit')->sum('montant');
-        
-        // Vérifier si les totaux sont équilibrés
-        return $totalCredit === $totalDebit;
-    }
-
-    public function message()
-    {
-        return $this->message;
-    } */
 }

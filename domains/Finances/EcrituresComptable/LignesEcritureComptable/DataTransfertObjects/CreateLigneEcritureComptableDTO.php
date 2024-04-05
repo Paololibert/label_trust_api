@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Domains\Finances\EcrituresComptable\LignesEcritureComptable\DataTransfertObjects;
 
 use App\Models\Finances\LigneEcritureComptable;
+use App\Rules\AccountNumberExistsInEitherTable;
+use App\Rules\EquilibreEcritureComptable;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Core\Utils\Enums\TypeEcritureCompteEnum;
 use Illuminate\Validation\Rules\Enum;
@@ -51,16 +53,12 @@ class CreateLigneEcritureComptableDTO extends BaseDTO
     {
         // 'libelle', 'montant', 'type_ecriture_compte', 'ligneable_id', 'ligneable_type', 'accountable_id', 'accountable_type'
         $rules = array_merge([
-            "lignes_ecriture"                          => ["required", "array", "min:2"],
+            "lignes_ecriture"                          => ["required", "array", "min:1", new EquilibreEcritureComptable()],
             "lignes_ecriture.*"                        => ["distinct", "array"],
             'lignes_ecriture.*.type_ecriture_compte'   => ['required', "string", new Enum(TypeEcritureCompteEnum::class)],
             "lignes_ecriture.*.montant"                => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            //"ligneable_type"            => ["required", "in:ecriture_comptable,operation_disponible"/* , "exists:".$this->ligneableRule */],
-            "lignes_ecriture.*.account_number"         => ["required", "exists:plan_comptable_comptes,account_number"],
-            "lignes_ecriture.*.account_number"         => ["required", "exists:plan_comptable_comptes,account_number"],
-            "lignes_ecriture.*.account_number"         => ["required", "exists:plan_comptable_comptes,account_number"],
-            "lignes_ecriture.*.account_number"         => ["required", "exists:plan_comptable_comptes,account_number"],
-            'can_be_deleted'            => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "lignes_ecriture.*.account_number"         => ["required", new AccountNumberExistsInEitherTable()],
+            'can_be_deleted'                           => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);

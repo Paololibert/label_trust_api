@@ -44,8 +44,6 @@ class UpdateEcritureComptableDTO extends BaseDTO
     {
         $rules = array_merge([
             "libelle"                   => ["sometimes", "string", "max:25"],
-            "total_debit"               => ["sometimes", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            "total_credit"              => ["sometimes", "numeric", 'regex:/^0|[1-9]\d+$/'],
             "date_ecriture"             => ["sometimes", "date", 'date_format:d/m/y'],
             "exercice_comptable_id"     => ["sometimes", "exists:periodes_exercice,id"],
             "journal_id"                => ["sometimes", "exists:journaux,id"],

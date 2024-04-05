@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Http\Controllers\API\RESTful\V1\Finances;
 
@@ -8,6 +8,7 @@ use App\Http\Requests\Finances\v1\ExercicesComptable\CreateExerciceComptableRequ
 use App\Http\Requests\Finances\v1\ExercicesComptable\UpdateExerciceComptableRequest;
 use App\Http\Requests\ResourceRequest;
 use Core\Utils\Controllers\RESTful\RESTfulResourceController;
+use Core\Utils\DataTransfertObjects\BaseDTO;
 use Domains\Finances\EcrituresComptable\DataTransfertObjects\CreateEcritureComptableDTO;
 use Domains\Finances\EcrituresComptable\Services\RESTful\Contracts\EcritureComptableRESTfulQueryServiceContract;
 use Domains\Finances\EcrituresComptable\Services\RESTful\Contracts\EcritureComptableRESTfulReadWriteServiceContract;
@@ -104,7 +105,17 @@ class ExerciceComptableController extends RESTfulResourceController
      */
     public function fetchEcrituresComptable(Request $request, string $exerciceComptableId): JsonResponse
     {
-        return $this->ecritureComptableRESTfulQueryService->where(["exercice_comptable_id", $exerciceComptableId]);
+        // Instantiate the ResourceRequest with a CreateAccountDTO instance
+        $createRequest = app(ResourceRequest::class, ["dto" => new BaseDTO()]);
+
+        // Validate the incoming request using the ResourceRequest rules
+        if ($createRequest) {
+            $createRequest->validate($createRequest->rules());
+        }
+
+        $createRequest->getDto()->setProperty("exercice_comptable_id", $exerciceComptableId);
+
+        return $this->ecritureComptableRESTfulQueryService->filter(filterCondition: $createRequest->getDto(), page: (int) $request->query('page', 1), perPage: (int) $request->query('perPage', 15), order: $request->query('order', 'asc'), orderBy: $request->query('sort', 'created_at'), columns: $request->query('columns', "[*]"));
     }
 
     /**
@@ -115,7 +126,7 @@ class ExerciceComptableController extends RESTfulResourceController
      */
     public function fetchDetailsOfAnEcritureComptable(Request $request, string $exerciceComptableId, string $ecritureComptableId): JsonResponse
     {
-        return $this->ecritureComptableRESTfulQueryService->retrieveDetailsOfEcritureComptable($exerciceComptableId, $ecritureComptableId);
+        return $this->ecritureComptableRESTfulQueryService->retrieveDetailsOfEcritureComptable($ecritureComptableId, $exerciceComptableId);
     }
 
     /**
@@ -134,7 +145,7 @@ class ExerciceComptableController extends RESTfulResourceController
             $createRequest->validate($createRequest->rules());
         }
 
-        $createRequest->getDto()->setProperty("exercice_comptable_id", $exerciceComptableId) ;
+        $createRequest->getDto()->setProperty("exercice_comptable_id", $exerciceComptableId);
 
         // Call the service method to add the accounts to the Plan Comptable
         return $this->ecritureComptableRESTfulReadWriteService->create($createRequest->getDto());

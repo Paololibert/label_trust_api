@@ -6,10 +6,15 @@ namespace App\Models\Finances;
 
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Utils\Enums\StatusExerciceEnum;
+use Core\Utils\Exceptions\ApplicationException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\countOf;
 
 /**
  * Class ***`ExerciceComptable`***
@@ -173,6 +178,39 @@ class ExerciceComptable extends ModelContract
      */
     public function accounts()
     {
-        return $this->plan_comptable()->getEager()->first()->accounts();
+        return $this->plan_comptable->accounts();
     }
+
+    /**
+     * Define a method to access the sub_accounts associated with the Exercice through its PlanComptable.
+     * @param \Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Eloquent\Builder|null $query
+     * @return
+     */
+    public function sub_accounts($query = null, bool $withSubDivision = false, $columns = ["*"])
+    {
+        return $this->plan_comptable->sub_accounts(query: $query, withSubDivision: $withSubDivision, columns: $columns);
+    }
+
+    /**
+     * Define a method to access the sub_accounts associated with the Exercice through its PlanComptable.
+     *
+     * @param \Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Eloquent\Builder|null $query
+     * 
+     * @return
+     */
+    public function sub_divisions($query = null)
+    {
+        return $this->plan_comptable->sub_divisions($query);
+    }
+
+    /**
+     * Get the balance des comptes
+     *
+     * @return HasMany
+     */
+    public function balance_des_comptes(): HasMany
+    {
+        return $this->accounts()->with("balance");
+    }
+
 }

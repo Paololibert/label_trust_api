@@ -44,8 +44,6 @@ class CreateEcritureComptableDTO extends BaseDTO
     {
         $rules = array_merge([
             "libelle"                   => ["required", "string", "max:25"],
-            /* "total_debit"               => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            "total_credit"              => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'], */
             "date_ecriture"             => ["required", 'date_format:Y-m-d'],
             "journal_id"                => ["required", "exists:journaux,id"],
             'can_be_deleted'            => ['sometimes', 'boolean', 'in:'.true.','.false],

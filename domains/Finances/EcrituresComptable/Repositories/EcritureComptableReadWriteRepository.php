@@ -12,6 +12,7 @@ use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -49,77 +50,42 @@ class EcritureComptableReadWriteRepository extends EloquentReadWriteRepository
 
             $this->model = parent::create(array_merge($data, ["exercice_comptable_journal_id" => $this->retrieveExerciceComptable($exerciceComptable, $data["journal_id"])->id]));
 
-            $this->model->lignes_ecriture()->create(array_map(function ($ligne_ecriture) use ($exerciceComptable) {
+            foreach ($data["lignes_ecriture"] as $key => $ligne_ecriture) {
+                $account = $exerciceComptable->plan_comptable->findAccountOrSubAccount(accountNumber: $ligne_ecriture["account_number"], columns: ["id", "account_number"]);
 
-                //dd($exerciceComptable->plan_comptable->accounts);
+                if (!$account) throw new ModelNotFoundException("Compte inconnu : {$ligne_ecriture['account_number']}.", 1);
 
-                if (!($account = $exerciceComptable->accounts()->where("compte_id", $ligne_ecriture["compte_id"])->first())) {
-                    $account = $exerciceComptable->plan_comptable->accounts()
-                        ->where(function ($query) use ($ligne_ecriture) {
-                            $query->where("compte_id", $ligne_ecriture["compte_id"])
-                                ->orWhereHas('sous_comptes', function ($query) use ($ligne_ecriture) {
-                                    $query->where("sous_compte_id", $ligne_ecriture["compte_id"]);
-                                });
-                        })->get();
-                    $exerciceComptable->accounts()->where("plan_comptable_id", $exerciceComptable->plan_comptable_id)->where("compte_id", $ligne_ecriture["compte_id"])->first();
-                }
-
-                $account = $exerciceComptable->plan_comptable->accounts()
-                    ->where(function ($query) use ($ligne_ecriture) {
-                        $query->where("compte_id", $ligne_ecriture["compte_id"])
-                            ->orWhereHas('sous_comptes', function ($query) use ($ligne_ecriture) {
-                                $query->where("sous_compte_id", $ligne_ecriture["compte_id"]);
-                            });
-                    })
-                    ->orWhereHas('sub_divisions', function ($query) use ($ligne_ecriture) {
-                        $query->where("sous_compte_id", $ligne_ecriture["compte_id"]);
-                    })
-                    ->first();
-
-
-                dd($account);
-
-                $account = $exerciceComptable->plan_comptable->accounts()
-                    ->where(function ($query) use ($ligne_ecriture) {
-                        $query->where("compte_id", $ligne_ecriture["compte_id"])
-                            ->orWhereHas('sous_comptes', function ($query) use ($ligne_ecriture) {
-                                $query->where("sous_compte_id", $ligne_ecriture["compte_id"])
-                                    ->orWhereHas('sub_divisions', function ($query) use ($ligne_ecriture) {
-                                        $query->where("sous_compte_id", $ligne_ecriture["compte_id"]);
-                                    });
-                            });
-                    })/* ->get()
-                    ->filter(function ($account) use ($ligne_ecriture) {
-                        dd($account);
-                        return $this->hasCompteIdInSubDivisions($account->sub_divisions, $ligne_ecriture["compte_id"]);
-                    }) */->first();
-                /* ->where(function ($query) use ($ligne_ecriture) {
-                        $query->where("compte_id", $ligne_ecriture["compte_id"])
-                            ->orWhereHas('sub_accounts', function ($query) use ($ligne_ecriture) {
-                                $query->where("compte_id", $ligne_ecriture["compte_id"]);
-                            });
-                    }); */
-
-                dd($account);
-
-                if (!($account = $exerciceComptable->accounts()->where("compte_id", $ligne_ecriture["compte_id"])->first())) {
-                    $exerciceComptable->accounts()->where("plan_comptable_id", $exerciceComptable->plan_comptable_id)->where("compte_id", $ligne_ecriture["compte_id"])->first();
-                }
-                dd($account);
-
-                return [
-
+                $ligne = [
                     "type_ecriture_compte"  => $ligne_ecriture["type_ecriture_compte"],
                     "montant" => $ligne_ecriture["montant"],
-                    'accountable_id' => $ligne_ecriture["montant"],
-                    'accountable_type' => $ligne_ecriture["montant"],
+                    'accountable_id' => $account->id,
+                    'accountable_type' => $account::class,
                 ];
-            }, $data["lignes_ecriture"]));
 
-            dd($this->model);
+                $this->model->lignes_ecriture()->create($ligne);
+            }
+
+            $results = $this->model->lignes_ecriture()->getQuery()
+                ->select('type_ecriture_compte', DB::raw('SUM(montant) as total'))
+                ->groupBy('type_ecriture_compte')->get();
+
+            $total = [];
+
+            foreach ($results as $result) {
+                if ($result->type_ecriture_compte->value === 'credit') {
+                   $total["total_credit"] = $result->total;
+                } elseif ($result->type_ecriture_compte->value === 'debit') {
+                    $total["total_debit"] = $result->total;
+                }
+            }
+
+            $this->model->update($total);
+
+            DB::commit();
 
             return $this->model->refresh();
         } catch (CoreException $exception) {
+            DB::rollBack();
             // Throw a NotFoundException with an error message and the caught exception
             throw new RepositoryException(message: "Error while registering ecriture comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Domains\Finances\ExercicesComptable\Repositories;
 
+use App\Http\Resources\BalanceDesComptesResource;
 use App\Http\Resources\ExerciceComptableResource;
 use App\Models\Finances\ExerciceComptable;
 use Core\Data\Repositories\Eloquent\EloquentReadOnlyRepository;
@@ -35,7 +36,10 @@ class ExerciceComptableReadOnlyRepository extends EloquentReadOnlyRepository
     public function balanceDesComptes(string $exerciceComptableId, array $periodeArrayData)
     {
         try {
-            $this->model = $this->find($exerciceComptableId);
+
+            $accounts_balance = $this->find($exerciceComptableId)->load(["plan_comptable.accounts", "plan_comptable.accounts.transactions", "plan_comptable.accounts.balance" => function($query){
+                $query/* ->select(DB::raw('SUM(solde_debit) as total')) */;
+            }]);
 
             /*$this->model = $this->model->load([
                 "plan_comptable.accounts.balance"
@@ -44,7 +48,7 @@ class ExerciceComptableReadOnlyRepository extends EloquentReadOnlyRepository
                 } /
             ]);*/
 
-            $this->model = $this->model->load([
+            /* $this->model = $this->model->load([
                 'plan_comptable.accounts.balance' => function ($query) use ($periodeArrayData) {
                     $query->select('id', 'solde_credit', 'solde_debit')
                         ->withCount(['ecritures_comptable as sum_solde_credit' => function ($query) use ($periodeArrayData) {
@@ -61,9 +65,9 @@ class ExerciceComptableReadOnlyRepository extends EloquentReadOnlyRepository
                             $balance->solde_debit -= $balance->sum_solde_debit;
                         });
                 }
-            ]);
+            ]); */
 
-            return new ExerciceComptableResource($this->model);
+            return new BalanceDesComptesResource($accounts_balance);
         } catch (CoreException $exception) {
             // Throw a NotFoundException with an error message and the caught exception
             throw new RepositoryException(message: "Error while quering balance of accounts of an exercice comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);

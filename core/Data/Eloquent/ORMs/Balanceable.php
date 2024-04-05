@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 trait Balanceable
 {
     /**
-     * Get the user of the employee.
+     * Get balances of an account.
      *
      * @return MorphMany
      */
@@ -20,16 +20,25 @@ trait Balanceable
     }
 
     /**
-     * Get the user of the employee.
+     * Get an account balance.
      *
      */
     public function balance()
     {
-        return $this->morphOne(BalanceDeCompte::class, 'balanceable')->whereNull("date_cloture")->orWhereNotNull("date_cloture")->orderByDesc("created_at");
+        return $this->morphOne(BalanceDeCompte::class, 'balanceable')->whereNull("date_cloture")->orderBy("created_at", "asc");
     }
 
     /**
-     * Delete the user associate with the employee
+     * Get an account balance.
+     *
+     */
+    public function close_balance()
+    {
+        return $this->morphOne(BalanceDeCompte::class, 'balanceable')->whereNotNull("date_cloture")->orderBy("created_at", "desc");
+    }
+
+    /**
+     *  
      */
     public static function bootBalanceable()
     {

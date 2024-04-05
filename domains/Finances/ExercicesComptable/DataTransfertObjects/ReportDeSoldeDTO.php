@@ -48,18 +48,18 @@ class ReportDeSoldeDTO extends BaseDTO
         $rules = array_merge([
             "accounts"                                                              => ["required", "array"],
             "accounts.*"                                                            => ["distinct", "array"],
-            "accounts.*.id"                                                         => ["required", "distinct", "exists:plan_comptable_comptes,id", Rule::exists("plan_comptable_comptes", "id")->where("plan_comptable_id", ExerciceComptable::find(request()->route("exercice_comptable_id"))?->plan_comptable_id)],
+            "accounts.*.account_number"                                                         => ["required", "distinct", "exists:plan_comptable_comptes,account_number", Rule::exists("plan_comptable_comptes", "account_number")->where("plan_comptable_id", ExerciceComptable::find(request()->route("exercice_comptable_id"))?->plan_comptable_id)],
             "accounts.*.solde_debit"                                                => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             "accounts.*.solde_credit"                                               => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
 
             "accounts.*.sub_accounts"                                               => ["sometimes", "array"],
             "accounts.*.sub_accounts.*"                                             => ["distinct", "array"],
-            "accounts.*.sub_accounts.*.id"                                            => ["required", "distinct", "exists:plan_comptable_compte_sous_comptes,id"],
+            "accounts.*.sub_accounts.*.account_number"                                => ["required", "distinct", "exists:plan_comptable_compte_sous_comptes,account_number"],
             "accounts.*.sub_accounts.*.solde_debit"                                   => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             "accounts.*.sub_accounts.*.solde_credit"                                  => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             "accounts.*.sub_accounts.*.sub_divisions"                                 => ["sometimes", "array"],
             "accounts.*.sub_accounts.*.sub_divisions.*"                               => ["distinct", "array"],
-            "accounts.*.sub_accounts.*.sub_divisions.*.id"                            => ["required", "distinct", "exists:plan_comptable_compte_sous_comptes,id"],
+            "accounts.*.sub_accounts.*.sub_divisions.*.account_number"                => ["required", "distinct", "exists:plan_comptable_compte_sous_comptes,account_number"],
             "accounts.*.sub_accounts.*.sub_divisions.*.solde_debit"                   => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             "accounts.*.sub_accounts.*.sub_divisions.*.solde_credit"                  => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
         ], $rules);
