@@ -82,4 +82,9 @@ class Permission extends ModelContract
         'key'          => 'string',
         'description'  => 'string'
     ];
+
+    public function authorable(): ?string
+    {
+        return null;
+    }
 }

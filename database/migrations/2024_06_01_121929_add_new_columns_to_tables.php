@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Class `AddNewColumnsToTables`
  *
- * A migration class for creating the "credentials" table with UUID primary key and timestamps.
+ * A migration class for creating the "données" table with UUID primary key and timestamps.
  *
  * @package `\Database\Migrations\AddNewColumnsToTables`
  */
@@ -179,24 +179,39 @@ class AddNewColumnsToTables extends Migration
 
         try {
 
-            if (Schema::hasTable('roles')) {
-                // Check if the "created_by" column exist in the "roles" table 
-                if (Schema::hasColumn('roles', 'created_by')) {
-                    // Modify the "roles" table
-                    Schema::table('roles', function (Blueprint $table) {
-                        $table->dropForeign('created_by');
-                        $table->dropColumn('created_by');
+            if (Schema::hasTable('contracts')) {
+
+                // Check if the "contract_id" column does not exist in the "contracts" table
+                if (Schema::hasColumn('contracts', 'contract_id')) {
+                    // Modify the "contracts" table
+                    Schema::table('contracts', function (Blueprint $table) {
+            
+                        // Drop the foreign key constraint from the 'contracts' table
+                        Schema::table('contracts', function (Blueprint $table) {
+                            $table->dropForeign(['contract_id']);
+                            // Drop the 'contract_id' column if it exists
+                            $table->dropColumn('contract_id');
+                        });
                     });
                 }
             }
 
+            // Drop the foreign key constraint from the "roles" table
+            if (Schema::hasTable('roles')) {
+                if (Schema::hasColumn('roles', 'created_by')) {
+                    Schema::table('roles', function (Blueprint $table) {
+                        $table->dropForeign(['created_by']); // Drop the foreign key constraint
+                        $table->dropIndex(['created_by']); // Drop the index
+                    });
+                }
+            }
+
+            // Drop the foreign key constraint from the "role_has_permissions" table
             if (Schema::hasTable('role_has_permissions')) {
-                // Check if the "attached_by" column exist in the "role_has_permissions" table 
                 if (Schema::hasColumn('role_has_permissions', 'attached_by')) {
-                    // Modify the "role_has_permissions" table
                     Schema::table('role_has_permissions', function (Blueprint $table) {
-                        $table->dropForeign('attached_by');
-                        $table->dropColumn('attached_by');
+                        $table->dropForeign(['attached_by']); // Drop the foreign key constraint
+                        $table->dropIndex(['attached_by']); // Drop the index
                     });
                 }
             }
@@ -206,12 +221,19 @@ class AddNewColumnsToTables extends Migration
                 if (Schema::hasColumn('users', 'created_by')) {
                     // Modify the "users" table
                     Schema::table('users', function (Blueprint $table) {
-                        $table->dropForeign('created_by');
-                        $table->dropColumn('created_by');
+                        $table->dropForeign(['created_by']);
+                        $table->dropIndex(['created_by']);
                     });
                 }
             }
-
+            // Drop the foreign key constraint from the "categories_of_employees" table
+            if (Schema::hasTable('categories_of_employees')) {
+                if (Schema::hasColumn('categories_of_employees', 'category_id')) {
+                    Schema::table('categories_of_employees', function (Blueprint $table) {
+                        $table->dropForeign(['category_id']); // Drop the foreign key constraint
+                    });
+                }
+            }
             // Commit the transaction
             DB::commit();
         } catch (\Throwable $exception) {
@@ -220,7 +242,7 @@ class AddNewColumnsToTables extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to drop "credentials" table: ' . $exception->getMessage(),
+                message: 'Failed to drop "données" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }

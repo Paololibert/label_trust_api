@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
  * @property string                     $category_employee_id    The ID of the associated category of employees.
  * @property string                     $taux_id                 The ID of the associated rate (TauxAndSalary).
  *
- * @property-read CategoryOfEmploye     $category                Relationship: Get the category of the rate of the work unit.
+ * @property-read CategoryOfEmployee     $category                Relationship: Get the category of the rate of the work unit.
  * @property-read TauxAndSalary         $taux                    Relationship: Get the rate of the work unit for a category of employees.
  *
  * @package App\Models
@@ -79,7 +79,7 @@ class CategorieTaux extends ModelContract
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(CategoryOfEmploye::class, 'category_employee_id');
+        return $this->belongsTo(CategoryOfEmployee::class, 'category_employee_id');
     }
 
     /**

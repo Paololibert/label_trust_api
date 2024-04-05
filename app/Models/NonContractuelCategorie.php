@@ -96,7 +96,7 @@ class NonContractuelCategorie extends ModelContract
      */
     public function categorie_employee(): BelongsTo
     {
-        return $this->belongsTo(CategoryOfEmploye::class, 'category_of_employee_id');
+        return $this->belongsTo(CategoryOfEmployee::class, 'category_of_employee_id');
     }
 
 

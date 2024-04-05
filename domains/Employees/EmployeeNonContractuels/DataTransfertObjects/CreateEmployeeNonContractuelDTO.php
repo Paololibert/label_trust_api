@@ -35,8 +35,7 @@ class CreateEmployeeNonContractuelDTO extends BaseDTO
         $rules = array_merge([
             'can_be_deleted'                        => ['sometimes', 'boolean'],
             'category_of_employee_id'               => ['required', 'string', 'exists:categories_of_employees,id'],
-            'date_debut'                            => ['required', 'date'],
-            /* 'category_of_employee_taux_id'          => ['sometimes','nullable', 'uuid', 'exists:categorie_taux,id'], */
+            'date_debut'                            => ['required', 'date']
         ], $rules);
 
         return $this->rules = parent::rules($rules);

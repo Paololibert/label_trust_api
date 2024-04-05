@@ -55,7 +55,6 @@ class EmployeeContractuel extends ModelContract
 
     ];
 
-
     /**
      * The attributes that should be visible in arrays.
      *

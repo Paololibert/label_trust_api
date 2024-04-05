@@ -20,5 +20,6 @@ use Core\Utils\DataTransfertObjects\DTOInterface;
  */
 interface EmployeeRESTfulReadWriteServiceContract extends RestJsonReadWriteServiceContract
 {
-    
+    //changing_type_employee
+
 }

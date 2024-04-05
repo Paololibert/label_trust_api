@@ -19,7 +19,7 @@ class UpdatePartnerRequest extends UpdateResourceRequest
 {
 
     public function __construct(){
-        parent::__construct(UpdatePartnerDTO::fromRequest(request()), 'Partner');
+        parent::__construct(UpdatePartnerDTO::fromRequest(request()), 'partner');
     }
 
     /**
@@ -32,6 +32,8 @@ class UpdatePartnerRequest extends UpdateResourceRequest
     
     public function authorize(): bool
     {
+
+        //dd($this->dto);
         return parent::authorize();
     }
 

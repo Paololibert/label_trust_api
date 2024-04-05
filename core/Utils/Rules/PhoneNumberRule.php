@@ -29,6 +29,11 @@ class PhoneNumberRule implements Rule
     /**
      * @var string
      */
+    protected ?string $ignore_value;
+
+    /**
+     * @var string
+     */
     protected string $attribute;
 
     /**
@@ -41,11 +46,13 @@ class PhoneNumberRule implements Rule
      */
     protected ?CoreException $exception;
 
-    public function __construct(string $table = 'users', string $column = 'phone_number')
+    public function __construct(string $table = 'users', string $column = 'phone_number', ?string $ignore_value = null)
     {
         $this->table = $table;
         $this->column = $column;
         $this->exception = null;
+        $this->ignore_value = $ignore_value;
+        
     }
 
     /**
@@ -71,6 +78,12 @@ class PhoneNumberRule implements Rule
                 throw new InvalidArgumentException('Phone number should be in json format');
             }
             
+            if ($this->ignore_value != null) {
+                if (DB::table('users') ->where($this->column, $phone_number->toJson())->where('id','!=',$this->ignore_value)->exists()) {
+                    $this->exception = new CoreException(message: "The phone number you entered already exists in our records.", error_code: ErrorCodeEnum::VALIDATION_ERROR, status_code: Response::HTTP_UNPROCESSABLE_ENTITY);
+                    return false;
+                }
+            }
             if (DB::table('users') ->where($this->column, $phone_number->toJson())->exists()) {
                 $this->exception = new CoreException(message: "The phone number you entered already exists in our records.", error_code: ErrorCodeEnum::VALIDATION_ERROR, status_code: Response::HTTP_UNPROCESSABLE_ENTITY);
                 return false;

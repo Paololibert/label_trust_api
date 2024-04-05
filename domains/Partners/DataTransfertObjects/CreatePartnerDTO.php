@@ -59,8 +59,8 @@ class CreatePartnerDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            'company'             => ['sometimes',"string"],
-            'country'             => ['sometimes',"string"],
+            'company'               => ['sometimes',"string"],
+            'country'               => ['sometimes',"string"],
             "type_partner"          => ['required', "string", new Enum(TypePartnerEnum::class)],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);

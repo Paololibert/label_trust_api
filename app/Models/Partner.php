@@ -107,7 +107,7 @@ class Partner extends ModelContract
      */
     public function suppliers()
     {
-        return $this->morphedByMany(Supplier::class, 'partnerable');
+        return $this->morphedByMany(Supplier::class, 'partnerable','partnerables');
     }
 
 
@@ -117,4 +117,18 @@ class Partner extends ModelContract
     }
     
     
+     /**
+     * Get the supplier that is assigned to this partner.
+     */
+    public function supplier()
+    {
+        //return $this->suppliers()->first();
+        return $this->suppliers()->orderByDesc("created_at")->take(1);
+        //->orWhereNull("created_at")->orderByDesc("created_at")->take(1);
+    }
+    
+    public function client()
+    {
+
+    }
 }

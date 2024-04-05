@@ -80,6 +80,7 @@ class RESTfulResourceController extends Controller implements RESTfulResourceCon
         
         $this->restJsonReadWriteService = $restJsonReadWriteService;
         $this->restJsonQueryService = $restJsonQueryService;
+        
     }
 
     /**
@@ -204,7 +205,8 @@ class RESTfulResourceController extends Controller implements RESTfulResourceCon
      * @return \Illuminate\Http\JsonResponse     The JSON response indicating the status of the operation.
      */
     public function update(Request $request, string $id): JsonResponse
-    {
+    {   
+        //dd($request);
         $createRequest = $this->createRequest('update', [$request]);
 
         if ($createRequest) {
