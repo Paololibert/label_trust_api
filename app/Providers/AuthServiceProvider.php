@@ -36,12 +36,12 @@ class AuthServiceProvider extends ServiceProvider
 
 
         try {
-            Permission::get()->map(function ($permission) {
+            /* Permission::get()->map(function ($permission) {
                 Gate::define($permission->slug, function ($user) use ($permission) {
                     dd($user);
                     return $user->hasPermissionTo($permission);
                 });
-            });
+            }); */
         } catch (Throwable $exception) {
             throw new ApplicationException(previous: $exception);
             
