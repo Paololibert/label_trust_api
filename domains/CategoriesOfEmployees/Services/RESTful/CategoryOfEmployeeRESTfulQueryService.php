@@ -6,11 +6,11 @@ namespace Domains\CategoriesOfEmployees\Services\RESTful;
 
 use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\RestJsonQueryService;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Domains\CategoriesOfEmployees\Services\RESTful\Contracts\CategoryOfEmployeeRESTfulQueryServiceContract;
 use Illuminate\Http\Response;
-use Throwable;
 
 /**
  * Class ***`CategoryOfEmployeeRESTfulQueryService`***
@@ -61,9 +61,9 @@ class CategoryOfEmployeeRESTfulQueryService extends RestJsonQueryService impleme
                 data: $taux,
                 status_code: Response::HTTP_OK
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Throw a ServiceException if there is an issue with the service operation
-            throw new ServiceException(message: 'Failed to fetch taux for category of employee: ' . $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: 'Failed to fetch taux for category of employee: ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }

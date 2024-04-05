@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Core\Data\Repositories\Eloquent;
 
-use Core\Utils\Exceptions\QueryException;
+use Core\Utils\Exceptions\QueryException as CoreQueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface;
+use Core\Utils\Exceptions\InvalidArgumentException;
+use Core\Utils\Exceptions\NotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Response;
 use Throwable;
 
 /**
@@ -50,6 +53,7 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
     public function all(array $columns = ['*']): Collection
     {
         try {
+
             return $this->model->select($columns)->get();
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while retrieving records.", previous: $exception);
@@ -73,9 +77,16 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
             return $this->model->select($columns)->findOrFail($id)->fresh();
         } catch (ModelNotFoundException $exception) {
             // Customize the message for ModelNotFoundException
-            throw new QueryException(message: "Record not found.", previous: $exception);
+            throw new NotFoundException(message: "Record not found.", previous: $exception);
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while retrieving the record.", previous: $exception);
+            // Catch QueryException and handle the case of invalid UUID
+            if ($exception->getCode() === '22P02') {
+                // Handle the case of invalid UUID
+                // For example, you can log the error or notify the user
+                // Then, throw a custom exception
+                throw new InvalidArgumentException(message: "Invalid UUID provided.", status_code: Response::HTTP_BAD_REQUEST, error: $exception->errorInfo, previous: $exception);
+            }
+            throw new CoreQueryException(message: "Error while retrieving the record.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while retrieving records.", previous: $exception);
         }
@@ -96,7 +107,7 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
         try {
             return $this->model->select($columns)->where($conditions)->first()?->fresh();
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while retrieving the record.", previous: $exception);
+            throw new CoreQueryException(message: "Error while retrieving the record.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while retrieving the record.", previous: $exception);
         }
@@ -116,12 +127,12 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
         try {
             return $this->model->where($conditions)->exists();
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while checking for record existence.", previous: $exception);
+            throw new CoreQueryException(message: "Error while checking for record existence.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while checking for record existence.", previous: $exception);
         }
     }
-    
+
     /**
      * Check if the specified relationship exists for the given IDs.
      *
@@ -136,14 +147,13 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
     public function relationExists(Relation $relation, array $ids, bool $isPivot = true): bool
     {
         try {
-            if($isPivot){
+            if ($isPivot) {
                 return $relation->wherePivotIn('id', $ids)->exists();
-            }
-            else {
+            } else {
                 return $relation->whereIn('id', $ids)->exists();
             }
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while checking for record existence.", previous: $exception);
+            throw new CoreQueryException(message: "Error while checking for record existence.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while checking for record existence.", previous: $exception);
         }
@@ -163,7 +173,7 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
         try {
             return $this->model->where($conditions)->count();
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while counting the records.", previous: $exception);
+            throw new CoreQueryException(message: "Error while counting the records.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while counting the records.", previous: $exception);
         }
@@ -185,7 +195,7 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
             // return parent::filter($conditions)->select($columns)->get();
             return $this->model->select($columns)->where($conditions)->get();
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while retrieving the records.", previous: $exception);
+            throw new CoreQueryException(message: "Error while retrieving the records.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while retrieving the records.", previous: $exception);
         }
@@ -205,10 +215,9 @@ class EloquentReadOnlyRepository extends BaseRepository implements ReadOnlyRepos
         try {
             return $this->model->select($columns)->onlyTrashed()->paginate(5);
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while retrieving the soft-deleted records.", previous: $exception);
+            throw new CoreQueryException(message: "Error while retrieving the soft-deleted records.", previous: $exception);
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while retrieving the soft-deleted records.", previous: $exception);
         }
     }
-
 }

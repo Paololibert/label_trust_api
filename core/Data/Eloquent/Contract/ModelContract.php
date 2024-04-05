@@ -198,7 +198,7 @@ class ModelContract extends Model
         parent::__construct($attributes);
 
         $this->attributes       = array_merge($this->default_attributes,       $this->attributes);
-        // $this->attributes       = array_merge($this->attributes,               ["{$this->deleteable()}"=> FALSE]);
+        $this->attributes       = array_merge($this->attributes,               ["{$this->deleteable()}"=> TRUE]);
         if($this->authorable()){
             $this->default_fillable = array_merge($this->default_fillable,         ["{$this->deleteable()}", "{$this->authorable()}"]);
         }

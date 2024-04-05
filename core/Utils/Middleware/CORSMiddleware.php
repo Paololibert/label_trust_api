@@ -7,6 +7,7 @@ namespace Core\Utils\Middleware;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Core\Utils\Exceptions\AuthorizationException;
 
 /**
  * Class `CORSMiddleware`
@@ -26,66 +27,36 @@ class CORSMiddleware
      */
     public function handle(Request $request, Closure $next): JsonResponse
     {
-        $allowedOrigins = ['http://localhost'];
-
-        // Validate headers
-        $allowedMethods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'];
-        $allowedHeaders = ['X-Requested-With', 'Content-Type', 'X-Token-Auth', 'Authorization'];
-
-        // Perform header validation
-        $requiredHeaders = [
-            'Access-Control-Allow-Origin',
-            'Access-Control-Allow-Methods',
-            'Access-Control-Allow-Credentials',
-            'Access-Control-Max-Age',
-            'Access-Control-Allow-Headers',
-        ];
 
         // Perform header value validation
-        $allowedOrigins = ['http://localhost', 'http://127.0.0.1'];
-        $allowedMethods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'];
-        $allowedHeaders = ['X-Requested-With', 'Content-Type', 'X-Token-Auth', 'Authorization'];
+        $allowedOrigins = ['http://localhost', 'http://localhost:8000', 'http://localhost:8080', 'http://127.0.0.1', 'http://127.0.0.1:8000', 'http://127.0.0.1:8080', 'https://pms.labelstrust.com/'];
 
-        // Validate the Origin header
+        // Check if the request origin is in the list of allowed origins
         $origin = $request->header('Origin');
 
-        // Validate the request method
-        $requestMethod = $request->method();
+        if (in_array($origin, $allowedOrigins)) {
+            // Add headers to allow cross-origin requests from the allowed origin
+            $headers = [
+                'Access-Control-Allow-Origin' => $origin,
+                'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
+                'Access-Control-Allow-Credentials' => 'true',
+            ];
 
-        /* foreach ($requiredHeaders as $header) {
-            if (!$request->hasHeader($header)) {
-                // Return a CORS error response
-                throw new ApplicationException(message: "Missing required header: . {$header}", status_code: Response::HTTP_BAD_REQUEST);
+            // Check if the request is an OPTIONS request (preflight request)
+            if ($request->isMethod('OPTIONS')) {
+                return response()->json('OK', 200, $headers);
             }
-        }
 
-        if (!in_array($origin, $allowedOrigins)) {
-            // Return a CORS error response
-            throw new ApplicationException(message: "Unauthorized origin", status_code: Response::HTTP_UNAUTHORIZED);
-        }
-
-        if (!in_array($requestMethod, $allowedMethods)) {
-            // Return a CORS error response
-            throw new ApplicationException(message: "Unauthorized Method", status_code: Response::HTTP_UNAUTHORIZED);
-        }
-
-        $requestHeaders = $request->header('Access-Control-Allow-Headers');
-
-        if ($requestHeaders) {
-            $headers = array_map('trim', explode(',', $requestHeaders));
-            $invalidHeaders = array_diff($headers, $allowedHeaders);
-
-            if (count($invalidHeaders) > 0) {
-                throw new ApplicationException(message: "Unauthorized Allow Headers: " . implode(', ', $invalidHeaders), status_code: Response::HTTP_UNAUTHORIZED);
+            // Add CORS headers to the response
+            $response = $next($request);
+            foreach ($headers as $key => $value) {
+                $response->header($key, $value);
             }
-        } */
 
-        // Proceed with the next middleware if header values pass validation
-        return $next($request)
-            ->header('Access-Control-Allow-Origin', $origin)
-            ->header('Access-Control-Allow-Methods', implode(', ', $allowedMethods))
-            ->header('Access-Control-Allow-Credentials', true)
-            ->header('Access-Control-Max-Age', '86400')
-            ->header('Access-Control-Allow-Headers', implode(', ', $allowedHeaders));
+            return $response;
+        }
+
+        throw new AuthorizationException(message: "Request origin not allowed.");
     }
 }

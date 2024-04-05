@@ -161,9 +161,9 @@ return [
          */
 
         Laravel\Passport\PassportServiceProvider::class,
+        App\Providers\RepositoriesServiceProvider::class,
         App\Providers\ModulesServiceProvider::class,
         App\Providers\ResourcesServiceProvider::class,
-        App\Providers\RepositoriesServiceProvider::class,
         App\Providers\QueryBuilderServiceProvider::class,
 
         /*

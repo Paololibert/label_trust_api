@@ -6,6 +6,7 @@ namespace Domains\UniteTravailles\Repositories;
 
 use App\Models\UniteTravaille;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Montants\Repositories\MontantReadWriteRepository;
@@ -63,10 +64,9 @@ class UniteTravailleReadWriteRepository extends EloquentReadWriteRepository
             $this->createTaux($this->model->id, $data['taux']);
 
             return $this->model->refresh();
-        } catch (QueryException $exception) {
-            throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while creating the record." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -100,12 +100,9 @@ class UniteTravailleReadWriteRepository extends EloquentReadWriteRepository
             }
 
             return true;
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while creating taux for unite travaille.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while creating taux for unite travaille.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while creating taux for unite travaille." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -149,9 +146,10 @@ class UniteTravailleReadWriteRepository extends EloquentReadWriteRepository
 
             return true;
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while editing taux for unite travaille.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while editing taux for unite travaille.", previous: $exception);
+            throw new QueryException(message: "Error while editing taux for unite travaille." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while editing taux for unite travaille." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -171,9 +169,10 @@ class UniteTravailleReadWriteRepository extends EloquentReadWriteRepository
             // Detach taux with the given IDs from the unite travaille
             return $this->model->taux()->whereIn("id", $tauxIds)->delete() ? true : false;
         } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while removing taux from unite travaille.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while removing taux from unite travaille.", previous: $exception);
+            throw new QueryException(message: "Error while removing taux from unite travaille." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while removing taux from unite travaille." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -196,9 +195,9 @@ class UniteTravailleReadWriteRepository extends EloquentReadWriteRepository
             }
 
             return $montant;
-        } catch (\Throwable $exception) {
-            // Handle any exceptions that may occur during the process
-            throw new QueryException(message: 'Error while checking and creating Montant.', previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while checking and creating Montant." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }

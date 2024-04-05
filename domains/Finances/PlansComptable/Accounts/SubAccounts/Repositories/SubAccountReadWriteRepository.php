@@ -6,12 +6,10 @@ namespace Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories;
 
 use App\Models\Finances\SubAccount;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
-use Core\Utils\Exceptions\QueryException;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\Comptes\Repositories\CompteReadWriteRepository;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
 
 /**
  * ***`SubAccountReadWriteRepository`***
@@ -58,10 +56,9 @@ class SubAccountReadWriteRepository extends EloquentReadWriteRepository
             }
 
             return $this->model->refresh();
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while creating the record.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while creating sub-accounts or sub-divisions accounts." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -95,13 +92,10 @@ class SubAccountReadWriteRepository extends EloquentReadWriteRepository
     
             return true;
             
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while attaching taux to category of employee.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while attaching taux to category of employee.", previous: $exception);
-        }        
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while attaching sub-divisions accounts to a plan comptable account a sub-account." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }    
     }
     
 }

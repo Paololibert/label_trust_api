@@ -6,10 +6,9 @@ namespace Domains\Roles\Repositories;
 
 use App\Models\Role;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
-use Core\Utils\Exceptions\QueryException;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
 
 /**
  * ***`RoleReadWriteRepository`***
@@ -48,12 +47,9 @@ class RoleReadWriteRepository extends EloquentReadWriteRepository
             $role = $this->find($roleId);
 
             return $role->grantAccess($accessIds) ? true : false;
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while granting access to role.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while granting access to role.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while granting access to role." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -73,12 +69,9 @@ class RoleReadWriteRepository extends EloquentReadWriteRepository
             $role = $this->find($roleId);
 
             return $role->revokeAccess($accessIds) ? true : false;
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while revoking access from role.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while revoking access from role.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while revoking access from role." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 

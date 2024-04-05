@@ -6,6 +6,7 @@ namespace Domains\CategoriesOfEmployees\Services\RESTful;
 
 use Core\Logic\Services\Contracts\ReadWriteServiceContract;
 use Core\Logic\Services\RestJson\RestJsonReadWriteService;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
@@ -73,12 +74,13 @@ class CategoryOfEmployeeRESTfulReadWriteService extends RestJsonReadWriteService
                 status_code: Response::HTTP_CREATED
             );
 
-        } catch (\Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
-            
+
             // Throw a ServiceException with an error message and the caught exception
-            throw new ServiceException(message: 'Failed to attach taux to category of employee: ' . $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: 'Failed to attach taux to category of employee: ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+            
         }
     }
 
@@ -120,11 +122,12 @@ class CategoryOfEmployeeRESTfulReadWriteService extends RestJsonReadWriteService
                 status_code: Response::HTTP_OK
             );
 
-        } catch (\Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: 'Failed to detache taux from category of employee: ' . $exception->getMessage(), previous: $exception);
+            // Throw a ServiceException with an error message and the caught exception
+            throw new ServiceException(message: 'Failed to detach taux from category of employee: ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
 
     }

@@ -7,6 +7,7 @@ namespace Domains\Roles\Services\RESTful;
 use Core\Logic\Services\Contracts\ReadWriteServiceContract;
 use Core\Logic\Services\RestJson\RestJsonReadWriteService;
 use Core\Utils\DataTransfertObjects\DTOInterface;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\QueryException;
 use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
@@ -14,7 +15,6 @@ use Domains\Roles\Services\RESTful\Contracts\RoleRESTfulReadWriteServiceContract
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Throwable;
 
 /**
  * The ***`RoleRESTfulReadWriteService`*** class provides RESTful CRUD operations for the "Role" resource.
@@ -63,11 +63,12 @@ class RoleRESTfulReadWriteService extends RestJsonReadWriteService implements Ro
                 data: $role->fresh(),
                 status_code: Response::HTTP_CREATED
             );
-        } catch (Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: $exception->getMessage(), previous: $exception);
+            // Throw a ServiceException with an error message and the caught exception
+            throw new ServiceException(message: 'Failed to created role : ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -105,12 +106,12 @@ class RoleRESTfulReadWriteService extends RestJsonReadWriteService implements Ro
                 status_code: Response::HTTP_CREATED
             );
 
-        } catch (\Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
             // Throw a ServiceException with an error message and the caught exception
-            throw new ServiceException(message: 'Failed to grant access to role : ' . $exception->getMessage(), previous: $exception);
+            throw new ServiceException(message: 'Failed to grant access to role : ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -147,11 +148,12 @@ class RoleRESTfulReadWriteService extends RestJsonReadWriteService implements Ro
                 status_code: Response::HTTP_CREATED
             );
 
-        } catch (\Throwable $exception) {
+        } catch (CoreException $exception) {
             // Rollback the transaction in case of an exception
             DB::rollBack();
             
-            throw new ServiceException(message: 'Failed to revoke access from role : ' . $exception->getMessage(), previous: $exception);
+            // Throw a ServiceException with an error message and the caught exception
+            throw new ServiceException(message: 'Failed to revoke access from role : ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 

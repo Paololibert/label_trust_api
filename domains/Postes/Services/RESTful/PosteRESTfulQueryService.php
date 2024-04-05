@@ -6,11 +6,11 @@ namespace Domains\Postes\Services\RESTful;
 
 use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\RestJsonQueryService;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Domains\Postes\Services\RESTful\Contracts\PosteRESTfulQueryServiceContract;
 use Illuminate\Http\Response;
-use Throwable;
 
 /**
  * Class ***`PosteRESTfulQueryService`***
@@ -61,9 +61,9 @@ class PosteRESTfulQueryService extends RestJsonQueryService implements PosteREST
                 data: $salaries,
                 status_code: Response::HTTP_OK
             );
-        } catch (Throwable $exception) {
-            // Throw a ServiceException if there is an issue with the service operation
-            throw new ServiceException(message: 'Failed to fetch salaries for the poste: ' . $exception->getMessage(), previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a ServiceException with an error message and the caught exception
+            throw new ServiceException(message: 'Failed to fetch salaries for the poste: ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 

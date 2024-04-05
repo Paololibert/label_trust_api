@@ -400,18 +400,18 @@ class RepositoriesServiceProvider extends ServiceProvider
 
 
         // Bind ReadWriteRepositoryInterface to AccountReadWriteRepository
-        $this->app->when(\Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulReadWriteService::class)
+        $this->app->when(\Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\SubAccountRESTfulReadWriteService::class)
             ->needs(
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
-            ->give(\Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository::class);
+            ->give(\Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories\SubAccountReadWriteRepository::class);
 
         // Bind ReadWriteRepositoryInterface to AccountReadOnlyRepository
-        $this->app->when(\Domains\Finances\PlansComptable\Accounts\Services\RESTful\AccountRESTfulQueryService::class)
+        $this->app->when(\Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\SubAccountRESTfulQueryService::class)
             ->needs(
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
-            ->give(\Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadOnlyRepository::class);
+            ->give(\Domains\Finances\PlansComptable\Accounts\SubAccounts\Repositories\SubAccountReadOnlyRepository::class);
 
         // Bind ReadWriteRepositoryInterface to ExerciceComptableReadWriteRepository
         $this->app->when(\Domains\Finances\ExercicesComptable\Services\RESTful\ExerciceComptableRESTfulReadWriteService::class)

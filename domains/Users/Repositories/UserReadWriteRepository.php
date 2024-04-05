@@ -7,14 +7,13 @@ namespace Domains\Users\Repositories;
 use App\Models\User;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Enums\Users\TypeOfAccountEnum;
-use Core\Utils\Exceptions\QueryException;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Users\Companies\Repositories\CompanyReadWriteRepository;
 use Domains\Users\People\Repositories\PersonReadWriteRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
 
 /**
  * ***`UserReadWriteRepository`***
@@ -78,10 +77,9 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
             }
 
             return $this->model->refresh();
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while creating the record.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while creating a user record." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -125,12 +123,9 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
 
             $result = $this->model->update($data);
             return $result ? $this->model->refresh() : $result;
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: $exception->getMessage(), code: $exception->getCode());
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while updating the record.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while updating the record.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while updating the record." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -151,12 +146,9 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
             $user = $this->find($userId);
 
             return $user->grantPrivileges($roleIds) ? true : false;
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while granting access to user.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while granting access to user.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while granting access to user record." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -175,12 +167,9 @@ class UserReadWriteRepository extends EloquentReadWriteRepository
         try {
             $user = $this->find($userId);
             return $user->revokePrivileges($roleIds) ? true : false;
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while revoking access from user.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while revoking access from user.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while revoking access from user record." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }

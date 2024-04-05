@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Schema;
 class AddNewColumnsToTables extends Migration
 {
     use CanDeleteTrait, HasCompositeKey, HasForeignKey, HasTimestampsAndSoftDeletes, HasUuidPrimaryKey;
-    
+
     /**
      * Run the migrations.
      *

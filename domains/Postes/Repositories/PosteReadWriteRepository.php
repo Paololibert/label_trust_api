@@ -6,10 +6,8 @@ namespace Domains\Postes\Repositories;
 
 use App\Models\Poste;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
-use Core\Utils\Exceptions\QueryException;
+use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\RepositoryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
 
 /**
  * ***`PosteReadWriteRepository`***
@@ -59,13 +57,10 @@ class PosteReadWriteRepository extends EloquentReadWriteRepository
     
             return false; // Taux is already attached
             
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while attaching salaries to poste.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while attaching salaries to poste.", previous: $exception);
-        }        
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while attaching salaries to poste." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }      
     }
 
     /**
@@ -85,12 +80,9 @@ class PosteReadWriteRepository extends EloquentReadWriteRepository
             $this->model = $this->find($posteId);
 
             return $this->model->salaries()->updateExistingPivot($salariesIds, ['deleted_at' => now()]) ? true : false;
-        } catch (ModelNotFoundException $exception) {
-            throw new QueryException(message: "{$exception->getMessage()}", previous: $exception);
-        } catch (QueryException $exception) {
-            throw new QueryException(message: "Error while detaching salaries from poste.", previous: $exception);
-        } catch (Throwable $exception) {
-            throw new RepositoryException(message: "Error while detaching salaries from poste.", previous: $exception);
+        } catch (CoreException $exception) {
+            // Throw a NotFoundException with an error message and the caught exception
+            throw new RepositoryException(message: "Error while detaching salaries from poste." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }  
 }
