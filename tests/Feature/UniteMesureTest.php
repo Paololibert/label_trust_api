@@ -32,7 +32,7 @@ class UniteMesureTest extends TestCase
   {
 
     // Send GET request to fetch all unite_mesures
-    $response = $this->get('/api/unite_mesures');
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->get('/api/unite_mesures');
 
     //dd($response);
 
@@ -86,7 +86,7 @@ class UniteMesureTest extends TestCase
     ];
 
     // Send POST request to create an unite_mesure
-    $response = $this->post('/api/unite_mesures', $data);
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->post('/api/unite_mesures', $data);
 
     // Assert HTTP status code 201
     //$response->assertStatus(201);
@@ -138,7 +138,7 @@ class UniteMesureTest extends TestCase
     $unite_mesure = UniteMesure::first();
 
     // Send GET request to fetch one unite_mesure
-    $response = $this->get("/api/unite_mesures/{$unite_mesure->id}");
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->get("/api/unite_mesures/{$unite_mesure->id}");
 
     // Assert HTTP status code 200
     //$response->assertStatus(200);
@@ -203,7 +203,7 @@ class UniteMesureTest extends TestCase
     ];
 
     // sending the request
-    $response = $this->put("/api/unite_mesures/{$uniteMesure->id}", $updatedData);
+    $response = $this->withHeaders(["Accept" => "application/json", "Content-Type" => "application/json", "Origin" => env("APP_URL")])->put("/api/unite_mesures/{$uniteMesure->id}", $updatedData);
 
 
     // Assert response structure
