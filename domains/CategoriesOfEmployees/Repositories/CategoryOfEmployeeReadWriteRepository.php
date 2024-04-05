@@ -46,7 +46,6 @@ class CategoryOfEmployeeReadWriteRepository extends EloquentReadWriteRepository
             $this->model = $this->find($categoryEmployeeId);
 
             foreach ($tauxIds as $key => $taux) {
-                dd($this->model->taux);
                 if(isset($taux['taux_id'])){
                     // Check if the taux is not already attached
                     if (!$this->relationExists($this->model->taux(), [$taux['taux_id']])) {
