@@ -7,6 +7,7 @@ namespace Domains\Finances\ExercicesComptable\Repositories;
 use App\Models\Finances\ExerciceComptable;
 use Carbon\Carbon;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
+use Core\Utils\Enums\StatusExerciceEnum;
 use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\QueryException as CoreQueryException;
 use Core\Utils\Exceptions\RepositoryException;
@@ -119,25 +120,25 @@ class ExerciceComptableReadWriteRepository extends EloquentReadWriteRepository
     /**
      * Cloture de solde aux comptes, aux sous-comptes et aux comptes de sub-division
      * 
-     * @return void
+     * @return bool
      */
-    public function clotureDesComptesDunExercice(string $exerciceComptableId, string $dateCloture = null): void
+    public function clotureDesComptesDunExercice(string $exerciceComptableId, array $data = []): bool
     {
         $this->model = $this->find($exerciceComptableId);
 
-        dd($exerciceComptableId);
+        return $this->model->update(["date_fermeture" => \Carbon\Carbon::createFromFormat("d/m/Y", $data["cloture_at"]) ?? \Carbon\Carbon::now(), "status_exercice" => StatusExerciceEnum::CLOSE]);
 
-        foreach ($this->model->plan_comptable->accounts as $key => $account) {
+        /* foreach ($this->model->plan_comptable->accounts as $key => $account) {
 
             $this->model->close_balance()->create(['solde_debit', 'solde_credit' => $account->balance()->where(), 'date_report' => \Carbon\Carbon::now(), 'date_cloture' => \Carbon\Carbon::now(), "ligneable_id" => $account->id, "ligneable_type" => $account::class]);
 
             if (isset($subAccountData["sub_divisions"])) {
                 $this->reportDeSoldeAuxSousCompte($subAccountData["sub_divisions"]);
             }
-        }
+        } */
     }
 
-    private function sous(){
-
+    private function sous()
+    {
     }
 }

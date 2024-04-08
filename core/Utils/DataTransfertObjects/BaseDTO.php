@@ -146,6 +146,16 @@ class BaseDTO implements DTOInterface
         return $this->ignoreValues;
     }
 
+    public function setRules(array $rules): array
+    {
+        return $this->rules($rules);
+    }
+
+    public function getRules(): array
+    {
+        return $this->rules;
+    }
+
     /**
      * Check if the current DTO is equal to another DTO.
      *

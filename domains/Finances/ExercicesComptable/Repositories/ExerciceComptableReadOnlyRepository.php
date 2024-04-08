@@ -53,7 +53,7 @@ class ExerciceComptableReadOnlyRepository extends EloquentReadOnlyRepository
                 $query->soldeDesComptes($exerciceComptableId)->transactions($exerciceComptableId);
             }])->where("id", $exerciceComptableId)->first();*/
 
-            $accounts_balance = $this->find($exerciceComptableId)->load("plan_comptable");
+            $accounts_balance = $this->find($exerciceComptableId);
 
             return new BalanceDesComptesResource(resource: $accounts_balance);
         } catch (CoreException $exception) {
@@ -62,17 +62,37 @@ class ExerciceComptableReadOnlyRepository extends EloquentReadOnlyRepository
         }
     }
 
-    public function balanceDeCompte(string $exerciceComptableId, string $compteId, array $periodeArrayData)
+    public function balanceDeCompte(string $exerciceComptableId, array $data)
     {
         try {
+            $exercice_comptable = $this->find($exerciceComptableId);
+            
+            $account_balance = $exercice_comptable->plan_comptable->findAccountOrSubAccount($data["account_number"]);
 
-            $exercice_comptable = $this->find($exerciceComptableId)->load(["plan_comptable" => function($query) use($compteId){
-                $query->with(["accounts", function($query) use($compteId){
-                    $query->where("compte_id", $compteId);
-                }]);
-            }]);
-
-            return new BalanceDesComptesResource(resource: $exercice_comptable);
+            return $exercice_comptable;
+            
+            /* 
+            return [
+                "id"                            => $exercice_comptable->id,
+                "fiscal_year"                   => $exercice_comptable->fiscal_year,
+                "date_ouverture"                => $exercice_comptable->date_ouverture->format("Y-m-d"),
+                "date_fermeture"                => $exercice_comptable->date_fermeture,
+                "status_exercice"               => $exercice_comptable->status_exercice,
+                "accounts"                      => [
+                        'id'                    => $account->id,
+                        'intitule'              => $account->intitule,
+                        "classe_de_compte"      => $account->classe_de_compte,
+                        "categorie_de_compte"   => $account->categorie_de_compte,
+                        'account_number'        => $account->account_number,
+                        "solde_debiteur"        => $this->solde($account, "debit"),
+                        "solde_crediteur"       => $this->solde($account, "credit"),
+                        "mouvement_debit"       => $this->mouvements_debit($account),
+                        "mouvement_credit"      => $this->mouvements_credit($account),
+                        "sub_accounts"          => $this->sub_accounts($account->sous_comptes),
+                        'created_at'            => $account->created_at->format("Y-m-d")
+                ],
+                "created_at"                    => $this->created_at->format("Y-m-d")
+            ]; */
         } catch (CoreException $exception) {
             // Throw a NotFoundException with an error message and the caught exception
             throw new RepositoryException(message: "Error while quering balance of accounts of an exercice comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);

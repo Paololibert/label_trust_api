@@ -7,8 +7,10 @@ namespace App\Http\Controllers\API\RESTful\V1\Finances;
 use App\Http\Requests\Finances\v1\ExercicesComptable\CreateExerciceComptableRequest;
 use App\Http\Requests\Finances\v1\ExercicesComptable\UpdateExerciceComptableRequest;
 use App\Http\Requests\ResourceRequest;
+use App\Rules\AccountNumberExistsInEitherTable;
 use Core\Utils\Controllers\RESTful\RESTfulResourceController;
 use Core\Utils\DataTransfertObjects\BaseDTO;
+use Core\Utils\Enums\StatusExerciceEnum;
 use Domains\Finances\EcrituresComptable\DataTransfertObjects\CreateEcritureComptableDTO;
 use Domains\Finances\EcrituresComptable\Services\RESTful\Contracts\EcritureComptableRESTfulQueryServiceContract;
 use Domains\Finances\EcrituresComptable\Services\RESTful\Contracts\EcritureComptableRESTfulReadWriteServiceContract;
@@ -18,6 +20,7 @@ use Domains\Finances\ExercicesComptable\Services\RESTful\Contracts\ExerciceCompt
 use Domains\Finances\ExercicesComptable\Services\RESTful\Contracts\ExerciceComptableRESTfulReadWriteServiceContract;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 /**
  * **`ExerciceComptableController`**
@@ -123,10 +126,14 @@ class ExerciceComptableController extends RESTfulResourceController
      * @param  string                           $planComptableId    The identifier of the resource details that will be fetch.
      * @return \Illuminate\Http\JsonResponse                        The JSON response indicating the status of the accounts fetched operation.
      */
-    public function balanceDeCompte(Request $request, string $exerciceComptableId, string $compteId): JsonResponse
+    public function balanceDeCompte(Request $request, string $exerciceComptableId): JsonResponse
     {
+        $dto = new PeriodeOfBalanceDTO();
+
+        $dto->setRules(["account_number" => ["required"]]);
+
         // Instantiate the ResourceRequest with a CreateAccountDTO instance
-        $createRequest = app(ResourceRequest::class, ["dto" => new PeriodeOfBalanceDTO]);
+        $createRequest = app(ResourceRequest::class, ["dto" => $dto]);
 
         // Validate the incoming request using the ResourceRequest rules
         if ($createRequest) {
@@ -134,7 +141,7 @@ class ExerciceComptableController extends RESTfulResourceController
         }
 
         // Call the service method to add the accounts to the Plan Comptable
-        return $this->restJsonQueryService->balanceDeCompte($exerciceComptableId, $compteId, $createRequest->getDto());
+        return $this->restJsonQueryService->balanceDeCompte($exerciceComptableId, $createRequest->getDto());
     }
 
     /**
@@ -165,8 +172,22 @@ class ExerciceComptableController extends RESTfulResourceController
      */
     public function cloture(Request $request, string $exerciceComptableId): JsonResponse
     {
+        $exercice_comptable = $this->restJsonQueryService->getReadOnlyService()->findById($exerciceComptableId);
+
+        if (!$exercice_comptable) {
+            throw ValidationException::withMessages(["Exercice comptable inconnu"]);
+        } else {
+            if ($exercice_comptable->status_exercice === StatusExerciceEnum::CLOSE) {
+                throw ValidationException::withMessages(["L'exercice comptable est deja cloturer"]);
+            }
+        }
+        
+        $dto = (new BaseDTO());
+        
+        $dto->setRules(["cloture_at" => ["required", "date_format:d/m/Y"]]);
+        
         // Instantiate the ResourceRequest with a CreateAccountDTO instance
-        $createRequest = app(ResourceRequest::class, ["dto" => new ReportDeSoldeDTO]);
+        $createRequest = app(ResourceRequest::class, ["dto" => $dto]);
 
         // Validate the incoming request using the ResourceRequest rules
         if ($createRequest) {
@@ -218,7 +239,7 @@ class ExerciceComptableController extends RESTfulResourceController
     public function registerANewEcritureComptable(Request $request, string $exerciceComptableId): JsonResponse
     {
         // Instantiate the ResourceRequest with a CreateAccountDTO instance
-        $createRequest = app(ResourceRequest::class, ["dto" => new CreateEcritureComptableDTO]);
+        $createRequest = app(ResourceRequest::class, ["dto" => new CreateEcritureComptableDTO()]);
 
         // Validate the incoming request using the ResourceRequest rules
         if ($createRequest) {

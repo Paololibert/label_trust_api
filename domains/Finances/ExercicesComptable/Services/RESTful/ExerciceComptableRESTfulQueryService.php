@@ -70,11 +70,11 @@ class ExerciceComptableRESTfulQueryService extends RestJsonQueryService implemen
      *
      * @throws \Core\Utils\Exceptions\ServiceException                                                  If there is an issue with quering accounts balance.
      */
-    public function balanceDeCompte(string $exerciceComptableId, string $compteId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsBalanceOfAPeriodeArrayData): \Illuminate\Http\JsonResponse
+    public function balanceDeCompte(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse
     {
         try {
 
-            $balance = $this->queryService->getRepository()->balanceDeCompte($exerciceComptableId, $compteId, $accountsBalanceOfAPeriodeArrayData->toArray());
+            $balance = $this->queryService->getRepository()->balanceDeCompte($exerciceComptableId, $data->toArray());
 
             return JsonResponseTrait::success(
                 message: "Balance successfully query.",
