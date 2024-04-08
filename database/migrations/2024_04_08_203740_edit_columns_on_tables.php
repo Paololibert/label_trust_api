@@ -37,10 +37,37 @@ class EditColumnsOnTables extends Migration
 
         try {
 
-            // Drop the foreign key constraint from the "devises" table
+            // Drop the column code from the "devises" table
             if (Schema::hasTable('devises')) {
                 if (Schema::hasColumn('devises', 'code')) {
                     Schema::table('devises', function (Blueprint $table) {
+                        $table->dropColumn(['code']);
+                    });
+                }
+            }
+
+            // Drop the column code from the "categories_de_compte" table
+            if (Schema::hasTable('categories_de_compte')) {
+                if (Schema::hasColumn('categories_de_compte', 'code')) {
+                    Schema::table('categories_de_compte', function (Blueprint $table) {
+                        $table->dropColumn(['code']);
+                    });
+                }
+            }
+
+            // Drop the column code from the "classes_de_compte" table
+            if (Schema::hasTable('classes_de_compte')) {
+                if (Schema::hasColumn('classes_de_compte', 'code')) {
+                    Schema::table('classes_de_compte', function (Blueprint $table) {
+                        $table->dropColumn(['code']);
+                    });
+                }
+            }
+
+            // Drop the column code from the "comptes" table
+            if (Schema::hasTable('comptes')) {
+                if (Schema::hasColumn('comptes', 'code')) {
+                    Schema::table('comptes', function (Blueprint $table) {
                         $table->dropColumn(['code']);
                     });
                 }
