@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Core\Utils\Enums\TypeIQPEnum;
 use Core\Utils\Traits\Database\Migrations\CanDeleteTrait;
 use Core\Utils\Traits\Database\Migrations\HasCompositeKey;
 use Core\Utils\Traits\Database\Migrations\HasForeignKey;
@@ -13,13 +14,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class ***`CreateArticlesTable`***
+ * Class ***`CreateIQPsTable`***
  *
  * A migration class for creating the "article" table with UUID primary key and timestamps.
  *
- * @package ***`\Database\Migrations\CreateArticlesTable`***
+ * @package ***`\Database\Migrations\CreateIQPsTable`***
  */
-class CreateCategorieArticlesTable extends Migration
+class CreateIQPsTable extends Migration
 {
     use CanDeleteTrait, HasCompositeKey, HasForeignKey, HasTimestampsAndSoftDeletes, HasUuidPrimaryKey;
     
@@ -37,12 +38,15 @@ class CreateCategorieArticlesTable extends Migration
 
         try {
 
-            Schema::create('categorie_articles', function (Blueprint $table) {
-                // Define a UUID primary key for the 'categorie_articles' table
+            Schema::create('iqps', function (Blueprint $table) {
+                // Define a UUID primary key for the 'iqps' table
                 $this->uuidPrimaryKey($table);
                 
-                // Define a unique string column for the categorie_articles name
-                $table->string('name')->unique()->comment('The unique name of the categorie_articles');
+                // Define a unique string column for the iqps name
+                $table->string('name')->unique()->comment('The unique name of the iqps');
+
+                // Define if the type of iqp
+                $table->enum('type_of_iqp', TypeIQPEnum::values())->default(TypeIQPEnum::DEFAULT);
 
                 // Add a boolean column 'status' to the table
                 $table->boolean('status')
@@ -79,7 +83,7 @@ class CreateCategorieArticlesTable extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to migrate "categorie_articles" table: ' . $exception->getMessage(),
+                message: 'Failed to migrate "iqps" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }
@@ -98,8 +102,8 @@ class CreateCategorieArticlesTable extends Migration
         DB::beginTransaction();
 
         try {
-            // Drop the "categorie_articles" table if it exists
-            Schema::dropIfExists('categorie_articles');
+            // Drop the "iqps" table if it exists
+            Schema::dropIfExists('iqps');
 
             // Commit the transaction
             DB::commit();
@@ -109,7 +113,7 @@ class CreateCategorieArticlesTable extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to drop "categorie_articles" table: ' . $exception->getMessage(),
+                message: 'Failed to drop "iqps" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }

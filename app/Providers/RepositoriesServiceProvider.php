@@ -331,6 +331,34 @@ class RepositoriesServiceProvider extends ServiceProvider
                 \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
             )
             ->give(\Domains\Articles\CategorieArticle\Repositories\CategorieArticleReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to ArticleIqpReadWriteRepository
+        $this->app->when(\Domains\Magasins\ArticleIqp\Services\RESTful\ArticleIqpRESTfulReadWriteService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Magasins\ArticleIqp\Repositories\ArticleIqpReadWriteRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to ArticleIqpReadOnlyRepository
+        $this->app->when(\Domains\Magasins\ArticleIqp\Services\RESTful\ArticleIqpRESTfulQueryService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Magasins\ArticleIqp\Repositories\ArticleIqpReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to IQPReadWriteRepository
+        $this->app->when(\Domains\Magasins\IQP\Services\RESTful\IQPRESTfulReadWriteService::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+        )
+        ->give(\Domains\Magasins\IQP\Repositories\IQPReadWriteRepository::class);
+
+    // Bind ReadWriteRepositoryInterface to IQPReadOnlyRepository
+    $this->app->when(\Domains\Magasins\IQP\Services\RESTful\IQPRESTfulQueryService::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+        )
+        ->give(\Domains\Magasins\IQP\Repositories\IQPReadOnlyRepository::class);
     }
 
     /**

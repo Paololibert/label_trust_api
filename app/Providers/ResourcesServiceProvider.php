@@ -240,14 +240,13 @@ class ResourcesServiceProvider extends ServiceProvider
         )
         ->give(\Domains\Articles\Article\Repositories\ArticleReadOnlyRepository::class);
 
-
-        
         // Bind ReadWriteRepositoryInterface to ArticleReadWriteRepository
         $this->app->when(\App\Http\Controllers\API\RESTful\V1\Articles\ArticleController::class)
         ->needs(
             \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
         )
         ->give(\Domains\Articles\Article\Repositories\ArticleReadWriteRepository::class);
+
 
         // Bind ReadOnlyRepositoryInterface to CategorieArticleReadOnlyRepository
         $this->app->when(\App\Http\Controllers\API\RESTful\V1\Articles\CategorieArticleController::class)
@@ -262,6 +261,34 @@ class ResourcesServiceProvider extends ServiceProvider
             \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
         )
         ->give(\Domains\Articles\CategorieArticle\Repositories\CategorieArticleReadWriteRepository::class);
+
+        // Bind ReadOnlyRepositoryInterface to ArticleIqpReadOnlyRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\ArticleIqpController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+        )
+        ->give(\Domains\Magasins\ArticleIqp\Repositories\ArticleIqpReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to ArticleIqpReadWriteRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\ArticleIqpController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+        )
+        ->give(\Domains\Magasins\ArticleIqp\Repositories\ArticleIqpReadWriteRepository::class);
+
+        // Bind ReadOnlyRepositoryInterface to IQPReadOnlyRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\IQPController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+        )
+        ->give(\Domains\Magasins\IQP\Repositories\IQPReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to IQPReadWriteRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\IQPController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+        )
+        ->give(\Domains\Magasins\IQP\Repositories\IQPReadWriteRepository::class);
     }
 
     /**

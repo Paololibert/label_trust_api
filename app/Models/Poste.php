@@ -74,6 +74,16 @@ class Poste extends ModelContract
         'departement_name'
     ];
 
+    
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array<int, string>
+     */
+    protected $with = [
+        'salaryBase'
+    ];
+
     /**
      * Get the Unit mesure of the unitTravaille.
      *
@@ -93,7 +103,7 @@ class Poste extends ModelContract
     {
         return $this->departement?->name ;
     }
-    
+
     /**
      * Interact with the Poste's name.
      */
@@ -130,4 +140,5 @@ class Poste extends ModelContract
                     ->where('est_le_salaire_de_base', true)
                     ->where('status', true);
     }
+
 }

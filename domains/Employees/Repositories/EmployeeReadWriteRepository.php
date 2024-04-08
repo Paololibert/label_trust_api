@@ -91,6 +91,7 @@ class EmployeeReadWriteRepository extends EloquentReadWriteRepository
                 if (!isset($data['data']['poste_salaire_id'])){
                     if (!$contract->salaires()->exists()) {
                         $salary = $contract->salaires()->create($data['data']);
+                        
                     }
                 }
                 

@@ -32,15 +32,15 @@ class AddNewColumnsToArticlesTable extends Migration
 
                     if (!Schema::hasColumn('articles', 'price')) {
                         // Add a boolean column 'price' to the table
-                        $table->decimal('price', 10, 2)->comment('The price of the articles');
+                        $table->decimal('price', 10, 2)->comment('The price of the articles')->nullable();
                     }
                     if (!Schema::hasColumn('articles', 'stock')) {
                         // Add a boolean column 'stock' to the table
-                        $table->decimal('stock', 10, 2)->comment('The stock of the articles');
+                        $table->decimal('stock', 10, 2)->comment('The stock of the articles')->nullable();
                     }
                     if (!Schema::hasColumn('articles', 'description')) {
                         // Add a boolean column 'description' to the table
-                        $table->string('description')->comment('The description of the articles');
+                        $table->string('description')->comment('The description of the articles')->nullable();
                     }
 
 
@@ -62,7 +62,7 @@ class AddNewColumnsToArticlesTable extends Migration
                             column: 'categorie_article_id',        // The column to which the foreign key is added ('category_id' in this case)
                             references: 'categorie_articles',    // The referenced table (categorie_articles) to establish the foreign key relationship
                             onDelete: 'cascade',         // Action to perform when the referenced record is deleted (cascade deletion)
-                            nullable: false              // Specify whether the foreign key column can be nullable (false means it is not allows to be NULL)
+                            nullable: true              // Specify whether the foreign key column can be nullable (false means it is not allows to be NULL)
                         );
                     }
                 });

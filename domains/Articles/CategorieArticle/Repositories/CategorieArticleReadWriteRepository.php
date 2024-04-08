@@ -6,6 +6,11 @@ namespace Domains\Articles\CategorieArticle\Repositories;
 
 use App\Models\Articles\CategorieArticle;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
+use Core\Utils\Exceptions\QueryException;
+use Core\Utils\Exceptions\RepositoryException;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 /**
  * ***`CategorieArticleReadWriteRepository`***

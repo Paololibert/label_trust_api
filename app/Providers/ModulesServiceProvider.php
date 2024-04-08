@@ -897,7 +897,7 @@ class ModulesServiceProvider extends ServiceProvider
                 return new \Domains\Articles\Article\Services\RESTful\ArticleRESTfulQueryService($queryService);
             }
         );
-        
+     
         // Binds the implementation of CategorieArticleRESTfulReadWriteServiceContract to the CategorieArticleRESTfulReadWriteService class.
         $this->app->bind(
             \Domains\Articles\CategorieArticle\Services\RESTful\Contracts\CategorieArticleRESTfulReadWriteServiceContract::class,
@@ -919,6 +919,54 @@ class ModulesServiceProvider extends ServiceProvider
 
                 // Create and return an instance of CategorieArticleRESTfulQueryService
                 return new \Domains\Articles\CategorieArticle\Services\RESTful\CategorieArticleRESTfulQueryService($queryService);
+            }
+        );
+     
+        // Binds the implementation of ArticleIqpRESTfulReadWriteServiceContract to the ArticleIqpRESTfulReadWriteService class.
+        $this->app->bind(
+            \Domains\Magasins\ArticleIqp\Services\RESTful\Contracts\ArticleIqpRESTfulReadWriteServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for ArticleIqpRESTfulReadWriteService
+                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
+
+                // Create and return an instance of ArticleIqpRESTfulReadWriteService
+                return new \Domains\Magasins\ArticleIqp\Services\RESTful\ArticleIqpRESTfulReadWriteService($readWriteService);
+            }
+        );
+
+        // Binds the implementation of ArticleIqpRESTfulQueryServiceContract to the ArticleIqpRESTfulQueryService class.
+        $this->app->bind(
+            \Domains\Magasins\ArticleIqp\Services\RESTful\Contracts\ArticleIqpRESTfulQueryServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for ArticleIqpRESTfulQueryService
+                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
+
+                // Create and return an instance of ArticleIqpRESTfulQueryService
+                return new \Domains\Magasins\ArticleIqp\Services\RESTful\ArticleIqpRESTfulQueryService($queryService);
+            }
+        );
+        
+        // Binds the implementation of IQPRESTfulReadWriteServiceContract to the IQPRESTfulReadWriteService class.
+        $this->app->bind(
+            \Domains\Magasins\IQP\Services\RESTful\Contracts\IQPRESTfulReadWriteServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for IQPRESTfulReadWriteService
+                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
+
+                // Create and return an instance of IQPRESTfulReadWriteService
+                return new \Domains\Magasins\IQP\Services\RESTful\IQPRESTfulReadWriteService($readWriteService);
+            }
+        );
+
+        // Binds the implementation of IQPRESTfulQueryServiceContract to the IQPRESTfulQueryService class.
+        $this->app->bind(
+            \Domains\Magasins\IQP\Services\RESTful\Contracts\IQPRESTfulQueryServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for IQPRESTfulQueryService
+                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
+
+                // Create and return an instance of IQPRESTfulQueryService
+                return new \Domains\Magasins\IQP\Services\RESTful\IQPRESTfulQueryService($queryService);
             }
         );
     }

@@ -79,6 +79,10 @@ class PosteReadWriteRepository extends EloquentReadWriteRepository
 
             $this->model = $this->find($posteId);
 
+            $this->model->salaries()->updateExistingPivot($salariesIds, ['deleted_at' => now()]);
+            $this->model->refresh();
+            dd($this->model->salaries);
+
             return $this->model->salaries()->updateExistingPivot($salariesIds, ['deleted_at' => now()]) ? true : false;
         } catch (CoreException $exception) {
             // Throw a NotFoundException with an error message and the caught exception

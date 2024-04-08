@@ -2,26 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Models\Articles;
+namespace App\Models\Magasins;
 
 use Core\Data\Eloquent\Contract\ModelContract;
-use Core\Data\Eloquent\ORMs\HasPermissions;
-use Core\Utils\Helpers\Sluggable\HasSlug;
+use Core\Utils\Enums\TypeIQPEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class ***`CategorieArticle`***
+ * Class ***`IQP`***
  *
- * This model represents the `CategorieArticles` table in the database.
+ * This model represents the `iqps` table in the database.
  * It extends the ModelContract class and provides access to the database table associated with the model.
  *
  * @property  string    $name;
  *
  * @package ***`\App\Models`***
  */
-class CategorieArticle extends ModelContract
+class IQP extends ModelContract
 {
-
     /**
      * The database connection that should be used by the model.
      *
@@ -34,7 +33,8 @@ class CategorieArticle extends ModelContract
      *
      * @var string
      */
-    protected $table = 'categorie_articles';
+    protected $table = 'iqps';
+
 
     /**
      * The attributes that are mass assignable.
@@ -42,25 +42,10 @@ class CategorieArticle extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'name','categorie_article_id'
+        'name',
+        'type_of_iqp'
     ];
 
-    /**
-     * The attributes that should be treated as dates.
-     *
-     * @var array<int, string>
-     */
-    protected $dates = [
-        
-    ];
-
-    /**
-     * The model's default attribute values.
-     *
-     * @var array<string, mixed>
-     */
-    protected $attributes = [
-    ];
 
     /**
      * The attributes that should be visible in arrays.
@@ -68,20 +53,32 @@ class CategorieArticle extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'name'
+        'name',
+        'type_of_iqp'
     ];
 
+    
     /**
-     * The accessors to append to the model's array and JSON representation.
+     * The model's default attribute values.
      *
-     * @var array<int, string>
+     * @var array<string, mixed>
      */
-    protected $appends = [
-
+    protected $attributes = [
+        'type_of_iqp'          => TypeIQPEnum::DEFAULT,
     ];
 
     /**
-     * Interact with the CategorieArticle's name.
+     * The attributes that should be cast to native types.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'name'              => 'string',
+        'type_of_iqp'       => TypeIQPEnum::class,
+    ];
+
+    /**
+     * Interact with the IQP's name.
      */
     protected function name(): Attribute
     {
@@ -90,4 +87,6 @@ class CategorieArticle extends ModelContract
             set: fn (string $value) => strtolower($value)
         );
     }
+
+
 }

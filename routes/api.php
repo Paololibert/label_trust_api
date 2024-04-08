@@ -262,6 +262,10 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                     Route::apiResource('storagespaces', 'StorageSpaceController')->parameters(['storagespaces' => 'storage_space_id']);
 
+                    Route::apiResource('iqps', 'IQPController')->parameters(['iqps' => 'iqp_id']);
+
+                    Route::apiResource('article_iqps', 'ArticleIqpController')->parameters(['article_iqps' => 'article_iqp_id']);
+
                 });
 
                 Route::group(['namespace' => 'Articles'], function () {                
