@@ -71,7 +71,7 @@ class Poste extends ModelContract
      * @var array<int, string>
      */
     protected $appends = [
-        'departement_name'
+        'departement_name',
     ];
 
     
@@ -92,6 +92,16 @@ class Poste extends ModelContract
     public function departement(): BelongsTo
     {
         return $this->belongsTo(Departement::class, 'department_id');
+    }
+
+    /**
+     * Get the base salary attribute.
+     *
+     * @return string|null The base salary.
+     */
+    public function getBaseSalaryAttribute(): ?string
+    {
+        return $this->salary?->rate ;
     }
 
     /**
@@ -126,19 +136,23 @@ class Poste extends ModelContract
                     ->withPivot('est_le_salaire_de_base', 'status', 'deleted_at', 'can_be_delete')
                     ->withTimestamps() // Enable automatic timestamps for the pivot table
                     ->wherePivot('status', true) // Filter records where the status is true
+                    ->wherePivot('deleted_at', null) // Filter records where the deleted_at column is null
                     ->using(PosteSalary::class); // Specify the intermediate model for the pivot relationship
     }
-
+   
     /**
      * Define a one-to-one relationship with the PosteSalary model representing the base salary.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
      */
-    public function salaryBase(): HasOne
+    public function salaryBase()
     {
         return $this->hasOne(PosteSalary::class, 'poste_id')
                     ->where('est_le_salaire_de_base', true)
                     ->where('status', true);
     }
+
+    
+ 
 
 }

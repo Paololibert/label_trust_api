@@ -52,14 +52,34 @@ class PosteSalary extends ModelContract
         'est_le_salaire_de_base'
     ];
 
+    
+    /**
+     * The accessors to append to the model's array and JSON representation.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'base_salary'
+    ];
     /**
      * The model's default attribute values.
      *
      * @var array<string, mixed>
      */
-    protected $attributes = [
+   /*  protected $attributes = [
         'est_le_salaire_de_base'        => false,
-    ];
+    ]; */
+
+    
+    /**
+     * Get the base salary attribute.
+     *
+     * @return string|null The base salary.
+     */
+    public function getBaseSalaryAttribute(): ?string
+    {
+        return $this->salary?->rate ;
+    }
 
     /**
      * The attributes that should be cast to native types.
@@ -91,4 +111,5 @@ class PosteSalary extends ModelContract
     {
         return $this->belongsTo(TauxAndSalary::class, 'salary_id');
     }
+
 }
