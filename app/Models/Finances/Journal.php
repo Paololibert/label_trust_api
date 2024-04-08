@@ -88,19 +88,25 @@ class Journal extends ModelContract
         });
     }
 
+
+    public function exercices_comptable(): BelongsToMany
+    {
+        return $this->belongsToMany(ExerciceComptable::class, 'exercice_comptable_journaux', 'exercice_comptable_id', 'journal_id');
+    }
+
     /**
      * Define a many-to-many relationship with the Compte model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function exercices_comptable(): BelongsToMany
+    /* public function exercices_comptable(): BelongsToMany
     {
         return $this->belongsToMany(ExerciceComptable::class, 'exercice_comptable_journaux', 'exercice_comptable_id', 'journal_id')
-                    ->withPivot('status', 'deleted_at', 'can_be_delete')
-                    ->withTimestamps() // Enable automatic timestamps for the pivot table
-                    ->wherePivot('status', true) // Filter records where the status is true
-                    ->using(ExerciceComptableJournal::class); // Specify the intermediate model for the pivot relationship
-    }
+            ->withPivot('total', 'total_debit', 'total_credit', 'status', 'deleted_at', 'can_be_delete')
+            ->withTimestamps() // Enable automatic timestamps for the pivot table
+            ->wherePivot('status', true) // Filter records where the status is true
+            ->using(ExerciceComptableJournal::class); // Specify the intermediate model for the pivot relationship
+    } */
 
     /**
      * 

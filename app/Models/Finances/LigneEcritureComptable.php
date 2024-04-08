@@ -6,7 +6,6 @@ namespace App\Models\Finances;
 
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Utils\Enums\TypeEcritureCompteEnum;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**

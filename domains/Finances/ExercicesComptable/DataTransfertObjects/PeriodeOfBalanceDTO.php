@@ -43,7 +43,7 @@ class PeriodeOfBalanceDTO extends BaseDTO
         $exercice = ExerciceComptable::find(request()->route("exercice_comptable_id"));
         $periode = $exercice?->periode_exercice;
         $rules = array_merge([
-            "from_date"                                                          => ["sometimes", "date_format:d/m/Y", "after_or_equal:". $periode->date_debut_periode . "/{$exercice->fiscal_year}", 'before_or_equal:' . $periode->date_fin_periode . "/{$exercice->fiscal_year}"],
+            "from_date"                                                          => ["sometimes", "date_format:d/m/Y", "after_or_equal:". $periode?->date_debut_periode . "/{$exercice?->fiscal_year}", 'before_or_equal:' . $periode?->date_fin_periode . "/{$exercice?->fiscal_year}"],
             "to_date"                                                            => ["required", "date_format:d/m/Y", "after_or_equal:from_date"],
         ], $rules);
 

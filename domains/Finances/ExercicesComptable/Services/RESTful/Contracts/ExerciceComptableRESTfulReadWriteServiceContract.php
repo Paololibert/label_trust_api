@@ -29,4 +29,15 @@ interface ExerciceComptableRESTfulReadWriteServiceContract extends RestJsonReadW
      * @throws \Core\Utils\Exceptions\ServiceException                                      If there is an issue with reporting accounts balance.
      */
     public function reportDesSoldesAuxComptes(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsBalanceArrayData): \Illuminate\Http\JsonResponse;
+
+    /**
+     * Cloture de l'exercice
+     *
+     * @param  string                                           $exerciceComptableId        The unique identifier of the exercice comptable accounts balance will be report.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountsBalanceArrayData   Accounts balance array data.
+     * @return \Illuminate\Http\JsonResponse                                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                      If there is an issue with reporting accounts balance.
+     */
+    public function clotureExercice(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse;
 }
