@@ -48,7 +48,7 @@ class ReportDeSoldeDTO extends BaseDTO
         $rules = array_merge([
             "accounts"                                                              => ["required", "array"],
             "accounts.*"                                                            => ["distinct", "array"],
-            "accounts.*.account_number"                                                         => ["required", "distinct", "exists:plan_comptable_comptes,account_number", Rule::exists("plan_comptable_comptes", "account_number")->where("plan_comptable_id", ExerciceComptable::find(request()->route("exercice_comptable_id"))?->plan_comptable_id)],
+            "accounts.*.account_number"                                             => ["required", "distinct", "exists:plan_comptable_comptes,account_number", Rule::exists("plan_comptable_comptes", "account_number")->where("plan_comptable_id", ExerciceComptable::find(request()->route("exercice_comptable_id"))?->plan_comptable_id)],
             "accounts.*.solde_debit"                                                => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             "accounts.*.solde_credit"                                               => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
 

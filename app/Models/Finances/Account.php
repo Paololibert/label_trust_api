@@ -8,9 +8,11 @@ use App\Models\Scopes\FindAccountByScope;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Accountable;
 use Core\Data\Eloquent\ORMs\Balanceable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ***`Account`***
@@ -157,40 +159,36 @@ class Account extends ModelContract
         return $this->morphMany(SubAccount::class, 'subaccountable');
     }
 
-    /**
-     * Get sous comptes
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    /* public function sous_comptes(): BelongsToMany
+    public function scopeSoldeDesComptes(Builder $query, string $exercice_comptable_id, string $start_date = null, string $end_date = null)
     {
-        return $this->belongsToMany(Compte::class, 'plan_comptable_compte_sous_comptes', 'subaccountable_id', 'sous_compte_id')
-                    ->as('sub_account')
-                    ->withPivot('account_number', 'status', 'deleted_at', 'can_be_delete')
-                    ->withTimestamps() // Enable automatic timestamps for the pivot table
-                    ->wherePivot('status', true) // Filter records where the status is true
-                    ->using(SubAccount::class); // Specify the intermediate model for the pivot relationship
-    } */
+        return $query->with("balance", function ($query) use ($exercice_comptable_id) {
+            $query->where("exercice_comptable_id", $exercice_comptable_id);
+        })->recursive($exercice_comptable_id);
+    }
 
-    public function findAccountHierarchyByAccountNumber($accountNumber)
+    public function scopeRecursive(Builder $query, string $exercice_comptable_id)
     {
-        // Query the Account model to find by account_number
-        $account = Account::where('account_number', $accountNumber)->first();
+        return $query->whereHas("sous_comptes", function ($query) use ($exercice_comptable_id) {
+            $query->soldeDesComptes($exercice_comptable_id);
+        });
+    }
 
-        return $account;
-        if (!$account) {
-            // Account not found, try finding in SubAccount model
-            $subAccount = SubAccount::where('account_number', $accountNumber)->first();
+    public function scopeTransactions(Builder $query, $exercice_comptable_id)
+    {
+        return $query->with("transactions", function ($query) use ($exercice_comptable_id) {
+            $query
+                ->select("type_ecriture_compte", DB::raw('SUM(montant) as total')) // Specify the columns you want to select
+                ->where("ligneable_type", "App\Models\Finances\EcritureComptable")
+                ->whereHas("ligneable.exercice_comptable_journal", function ($ligne_query) use ($exercice_comptable_id) {
+                    $ligne_query->where("exercice_comptable_id", $exercice_comptable_id);
+                })->groupBy('type_ecriture_compte'); 
+        })->recursiveTransactions($exercice_comptable_id);
+    }
 
-            if (!$subAccount) {
-                // SubAccount not found, try finding in SubDivision model
-                $subDivision = SubDivision::where('account_number', $accountNumber)->first();
-                return $subDivision;
-            }
-
-            return $subAccount;
-        }
-
-        return $account;
+    public function scopeRecursiveTransactions(Builder $query, string $exercice_comptable_id)
+    {
+        return $query->whereHas("sous_comptes", function ($query) use ($exercice_comptable_id) {
+                $query->transactions($exercice_comptable_id);
+            });
     }
 }

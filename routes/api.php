@@ -249,7 +249,11 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                     Route::group(['prefix' => 'exercices_comptable'], function () {
                         Route::put('{exercice_comptable_id}/report-des-soldes-aux-comptes', 'ExerciceComptableController@reportDesSoldesAuxComptes')->name('exercices_comptable.report');
-                        Route::get('{exercice_comptable_id}/balance-des-comptes', 'ExerciceComptableController@balanceDesComptes')->name('exercices_comptable.balance');
+                        Route::put('{exercice_comptable_id}/cloture', 'ExerciceComptableController@cloture')->name('exercices_comptable.cloture');
+                        Route::get('{exercice_comptable_id}/journal-entries', 'ExerciceComptableController@journaux')->name('exercices_comptable.entries.journal');
+                        Route::get('{exercice_comptable_id}/journal-entries/{journal}', 'ExerciceComptableController@journal')->name('exercices_comptable.journal');
+                        Route::get('{exercice_comptable_id}/balance-des-comptes', 'ExerciceComptableController@balanceDesComptes')->name('exercices_comptable.accounts.balance');
+                        Route::get('{exercice_comptable_id}/accounts/{account_id}/balance-de-compte', 'ExerciceComptableController@balanceDeCompte')->name('exercices_comptable.account.balance');
                         Route::get('{exercice_comptable_id}/ecritures-comptable', 'ExerciceComptableController@fetchEcrituresComptable')->name('exercices_comptable.list-ecritures');
                         Route::put('{exercice_comptable_id}/ecritures-comptable', 'ExerciceComptableController@registerANewEcritureComptable')->name('exercices_comptable.register-ecriture');
                         Route::get('{exercice_comptable_id}/ecritures-comptable/{ecriture_comptable_id}', 'ExerciceComptableController@fetchDetailsOfAnEcritureComptable')->name('exercices_comptable.details-of-an-ecriture');

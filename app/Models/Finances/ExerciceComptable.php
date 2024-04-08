@@ -94,6 +94,15 @@ class ExerciceComptable extends ModelContract
     ];
 
     /**
+     * The attributes that should be visible in arrays.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'plan_name'
+    ];
+
+    /**
      * The "booted" method of the model.
      *
      * @return void
@@ -115,6 +124,16 @@ class ExerciceComptable extends ModelContract
         return [
             'date_fermeture'
         ];
+    }
+
+    /**
+     * Get the user's full name attribute.
+     *
+     * @return string The user's full name.
+     */
+    public function getPlanNameAttribute(): string
+    {
+        return $this->plan_comptable->name;
     }
 
     /**
@@ -148,14 +167,14 @@ class ExerciceComptable extends ModelContract
     }
 
     /**
-     * Define a many-to-many relationship with the Journal model.
+     * Define a many-to-many relationship with the Compte model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function journaux(): BelongsToMany
     {
         return $this->belongsToMany(Journal::class, 'exercice_comptable_journaux', 'journal_id', 'exercice_comptable_id')
-            ->withPivot('status', 'deleted_at', 'can_be_delete')
+            ->withPivot('total', 'total_debit', 'total_credit', 'status', 'deleted_at', 'can_be_delete')
             ->withTimestamps() // Enable automatic timestamps for the pivot table
             ->wherePivot('status', true) // Filter records where the status is true
             ->using(ExerciceComptableJournal::class); // Specify the intermediate model for the pivot relationship
@@ -174,11 +193,11 @@ class ExerciceComptable extends ModelContract
     /**
      * Define a method to access the accounts associated with the Exercice through its PlanComptable.
      *
-     * @return
+     * @return HasMany
      */
-    public function accounts()
+    public function accounts(): HasMany
     {
-        return $this->plan_comptable->accounts();
+        return $this->plan_comptable()->getEager()->first()->accounts();
     }
 
     /**
@@ -188,7 +207,7 @@ class ExerciceComptable extends ModelContract
      */
     public function sub_accounts($query = null, bool $withSubDivision = false, $columns = ["*"])
     {
-        return $this->plan_comptable->sub_accounts(query: $query, withSubDivision: $withSubDivision, columns: $columns);
+        return $this->plan_comptable()->getEager()->first()->sub_accounts(query: $query, withSubDivision: $withSubDivision, columns: $columns);
     }
 
     /**
@@ -200,17 +219,6 @@ class ExerciceComptable extends ModelContract
      */
     public function sub_divisions($query = null)
     {
-        return $this->plan_comptable->sub_divisions($query);
+        return $this->plan_comptable()->getEager()->first()->sub_divisions($query);
     }
-
-    /**
-     * Get the balance des comptes
-     *
-     * @return HasMany
-     */
-    public function balance_des_comptes(): HasMany
-    {
-        return $this->accounts()->with("balance");
-    }
-
 }

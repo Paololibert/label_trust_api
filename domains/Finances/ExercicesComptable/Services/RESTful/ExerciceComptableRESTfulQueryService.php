@@ -43,11 +43,12 @@ class ExerciceComptableRESTfulQueryService extends RestJsonQueryService implemen
      *
      * @throws \Core\Utils\Exceptions\ServiceException                                                  If there is an issue with quering accounts balance.
      */
-    public function balanceDesComptes(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsBalanceOfAPeriodeArrayData): \Illuminate\Http\JsonResponse{
+    public function balanceDesComptes(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsBalanceOfAPeriodeArrayData): \Illuminate\Http\JsonResponse
+    {
         try {
 
             $balance = $this->queryService->getRepository()->balanceDesComptes($exerciceComptableId, $accountsBalanceOfAPeriodeArrayData->toArray());
-        
+
             return JsonResponseTrait::success(
                 message: "Balance successfully query.",
                 data: $balance,
@@ -59,4 +60,82 @@ class ExerciceComptableRESTfulQueryService extends RestJsonQueryService implemen
         }
     }
 
+    
+    /**
+     * Query la balance des comptes a une periode donnee
+     *
+     * @param  string                                           $exerciceComptableId                    The unique identifier of the exercice comptable accounts balance.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountsBalanceOfAPeriodeArrayData     Accounts balance array data.
+     * @return \Illuminate\Http\JsonResponse                                                            The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                                  If there is an issue with quering accounts balance.
+     */
+    public function balanceDeCompte(string $exerciceComptableId, string $compteId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsBalanceOfAPeriodeArrayData): \Illuminate\Http\JsonResponse
+    {
+        try {
+
+            $balance = $this->queryService->getRepository()->balanceDeCompte($exerciceComptableId, $compteId, $accountsBalanceOfAPeriodeArrayData->toArray());
+
+            return JsonResponseTrait::success(
+                message: "Balance successfully query.",
+                data: $balance,
+                status_code: Response::HTTP_OK
+            );
+        } catch (CoreException $exception) {
+            // Throw a ServiceException with an error message and the caught exception
+            throw new ServiceException(message: 'Failed to query balance of account of an exercice comptable: ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }
+    }
+
+    /**
+     * Query les journaux
+     *
+     * @param  string                                           $exerciceComptableId                    The unique identifier of the exercice comptable accounts balance.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountsBalanceOfAPeriodeArrayData     Accounts balance array data.
+     * @return \Illuminate\Http\JsonResponse                                                            The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                                  If there is an issue with quering accounts balance.
+     */
+    public function journaux(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsBalanceOfAPeriodeArrayData): \Illuminate\Http\JsonResponse
+    {
+        try {
+
+            $balance = $this->queryService->getRepository()->journaux($exerciceComptableId, $accountsBalanceOfAPeriodeArrayData->toArray());
+
+            return JsonResponseTrait::success(
+                message: "Journaux successfully query.",
+                data: $balance,
+                status_code: Response::HTTP_OK
+            );
+        } catch (CoreException $exception) {
+            // Throw a ServiceException with an error message and the caught exception
+            throw new ServiceException(message: 'Failed to query balance of account of an exercice comptable: ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }
+    }
+
+    /**
+     * Query un journal
+     *
+     * @param  string                                           $exerciceComptableId                    The unique identifier of the exercice comptable accounts balance.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountsBalanceOfAPeriodeArrayData     Accounts balance array data.
+     * @return \Illuminate\Http\JsonResponse                                                            The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                                  If there is an issue with quering accounts balance.
+     */
+    public function journal(string $exerciceComptableId, string $journalId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsBalanceOfAPeriodeArrayData): \Illuminate\Http\JsonResponse
+    {
+        try {
+
+            $balance = $this->queryService->getRepository()->journal($exerciceComptableId, $journalId, $accountsBalanceOfAPeriodeArrayData->toArray());
+
+            return JsonResponseTrait::success(
+                message: "Journal des comptes successfully query.",
+                data: $balance,
+                status_code: Response::HTTP_OK
+            );
+        } catch (CoreException $exception) {
+            // Throw a ServiceException with an error message and the caught exception
+            throw new ServiceException(message: 'Failed to query balance of account of an exercice comptable: ' . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }
+    }
 }
