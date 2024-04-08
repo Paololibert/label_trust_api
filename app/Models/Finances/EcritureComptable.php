@@ -88,6 +88,15 @@ class EcritureComptable extends ModelContract
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array<int, string>
+     */
+    protected $with = [
+        'lignes_ecriture'
+    ];
+
+    /**
      * Interact with the Compte's name.
      */
     protected function date_ecriture(): Attribute

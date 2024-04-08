@@ -93,7 +93,7 @@ class ExerciceComptableJournal extends ModelContract
      */
     public function journal(): BelongsTo
     {
-        return $this->belongsTo(ExerciceComptable::class, 'journal_id');
+        return $this->belongsTo(Journal::class, 'journal_id');
     }
 
     /**
