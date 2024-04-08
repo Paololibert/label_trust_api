@@ -49,6 +49,7 @@ class PosteReadWriteRepository extends EloquentReadWriteRepository
                 if(isset($salary['salary_id'])){
                     // Check if the salary is not already attached
                     if (!$this->relationExists($this->model->salaries(), [$salary['salary_id']])) {
+                        //dd($salary);
                         // Attach the salary
                         return $this->model->salaries()->syncWithoutDetaching($salary['salary_id'], $salary) ? true : false;
                     }
@@ -78,6 +79,11 @@ class PosteReadWriteRepository extends EloquentReadWriteRepository
         try {
 
             $this->model = $this->find($posteId);
+ 
+            /*
+            $this->model->salaries()->updateExistingPivot($salariesIds, ['deleted_at' => now()]);
+            $this->model->refresh();
+            dd($this->model->salaries); */
 
             return $this->model->salaries()->updateExistingPivot($salariesIds, ['deleted_at' => now()]) ? true : false;
         } catch (CoreException $exception) {

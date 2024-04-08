@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Domains\Postes\Services\RESTful;
 
+use App\Models\Salaire;
 use Core\Logic\Services\Contracts\ReadWriteServiceContract;
 use Core\Logic\Services\RestJson\RestJsonReadWriteService;
 use Core\Utils\Exceptions\Contract\CoreException;
@@ -55,7 +56,7 @@ class PosteRESTfulReadWriteService extends RestJsonReadWriteService implements P
         DB::beginTransaction();
 
         try {
-
+            
             // Call the create method on the repository to add salaries to the poste
             $result = $this->queryService->getRepository()->attachSalaries($posteId, $salariesIds->toArray()['salaries']);
 

@@ -33,5 +33,38 @@ interface ExerciceComptableRESTfulQueryServiceContract extends RestJsonQueryServ
      *
      * @throws \Core\Utils\Exceptions\ServiceException                                                  If there is an issue with quering accounts balance.
      */
-    public function balanceDesComptes(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $accountsBalanceOfAPeriodeArrayData): \Illuminate\Http\JsonResponse;
+    public function balanceDesComptes(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse;
+
+    /**
+     * Query la balance des comptes a une periode donnee
+     *
+     * @param  string                                           $exerciceComptableId                    The unique identifier of the exercice comptable accounts balance.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountsBalanceOfAPeriodeArrayData     Accounts balance array data.
+     * @return \Illuminate\Http\JsonResponse                                                            The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                                  If there is an issue with quering accounts balance.
+     */
+    public function balanceDeCompte(string $exerciceComptableId, string $compteId, \Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse;
+
+    /**
+     * Query les journaux
+     *
+     * @param  string                                           $exerciceComptableId                    The unique identifier of the exercice comptable accounts balance.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountsBalanceOfAPeriodeArrayData     Accounts balance array data.
+     * @return \Illuminate\Http\JsonResponse                                                            The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                                  If there is an issue with quering accounts balance.
+     */
+    public function journaux(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse;
+
+    /**
+     * Query un journal
+     *
+     * @param  string                                           $exerciceComptableId                    The unique identifier of the exercice comptable accounts balance.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $accountsBalanceOfAPeriodeArrayData     Accounts balance array data.
+     * @return \Illuminate\Http\JsonResponse                                                            The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                                  If there is an issue with quering accounts balance.
+     */
+    public function journal(string $exerciceComptableId, string $journalId, \Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse;
 }

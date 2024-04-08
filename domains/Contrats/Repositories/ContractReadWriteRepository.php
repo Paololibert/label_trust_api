@@ -56,6 +56,7 @@ class ContractReadWriteRepository extends EloquentReadWriteRepository
         } catch (QueryException $exception) {
             
             throw new QueryException(message: "Error while creating the record.", previous: $exception);
+            
         } catch (Throwable $exception) {
             throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
         }

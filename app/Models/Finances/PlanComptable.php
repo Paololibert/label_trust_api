@@ -298,4 +298,14 @@ class PlanComptable extends ModelContract
             $this->sub_accounts()->where('account_number', $accountNumber);
         }
     }
+
+
+    /**
+     */
+    public function scopeAccountsBalance(Builder $query, string $exercice_comptable_id)
+    {
+        return $query->whereHas("accounts", function ($query) use ($exercice_comptable_id) {
+            $query->transactions($exercice_comptable_id);
+        });
+    }
 }

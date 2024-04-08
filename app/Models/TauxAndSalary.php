@@ -149,8 +149,8 @@ class TauxAndSalary extends ModelContract
     public function getWorkUnitAttribute(): array
     {
         return [
-                "type" => $this->unite_travaille->type_of_unite_travaille,
-                "symbol" => $this->unite_travaille->uniteMesure?->symbol
+                "type" => $this->unite_travaille?->type_of_unite_travaille,
+                "symbol" => $this->unite_travaille?->uniteMesure?->symbol
             ];
     }
 

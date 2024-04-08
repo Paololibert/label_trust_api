@@ -71,4 +71,42 @@ class ExerciceComptableRESTfulReadWriteService extends RestJsonReadWriteService 
             throw new ServiceException(message: "Failed to add accounts records to a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
+
+
+    /**
+     * Cloture de l'exercice
+     *
+     * @param  string                                           $exerciceComptableId        The unique identifier of the exercice comptable accounts balance will be report.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $data   Accounts balance array data.
+     * @return \Illuminate\Http\JsonResponse                                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                      If there is an issue with reporting accounts balance.
+     */
+    public function clotureExercice(string $exerciceComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse{
+
+        // Begin the transaction
+        DB::beginTransaction();
+        
+        try {
+            //
+            $result = $this->readWriteService->getRepository()->clotureDesComptesDunExercice(exerciceComptableId: $exerciceComptableId, dateCloture: $data->toArray()['dateCloture']);
+
+            // If the result is false, throw a custom exception
+            if (!$result) {
+                throw new QueryException("Failed to close the exercice.", 1);
+            }
+
+            // Commit the transaction
+            DB::commit();
+
+            return JsonResponseTrait::success(
+                message: 'Exercice Cloturer.',
+                data: $result,
+                status_code: Response::HTTP_CREATED
+            );
+        } catch (CoreException $exception) {
+            // Throw a ServiceException if there is an issue with adding the accounts
+            throw new ServiceException(message: "Failed to add accounts records to a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }
+    }
 }

@@ -7,6 +7,7 @@ namespace App\Models\Finances;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Accountable;
 use Core\Data\Eloquent\ORMs\Balanceable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
@@ -163,4 +164,41 @@ class SubAccount extends ModelContract
                     ->wherePivot('status', true) // Filter records where the status is true
                     ->using(SubAccount::class); // Specify the intermediate model for the pivot relationship
     } */
+
+
+
+    public function scopeSoldeDesComptes(Builder $query, string $exercice_comptable_id, string $start_date = null, string $end_date = null)
+    {
+        return $query->with("balance", function ($query) use ($exercice_comptable_id) {
+            $query->where("exercice_comptable_id", $exercice_comptable_id);
+        })->recursive($exercice_comptable_id);
+    }
+
+    public function scopeRecursive(Builder $query, string $exercice_comptable_id) {
+
+        return $query;
+        return $query->whereHas("sub_divisions", function($query) use ($exercice_comptable_id) {
+            $query->soldeDesComptes($exercice_comptable_id);
+        });
+    }
+
+    public function scopeTransactions(Builder $query, $exercice_comptable_id)
+    {
+        return $query->with("transactions", function ($query) use ($exercice_comptable_id) {
+            $query
+                //->select("type_ecriture_compte", DB::raw('SUM(montant) as total')) // Specify the columns you want to select
+                ->where("ligneable_type", "App\Models\Finances\EcritureComptable")
+                ->whereHas("ligneable.exercice_comptable_journal", function ($ligne_query) use ($exercice_comptable_id) {
+                    $ligne_query->where("exercice_comptable_id", $exercice_comptable_id);
+                }); //->groupBy('type_ecriture_compte'); 
+        })->recursiveTransactions($exercice_comptable_id);
+    }
+
+    public function scopeRecursiveTransactions(Builder $query, string $exercice_comptable_id)
+    {
+        return $query;
+        return $query->whereHas("sub_divisions", function ($query) use ($exercice_comptable_id) {
+                $query->transactions($exercice_comptable_id);
+            });
+    }
 }

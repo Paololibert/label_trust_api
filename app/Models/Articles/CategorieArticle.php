@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  */
 class CategorieArticle extends ModelContract
 {
-    use HasSlug;
 
     /**
      * The database connection that should be used by the model.

@@ -50,6 +50,7 @@ class CategoryOfEmployeeReadWriteRepository extends EloquentReadWriteRepository
                     // Check if the taux is not already attached
                     if (!$this->relationExists($this->model->taux(), [$taux['taux_id']])) {
                         // Attach the taux
+                        
                         return $this->model->taux()->syncWithoutDetaching($taux['taux_id'], $taux) ? true : false;
                     }
                 }else {

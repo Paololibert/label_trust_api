@@ -71,7 +71,17 @@ class Poste extends ModelContract
      * @var array<int, string>
      */
     protected $appends = [
-        'departement_name'
+        'departement_name',
+    ];
+
+    
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array<int, string>
+     */
+    protected $with = [
+        'salaryBase'
     ];
 
     /**
@@ -85,6 +95,16 @@ class Poste extends ModelContract
     }
 
     /**
+     * Get the base salary attribute.
+     *
+     * @return string|null The base salary.
+     */
+    public function getBaseSalaryAttribute(): ?string
+    {
+        return $this->salary?->rate ;
+    }
+
+    /**
      * Get the user's full name attribute.
      *
      * @return string|null The user's full name.
@@ -93,7 +113,7 @@ class Poste extends ModelContract
     {
         return $this->departement?->name ;
     }
-    
+
     /**
      * Interact with the Poste's name.
      */
@@ -116,18 +136,23 @@ class Poste extends ModelContract
                     ->withPivot('est_le_salaire_de_base', 'status', 'deleted_at', 'can_be_delete')
                     ->withTimestamps() // Enable automatic timestamps for the pivot table
                     ->wherePivot('status', true) // Filter records where the status is true
+                    ->wherePivot('deleted_at', null) // Filter records where the deleted_at column is null
                     ->using(PosteSalary::class); // Specify the intermediate model for the pivot relationship
     }
-
+   
     /**
      * Define a one-to-one relationship with the PosteSalary model representing the base salary.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
      */
-    public function salaryBase(): HasOne
+    public function salaryBase()
     {
         return $this->hasOne(PosteSalary::class, 'poste_id')
                     ->where('est_le_salaire_de_base', true)
                     ->where('status', true);
     }
+
+    
+ 
+
 }
