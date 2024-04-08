@@ -46,7 +46,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        dd($exception);
+        //dd($exception);
         if ($exception instanceof MethodNotAllowedHttpException) {
             throw new HttpMethodNotAllowedException();
         }
