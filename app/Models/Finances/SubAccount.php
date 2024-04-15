@@ -66,7 +66,7 @@ class SubAccount extends ModelContract
      * @var array<int, string>
      */
     protected $appends = [
-        'intitule'
+        'intitule', 'categorie_de_compte'
     ];
 
     /**
@@ -98,6 +98,16 @@ class SubAccount extends ModelContract
     public function getIntituleAttribute(): string
     {
         return $this->sous_compte->name ;
+    }
+
+    /**
+     * Get attribute.
+     *
+     * @return string
+     */
+    public function getCategorieDeCompteAttribute(): string
+    {
+        return $this->sous_compte->categorie_de_compte;
     }
     
     /**

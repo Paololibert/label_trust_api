@@ -10,13 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Str;
-use App\Models\Finances\SubAccount as SubDivision;
-use App\Models\Scopes\FindAccountByScope;
-use App\Models\Scopes\FindAccountScope;
 use Core\Utils\Exceptions\ApplicationException;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ***`PlanComptable`***
@@ -115,6 +111,16 @@ class PlanComptable extends ModelContract
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class, 'plan_comptable_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function sortAccounts(): HasMany
+    {
+        return $this->hasMany(Account::class, 'plan_comptable_id')
+            ->join('classes_de_compte', 'plan_comptable_comptes.classe_id', '=', 'classes_de_compte.id')
+            ->orderBy('classes_de_compte.class_number');
     }
 
     /**
@@ -233,7 +239,7 @@ class PlanComptable extends ModelContract
     public function findAccountOrSubAccount(string $accountNumber, $query = null, $columns = ["*"])
     {
         if (strlen($accountNumber) < 2) throw new ApplicationException("Veuillez soumettre un numero de compte invalid", 1);
-        
+
         if (strlen($accountNumber) === 2) {
             $query = $query ?? $this->accounts();
 
@@ -243,7 +249,7 @@ class PlanComptable extends ModelContract
         } else {
             $query = $query ?? $this->sub_accounts_and_sub_divisions(columns: $columns);
             return $query->whereNull('deleted_at')
-                    ->where('account_number', '=', $accountNumber)->first();
+                ->where('account_number', '=', $accountNumber)->first();
         }
 
         return null;
@@ -308,4 +314,5 @@ class PlanComptable extends ModelContract
             $query->transactions($exercice_comptable_id);
         });
     }
+
 }

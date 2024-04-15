@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Domains\Finances\EcrituresComptable\Services\RESTful;
 
+use App\Http\Resources\Finances\EcritureComptableCollection;
+use App\Http\Resources\Finances\EcritureComptableResource;
 use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\RestJsonQueryService;
 use Core\Utils\DataTransfertObjects\DTOInterface;
@@ -82,7 +84,7 @@ class EcritureComptableRESTfulQueryService extends RestJsonQueryService implemen
 
             return JsonResponseTrait::success(
                 message: "Ecriture comptable successfully query.",
-                data: $ecritures_comptable,
+                data: new EcritureComptableCollection(resource: $ecritures_comptable, resourceClass: EcritureComptableResource::class),
                 status_code: Response::HTTP_OK
             );
         } catch (CoreException $exception) {
@@ -111,7 +113,7 @@ class EcritureComptableRESTfulQueryService extends RestJsonQueryService implemen
         
             return JsonResponseTrait::success(
                 message: "Ecriture comptable successfully query.",
-                data: $ecriture_comptable,
+                data: new EcritureComptableResource($ecriture_comptable),
                 status_code: Response::HTTP_OK
             );
         } catch (CoreException $exception) {

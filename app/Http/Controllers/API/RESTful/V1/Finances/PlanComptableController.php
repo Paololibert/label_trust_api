@@ -19,6 +19,7 @@ use Domains\Finances\PlansComptable\Accounts\SubAccounts\DataTransfertObjects\Cr
 use Domains\Finances\PlansComptable\Accounts\SubAccounts\DataTransfertObjects\UpdateSubAccountDTO;
 use Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulReadWriteServiceContract;
 use Domains\Finances\PlansComptable\Accounts\SubAccounts\Services\RESTful\Contracts\SubAccountRESTfulQueryServiceContract;
+use Domains\Finances\PlansComptable\DataTransfertObjects\ImportPlanDTO;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -70,6 +71,26 @@ class PlanComptableController extends RESTfulResourceController
 
         $this->accountRESTfulQueryService = $accountRESTfulQueryService;
         $this->accountRESTfulReadWriteService = $accountRESTfulReadWriteService;
+    }
+
+    /**
+     * Import a plan comptable.
+     *
+     * @param  Request                          $request            The request object containing the data for updating the resource.
+     * @return \Illuminate\Http\JsonResponse                        The JSON response indicating the status of the operation.
+     */
+    public function import(Request $request): JsonResponse
+    {
+        // Instantiate the ResourceRequest with a CreateAccountDTO instance
+        $createRequest = app(ResourceRequest::class, ["dto" => new ImportPlanDTO]);
+
+        // Validate the incoming request using the ResourceRequest rules
+        if ($createRequest) {
+            $createRequest->validate($createRequest->rules());
+        }
+
+        // Call the service method to add the accounts to the Plan Comptable
+        return $this->restJsonReadWriteService->import($createRequest->getDto());
     }
 
     /**

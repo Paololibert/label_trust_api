@@ -59,9 +59,9 @@ class SubAccountReadWriteRepository extends EloquentReadWriteRepository
             $this->model = parent::create($data);
 
             if(isset($data['sub_divisions'])){
-                $this->attachSubDivisions($this->model->id, $data['sub_divisions']);
+                $this->attachSubDivisions($this->model->id, $data['sub_divisions']);    
             }
-
+            
             return $this->model->refresh();
         } catch (CoreException $exception) {
             // Throw a NotFoundException with an error message and the caught exception
@@ -83,17 +83,21 @@ class SubAccountReadWriteRepository extends EloquentReadWriteRepository
     {
         try {
 
+            //if($subDivisionDataArray["account_number"] === 101) dump([$this->model->account_number]);
             $this->model = $this->find($subAccountId);
 
             foreach ($subDivisionDataArray as $subDivisionItem) {
+                
                 if(isset($subDivisionItem['sous_compte_id'])){
                     if (!parent::relationExists($this->model->sub_divisions(), [$subDivisionItem['sous_compte_id']], isPivot: false)) {
                         $this->create(array_merge($subDivisionItem, ["subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
                     }
-                }else {
-                    $compte = $this->compteReadWriteRepository->create(array_merge($subDivisionItem, $subDivisionItem["compte_data"]));
+                } else if (isset($subDivisionItem['compte_data'])) {
+                    $compte = $this->compteReadWriteRepository->firstOrCreate(["name" => strtolower($subDivisionItem["compte_data"]["name"])], array_merge($subDivisionItem, $subDivisionItem["compte_data"]));
 
-                    $this->create(array_merge($subDivisionItem, ["sous_compte_id" => $compte->id, "subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
+                    $data = array_merge($subDivisionItem, ["sous_compte_id" => $compte->id, "subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]);
+                    
+                    $this->create($data);
                 }
             }
     

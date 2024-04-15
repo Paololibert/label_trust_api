@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Finances;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -35,15 +35,15 @@ class JournauxResource extends JsonResource
             "id"                            => $this->id,
             "fiscal_year"                   => $this->fiscal_year,
             "date_ouverture"                => $this->date_ouverture->format("Y-m-d"),
-            "date_fermeture"                => $this->date_fermeture,
+            "date_fermeture"                => $this->date_fermeture?->format("Y-m-d"),
             "status_exercice"               => $this->status_exercice,
-            "journaux"                      => $this->journaux->map(function ($journal) {
+            "journaux"                      => $this->journal_entries->map(function ($entry) {
                 return [
-                    'id'                    => $journal->id,
-                    'code'                  => $journal->code,
-                    'name'                  => $journal->name,
-                    "ecritures_comptable"   => $this->ecritures($journal->ecritures_comptable),
-                    'created_at'            => $journal->created_at->format("Y-m-d")
+                    'id'                    => $entry->journal->id,
+                    'code'                  => $entry->journal->code,
+                    'name'                  => $entry->journal->name,
+                    "ecritures_comptable"   => EcritureComptableResource::collection($entry->journal->ecritures_comptable),
+                    'created_at'            => $entry->journal->created_at->format("Y-m-d")
                 ];
             }),
             "created_at"                        => $this->created_at->format("Y-m-d")

@@ -186,4 +186,39 @@ class PlanComptableRESTfulReadWriteService extends RestJsonReadWriteService impl
             throw new ServiceException(message: "Failed to validate a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
+
+
+    /**
+     * Importer un plan comptable.
+     *
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $data       The IDs of the accounts to be deleted.
+     * @return \Illuminate\Http\JsonResponse                                The JSON response indicating the validation result.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                      If there is an issue with validating the Plan Comptable.
+     */
+    public function import(\Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse{
+
+        // Begin the transaction
+        DB::beginTransaction();
+
+        try {
+            // Logic to validate the specified Plan Comptable
+            $plan = $this->readWriteService->getRepository()->import(data: $data->toArray());
+
+            // Commit the transaction
+            DB::commit();
+
+            return JsonResponseTrait::success(
+                message: 'Plan Comptable import successfully.',
+                data: $plan,
+                status_code: Response::HTTP_OK
+            );
+        } catch (CoreException $exception) {
+            // Begin the transaction
+            DB::rollback();
+    
+            // Throw a ServiceException if there is an issue with validating a plan comptable
+            throw new ServiceException(message: "Failed to import: " . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        }
+    }
 }

@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
+
 
 class QueryBuilderServiceProvider extends ServiceProvider
 {
@@ -18,6 +20,22 @@ class QueryBuilderServiceProvider extends ServiceProvider
                     $query->where('id', '!=', $this->model->id);
                 })
                 ->exists();
+        });
+
+
+
+        /**
+         * Sort a collection by a specific attribute of a related model.
+         *
+         * @param \Illuminate\Support\Collection $collection
+         * @param string $relation
+         * @param string $attribute
+         * @return \Illuminate\Support\Collection
+         */
+        Collection::macro('sortByRelatedAttribute', function ($relationName, $attribute, $direction = 'asc') {
+            return $this->sortBy(function ($item) use ($relationName, $attribute) {
+                return optional($item->{$relationName})->{$attribute};
+            }, SORT_REGULAR, $direction === 'desc');
         });
     }
 

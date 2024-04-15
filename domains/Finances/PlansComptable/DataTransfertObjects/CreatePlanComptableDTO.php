@@ -19,13 +19,14 @@ use Illuminate\Validation\Rule;
  */
 class CreatePlanComptableDTO extends BaseDTO
 {
-
-    public function __construct()
+    public function __construct(array $data = [], array $rules = [])
     {
-        parent::__construct();
+        parent::__construct(data: $data, rules: $rules);
 
-        if (array_key_exists('accounts', $this->rules())) {
-            $this->merge(new CreateAccountDTO());
+        if (array_key_exists('accounts', $this->rules()) || array_key_exists('accounts', $this->properties)) {
+            $dtObject = new CreateAccountDTO(data: $data, rules: $rules);
+
+            $this->merge($dtObject);
         }
     }
 
@@ -47,8 +48,8 @@ class CreatePlanComptableDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["required", "string", "max:150", "unique_ignore_case:plans_comptable,name"],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "name"                    => ["required", "string", "max:150", "unique_ignore_case:plans_comptable,name"],
+            'can_be_deleted'        => ['sometimes', 'boolean', 'in:' . true . ',' . false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);

@@ -41,8 +41,9 @@ class CreateClasseDeCompteDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", "max:25", 'unique_ignore_case:classes_de_compte,name'],
-            'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "intitule"              => ["required", "string", "max:25", "unique_ignore_case:classes_de_compte,intitule"],
+            "class_number"          => ["required", "integer", "min:0", "max:10", "unique:classes_de_compte,class_number"],
+            'can_be_deleted'        => ["sometimes", "boolean", 'in:'.true.','.false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);

@@ -15,6 +15,7 @@ use Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteReposi
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 /**
@@ -84,9 +85,9 @@ class ExerciceComptableReadWriteRepository extends EloquentReadWriteRepository
 
                 if (!$account) throw new ModelNotFoundException("Compte inconnu : {$accountDataArray['account_number']}.", 1);
 
-                $this->model->balances()->create(array_merge($accountDataArray, ["balanceable_id" => $account->id, "balanceable_type" => $account::class]));
+                if(!$this->model->balances()->where("balanceable_id", $account->id)->first()) $this->model->balances()->create(array_merge($accountDataArray, ["balanceable_id" => $account->id, "balanceable_type" => $account::class]));
                 if (isset($accountDataArray["sub_accounts"])) {
-                    $this->reportDeSoldeAuxSousCompte($accountDataArray["sub_accounts"]);
+                    $this->reportDeSoldeAuxSousCompte(accountsData: $accountDataArray["sub_accounts"], parentAccountNumber: $account->account_number);
                 }
             }
 
@@ -102,17 +103,26 @@ class ExerciceComptableReadWriteRepository extends EloquentReadWriteRepository
      * 
      * @return void
      */
-    private function reportDeSoldeAuxSousCompte($accountsData): void
+    private function reportDeSoldeAuxSousCompte($accountsData, string $parentAccountNumber): void
     {
+        $query = $this->model->plan_comptable->sub_accounts_and_sub_divisions(query: $this->model->plan_comptable->accounts(), columns: ["id", "account_number"]);
+
+        /* $query = $query->filter(function ($model) use ($parentAccountNumber) {
+            // Perform a "where like" operation on the desired attribute
+            return stripos($model->account_number, $parentAccountNumber) !== false;
+        }); */
+
+        $query = DB::table("plan_comptable_compte_sous_comptes")->select("id", "account_number")->get();
+        
         foreach ($accountsData as $key => $subAccountData) {
-            $subAccount = $this->model->plan_comptable->findAccountOrSubAccount(accountNumber: $subAccountData["account_number"], columns: ["id", "account_number"]);
+            $subAccount = $this->model->plan_comptable->findAccountOrSubAccount(query: $query, accountNumber: $subAccountData["account_number"], columns: ["id", "account_number"]);
 
             if (!$subAccount) throw new ModelNotFoundException("Compte inconnu : {$subAccountData['account_number']}.", 1);
 
-            $this->model->balances()->create(array_merge($subAccountData, ["balanceable_id" => $subAccount->id, "balanceable_type" => $subAccount::class]));
+            if(!$this->model->balances()->where("balanceable_id", $subAccount->id)->first()) $this->model->balances()->create(array_merge($subAccountData, ["balanceable_id" => $subAccount->id, "balanceable_type" => $subAccount::class]));
 
             if (isset($subAccountData["sub_divisions"])) {
-                $this->reportDeSoldeAuxSousCompte($subAccountData["sub_divisions"]);
+                $this->reportDeSoldeAuxSousCompte(accountsData: $subAccountData["sub_divisions"], parentAccountNumber: $subAccount->account_number);
             }
         }
     }
@@ -126,8 +136,6 @@ class ExerciceComptableReadWriteRepository extends EloquentReadWriteRepository
     {
         $this->model = $this->find($exerciceComptableId);
 
-        return $this->model->update(["date_fermeture" => \Carbon\Carbon::createFromFormat("d/m/Y", $data["cloture_at"]) ?? \Carbon\Carbon::now(), "status_exercice" => StatusExerciceEnum::CLOSE]);
-
         /* foreach ($this->model->plan_comptable->accounts as $key => $account) {
 
             $this->model->close_balance()->create(['solde_debit', 'solde_credit' => $account->balance()->where(), 'date_report' => \Carbon\Carbon::now(), 'date_cloture' => \Carbon\Carbon::now(), "ligneable_id" => $account->id, "ligneable_type" => $account::class]);
@@ -136,6 +144,29 @@ class ExerciceComptableReadWriteRepository extends EloquentReadWriteRepository
                 $this->reportDeSoldeAuxSousCompte($subAccountData["sub_divisions"]);
             }
         } */
+
+        return $this->model->update(["date_fermeture" => \Carbon\Carbon::createFromFormat("d/m/Y", $data["cloture_at"]) ?? \Carbon\Carbon::now(), "status_exercice" => StatusExerciceEnum::CLOSE]);
+
+    }
+
+    /**
+     * Report de solde aux sous-comptes et aux comptes de sub-divisions
+     * 
+     * @return void
+     */
+    private function clotureDesComptes($accountsData): void
+    {
+        foreach ($accountsData as $key => $subAccountData) {
+            $subAccount = $this->model->plan_comptable->findAccountOrSubAccount(accountNumber: $subAccountData["account_number"], columns: ["id", "account_number"]);
+
+            if (!$subAccount) throw new ModelNotFoundException("Compte inconnu : {$subAccountData['account_number']}.", 1);
+
+            $this->model->balances()->create(array_merge($subAccountData, ["balanceable_id" => $subAccount->id, "balanceable_type" => $subAccount::class]));
+
+            if (isset($subAccountData["sub_divisions"])) {
+                $this->clotureDesComptes($subAccountData["sub_divisions"]);
+            }
+        }
     }
 
     private function sous()

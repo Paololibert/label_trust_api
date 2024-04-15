@@ -56,6 +56,26 @@ class EloquentReadWriteRepository extends EloquentReadOnlyRepository implements 
     }
 
     /**
+     * Create a new record.
+     *
+     * @param  array $identifiers         The data for creating the record.
+     * @param  array $data                The data for creating the record.
+     * @return Model                      The created record.
+     *
+     * @throws \Core\Utils\Exceptions\RepositoryException If there is an error while creating the record.
+     */
+    public function firstOrCreate(array $identifiers, array $data): Model
+    {
+        try {
+            return $this->model->firstOrCreate($identifiers, $data)->fresh();
+        } catch (QueryException $exception) {
+            throw new CoreQueryException(message: "Error while creating the record.", previous: $exception);
+        } catch (Throwable $exception) {
+            throw new RepositoryException(message: "Error while creating the record.", previous: $exception);
+        }
+    }
+
+    /**
      * Update an existing record.
      *
      * @param  Model|string $id       The ID of the record to update.

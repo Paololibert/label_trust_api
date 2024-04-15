@@ -103,7 +103,7 @@ class ExerciceComptableRESTfulQueryService extends RestJsonQueryService implemen
             $balance = $this->queryService->getRepository()->journaux($exerciceComptableId, $accountsBalanceOfAPeriodeArrayData->toArray());
 
             return JsonResponseTrait::success(
-                message: "Journaux successfully query.",
+                message: "Successfully query.",
                 data: $balance,
                 status_code: Response::HTTP_OK
             );

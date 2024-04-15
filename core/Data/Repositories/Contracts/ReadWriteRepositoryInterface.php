@@ -48,6 +48,17 @@ interface ReadWriteRepositoryInterface extends ReadOnlyRepositoryInterface
     public function create(array $data): \Illuminate\Database\Eloquent\Model;
 
     /**
+     * Get first record or Create a new record.
+     *
+     * @param  array $identifiers         The data for creating the record.
+     * @param  array $data                The data for creating the record.
+     * @return Model                      The created record.
+     *
+     * @throws \Core\Utils\Exceptions\RepositoryException If there is an error while creating the record.
+     */
+    public function firstOrCreate(array $identifiers, array $data): \Illuminate\Database\Eloquent\Model;
+
+    /**
      * Update an existing record.
      *
      * @param  \Illuminate\Database\Eloquent\Model|string    $id       The ID of the record to update.

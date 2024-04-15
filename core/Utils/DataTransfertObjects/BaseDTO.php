@@ -49,11 +49,11 @@ class BaseDTO implements DTOInterface
      *
      * @param array $data The initial data to populate the DTO properties.
      */
-    public function __construct(array $data = [])
+    public function __construct(array $data = [], array $rules = [])
     {
-        $this->mergeArray($data);
+        $this->mergeArray(array_merge(request()->all(), $data));
         $this->getProperties();
-        $this->rules();
+        $this->rules($rules);
         $this->messages();
     }
 
@@ -285,10 +285,13 @@ class BaseDTO implements DTOInterface
      * @param  Request $request The request object to populate the DTO from.
      * @return self             The new instance of the DTO.
      */
-    public static function fromRequest(Request $request): self
+    public static function fromRequest(Request $request, array $data = [], array $rules = [], array $messages = []): self
     {  
         $dto = new static();
-        $dto->mergeArray($request->all());
+        $dto->mergeArray(array_merge($request->all(), $data));
+        $dto->rules($rules);
+        $dto->messages($messages);
+
         return $dto;
     }
 

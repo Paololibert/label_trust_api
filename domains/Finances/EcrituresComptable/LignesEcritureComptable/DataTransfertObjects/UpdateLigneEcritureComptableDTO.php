@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Domains\Finances\EcrituresComptable\LignesEcritureComptable\DataTransfertObjects;
 
 use App\Models\Finances\LigneEcritureComptable;
+use App\Rules\AccountNumberExistsInEitherTable;
+use App\Rules\EquilibreEcritureComptable;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Core\Utils\Enums\TypeEcritureCompteEnum;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 /**
@@ -50,11 +53,13 @@ class UpdateLigneEcritureComptableDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            'type_ecriture_compte'      => ['sometimes', "string", new Enum(TypeEcritureCompteEnum::class)],
-            "montant"                   => ["sometimes", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            "ligneable_id"              => ["sometimes", "exists:".$this->ligneableRule],
-            "compte_id"                 => ["sometimes", "exists:comptes,id"],
-            'can_be_deleted'            => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "lignes_ecriture"                           => ["required", "array", "min:2", new EquilibreEcritureComptable()],
+            "lignes_ecriture.*"                         => ["distinct", "array"],
+            'lignes_ecriture.*.id'                      => ['sometimes', "string", Rule::exists("lignes_ecriture_comptable", "id")->where("ligneable_id", request()->route("operationComptableId") )],
+            'lignes_ecriture.*.type_ecriture_compte'    => ['required', "string", new Enum(TypeEcritureCompteEnum::class)],
+            "lignes_ecriture.*.montant"                 => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
+            "lignes_ecriture.*.account_number"          => ["required", "distinct", new AccountNumberExistsInEitherTable()],
+            'can_be_deleted'                            => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);

@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Domains\Finances\OperationsDisponible\DataTransfertObjects;
 
+use App\Models\Finances\ExerciceComptable;
 use App\Models\Finances\OperationComptableDisponible;
 use Core\Utils\DataTransfertObjects\BaseDTO;
+use Core\Utils\Enums\StatusExerciceEnum;
 use Domains\Finances\EcrituresComptable\LignesEcritureComptable\DataTransfertObjects\CreateLigneEcritureComptableDTO;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class ***`CreateOperationDisponibleDTO`***
@@ -19,10 +22,31 @@ use Domains\Finances\EcrituresComptable\LignesEcritureComptable\DataTransfertObj
 class CreateOperationDisponibleDTO extends BaseDTO
 {
 
+    /**
+     * @var
+     */
+    protected $exercice_comptable;
+    
+    /**
+     * Constructor
+     * 
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
-        $this->merge(new CreateLigneEcritureComptableDTO('ecritures_comptable'), 'lignes_ecriture', ['array', 'min:2']);
+
+        $this->exercice_comptable = ExerciceComptable::find(request()->route("exercice_comptable_id"));
+
+        if (!$this->exercice_comptable) {
+            throw ValidationException::withMessages(["Exercice comptable inconnu"]);
+        } else {
+            if ($this->exercice_comptable->status_exercice === StatusExerciceEnum::CLOSE) {
+                throw ValidationException::withMessages(["L'exercice comptable est deja cloturer"]);
+            }
+        }
+
+        $this->merge(new CreateLigneEcritureComptableDTO('operations_comptable'));
     }
 
     /**
@@ -42,13 +66,11 @@ class CreateOperationDisponibleDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
+        $periode = $this->exercice_comptable?->periode_exercice;
+
         $rules = array_merge([
             "libelle"                   => ["required", "string", "max:25"],
-            "total_debit"               => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            "total_credit"              => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            "date_ecriture"             => ["required", "date", 'date_format:d/m/y'],
-            "exercice_comptable_id"     => ["required", "exists:periodes_exercice,id"],
-            "journal_id"                => ["required", "exists:journaux,id"],
+            "date_ecriture"             => ["required", 'date_format:Y-m-d', "after_or_equal:" . $periode?->date_debut_periode . "/{$this->exercice_comptable?->fiscal_year}", 'before_or_equal:' . $periode?->date_fin_periode . "/{$this->exercice_comptable?->fiscal_year}"],
             'can_be_deleted'            => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

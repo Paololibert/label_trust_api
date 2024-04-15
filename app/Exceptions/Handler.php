@@ -65,6 +65,9 @@ class Handler extends ExceptionHandler
         else if($exception instanceof ThrottleRequestsException){
             throw new TooManyAttemptsException(previous: $exception);            
         }
+        else if($exception instanceof \Symfony\Component\ErrorHandler\Error\FatalError){
+            throw new ApplicationException(message: 'An unexpected error occurred.'. $exception->getMessage(), previous: $exception);   
+        }
         else if(!$exception instanceof CoreException){
             throw new ApplicationException(message: $exception->getMessage(), previous: $exception);   
         }
