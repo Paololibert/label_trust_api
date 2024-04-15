@@ -43,11 +43,9 @@ class ArticleIqp extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'norme',
-        'unite_mesure_id',
-        'article_id',
-        'iqp_id'
+        'name','norme',
+        'unite_mesure_id','article_id',
+        'iqp_id','quantity_treated'
     ];
 
 
@@ -57,11 +55,9 @@ class ArticleIqp extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'name',
-        'norme',
-        'unite_mesure_id',
-        'article_id',
-        'iqp_id'
+        'name','norme',
+        'unite_mesure_id','article_id',
+        'iqp_id','quantity_treated'
     ];
 
     /**
@@ -75,6 +71,7 @@ class ArticleIqp extends ModelContract
         'unite_mesure_id'       =>'string',      
         'article_id'            =>'string',
         'iqp_id'                =>'string',
+        'quantity_treated'      =>'string'
     ];
 
     /**

@@ -270,6 +270,8 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                     Route::apiResource('article_iqps', 'ArticleIqpController')->parameters(['article_iqps' => 'article_iqp_id']);
 
+                    Route::apiResource('commandes', 'CommandeController')->parameters(['commandes' => 'commande_id']);
+
                 });
 
                 Route::group(['namespace' => 'Articles'], function () {                

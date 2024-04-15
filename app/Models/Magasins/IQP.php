@@ -6,6 +6,7 @@ namespace App\Models\Magasins;
 
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Utils\Enums\TypeIQPEnum;
+use Core\Utils\Enums\TypeOfIQPEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -43,7 +44,8 @@ class IQP extends ModelContract
      */
     protected $fillable = [
         'name',
-        'type_of_iqp'
+        'type_of_iqp',
+        'iqp_type'
     ];
 
 
@@ -54,7 +56,8 @@ class IQP extends ModelContract
      */
     protected $visible = [
         'name',
-        'type_of_iqp'
+        'type_of_iqp',
+        'iqp_type'
     ];
 
     
@@ -65,6 +68,7 @@ class IQP extends ModelContract
      */
     protected $attributes = [
         'type_of_iqp'          => TypeIQPEnum::DEFAULT,
+        'iqp_type'             => TypeOfIQPEnum::DEFAULT
     ];
 
     /**
@@ -75,6 +79,7 @@ class IQP extends ModelContract
     protected $casts = [
         'name'              => 'string',
         'type_of_iqp'       => TypeIQPEnum::class,
+        'iqp_type'          => TypeOfIQPEnum::class
     ];
 
     /**

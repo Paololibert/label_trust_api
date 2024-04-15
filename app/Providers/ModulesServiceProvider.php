@@ -969,6 +969,54 @@ class ModulesServiceProvider extends ServiceProvider
                 return new \Domains\Magasins\IQP\Services\RESTful\IQPRESTfulQueryService($queryService);
             }
         );
+        
+        // Binds the implementation of CommandeRESTfulReadWriteServiceContract to the CommandeRESTfulReadWriteService class.
+        $this->app->bind(
+            \Domains\Magasins\Commandes\Commande\Services\RESTful\Contracts\CommandeRESTfulReadWriteServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for CommandeRESTfulReadWriteService
+                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
+
+                // Create and return an instance of CommandeRESTfulReadWriteService
+                return new \Domains\Magasins\Commandes\Commande\Services\RESTful\CommandeRESTfulReadWriteService($readWriteService);
+            }
+        );
+
+        // Binds the implementation of CommandeRESTfulQueryServiceContract to the CommandeRESTfulQueryService class.
+        $this->app->bind(
+            \Domains\Magasins\Commandes\Commande\Services\RESTful\Contracts\CommandeRESTfulQueryServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for CommandeRESTfulQueryService
+                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
+
+                // Create and return an instance of CommandeRESTfulQueryService
+                return new \Domains\Magasins\Commandes\Commande\Services\RESTful\CommandeRESTfulQueryService($queryService);
+            }
+        );
+        
+        // Binds the implementation of CommandeArticleRESTfulReadWriteServiceContract to the CommandeArticleRESTfulReadWriteService class.
+        $this->app->bind(
+            \Domains\Magasins\Commandes\CommandeArticle\Services\RESTful\Contracts\CommandeArticleRESTfulReadWriteServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for CommandeArticleRESTfulReadWriteService
+                $readWriteService = $app->make(\Core\Logic\Services\Contracts\ReadWriteServiceContract::class);
+
+                // Create and return an instance of CommandeArticleRESTfulReadWriteService
+                return new \Domains\Magasins\Commandes\CommandeArticle\Services\RESTful\CommandeArticleRESTfulReadWriteService($readWriteService);
+            }
+        );
+
+        // Binds the implementation of CommandeArticleRESTfulQueryServiceContract to the CommandeArticleRESTfulQueryService class.
+        $this->app->bind(
+            \Domains\Magasins\Commandes\CommandeArticle\Services\RESTful\Contracts\CommandeArticleRESTfulQueryServiceContract::class,
+            function ($app) {
+                // Resolve the necessary dependencies for CommandeArticleRESTfulQueryService
+                $queryService = $app->make(\Core\Logic\Services\Contracts\QueryServiceContract::class);
+
+                // Create and return an instance of CommandeArticleRESTfulQueryService
+                return new \Domains\Magasins\Commandes\CommandeArticle\Services\RESTful\CommandeArticleRESTfulQueryService($queryService);
+            }
+        );
     }
 
     /**

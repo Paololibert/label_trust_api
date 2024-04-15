@@ -2,19 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Domains\Employees\EmployeeContractuels\DataTransfertObjects;
+namespace Domains\Magasins\Commandes\CommandeArticle\DataTransfertObjects;
 
-use App\Models\EmployeeContractuel;
+use App\Models\Magasins\CommandeArticle;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
-class UpdateEmployeeContractuelDTO extends BaseDTO
+/**
+ * Class ***`UpdateCommandeArticleDTO`***
+ *
+ * This class extends the ***`BaseDTO`*** class.
+ * It represents the data transfer object for updating a new ***`CommandeArticle`*** model.
+ *
+ * @package ***`\Domains\Magasins\Commandes\CommandeArticle\DataTransfertObjects`***
+ */
+class UpdateCommandeArticleDTO extends BaseDTO
 {
 
     public function __construct()
     {
         parent::__construct();
     }
-
+    
     /**
      * Get the class name of the model associated with the DTO.
      *
@@ -22,7 +30,7 @@ class UpdateEmployeeContractuelDTO extends BaseDTO
      */
     protected function getModelClass(): string
     {
-        return EmployeeContractuel::class;
+        return CommandeArticle::class;
     }
 
     /**
@@ -33,18 +41,12 @@ class UpdateEmployeeContractuelDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            'reference'             => ['sometimes', 'string'],
-            'type_contract'         => ['sometimes', 'string'],
-            'duree'                 => ['sometimes', 'numeric'],
-            'date_debut'            => ['sometimes', 'date'],
-            'date_fin'              => ['sometimes', 'date'],
-            'contract_status'       => ['sometimes', 'string'],
-            'renouvelable'          => ['sometimes', 'boolean'],
-            "poste_salaire_id"      => ["present_if:montant,null", "sometimes", "uuid", "exists:poste_salaries,id"],
-            "montant"               => ["present_if:poste_salaire_id,null", "sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
-            'poste_id'              => ['sometimes', 'string', 'exists:postes,id'],
-            'unite_mesures_id'      => ['sometimes', 'string', 'exists:unite_mesures,id'],
-            'can_be_deleted'        => ['sometimes', 'boolean']
+            'articles'                          => ['sometimes','array'],
+            'articles.*.article_id'             => ["sometimes", "string", 'exists:articles,id'],
+            'articles.*.quantity'        		=> ["sometimes","numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            "discount"                          => ["sometimes","numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            'commande_id'                       => ['sometimes', 'string', 'exists:commandes,id'],
+            'can_be_deleted'                    => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);

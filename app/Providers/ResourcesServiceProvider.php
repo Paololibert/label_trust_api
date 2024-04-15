@@ -289,6 +289,21 @@ class ResourcesServiceProvider extends ServiceProvider
             \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
         )
         ->give(\Domains\Magasins\IQP\Repositories\IQPReadWriteRepository::class);
+
+
+        // Bind ReadOnlyRepositoryInterface to CommandeReadOnlyRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\CommandeController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadOnlyRepositoryInterface::class
+        )
+        ->give(\Domains\Magasins\Commandes\Commande\Repositories\CommandeReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to CommandeReadWriteRepository
+        $this->app->when(\App\Http\Controllers\API\RESTful\V1\Magasins\CommandeController::class)
+        ->needs(
+            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+        )
+        ->give(\Domains\Magasins\Commandes\Commande\Repositories\CommandeReadWriteRepository::class);
     }
 
     /**

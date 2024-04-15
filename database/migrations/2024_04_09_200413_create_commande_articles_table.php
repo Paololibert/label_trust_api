@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use Core\Utils\Enums\TypeIQPEnum;
+use Core\Utils\Enums\StatutsOrderEnum;
+use Core\Utils\Enums\TypeOrderEnum;
 use Core\Utils\Traits\Database\Migrations\CanDeleteTrait;
 use Core\Utils\Traits\Database\Migrations\HasCompositeKey;
 use Core\Utils\Traits\Database\Migrations\HasForeignKey;
@@ -14,13 +15,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class ***`CreateArticleIQPsTable`***
+ * Class ***`CreateCommandeArticlesTable`***
  *
- * A migration class for creating the "article" table with UUID primary key and timestamps.
+ * A migration class for creating the "supplier" table with UUID primary key and timestamps.
  *
- * @package ***`\Database\Migrations\CreateArticleIQPsTable`***
+ * @package ***`\Database\Migrations\CreateCommandeArticlesTable`***
  */
-class CreateArticleIQPsTable extends Migration
+class CreateCommandeArticlesTable extends Migration
 {
     use CanDeleteTrait, HasCompositeKey, HasForeignKey, HasTimestampsAndSoftDeletes, HasUuidPrimaryKey;
 
@@ -38,24 +39,17 @@ class CreateArticleIQPsTable extends Migration
 
         try {
 
-            Schema::create('article_iqps', function (Blueprint $table) {
-                // Define a UUID primary key for the 'article_iqps' table
+            Schema::create('commande_articles', function (Blueprint $table) {
+                // Define a UUID primary key for the 'commande_articles' table
                 $this->uuidPrimaryKey($table);
 
-                // Define a unique string column for the article_iqps name
-                $table->string('name')->unique()->comment('The unique name of the article_iqps');
+                // the date of the order 
+                $table->decimal('quantity', 12, 2)
+                ->comment('The quantity of article order.');
 
-                // Define string column for the article_iqps norme
-                $table->string('norme')->comment('The norme of the article_iqps');
-
-                // Define a foreign key for 'unite_mesure_id', referencing the 'unite_mesures' table
-                $this->foreignKey(
-                    table: $table,                // The table where the foreign key is being added
-                    column: 'unite_mesure_id',        // The column to which the foreign key is added ('unite_mesure_id' in this case)
-                    references: 'unite_mesures',    // The referenced table (unite_mesures) to establish the foreign key relationship
-                    onDelete: 'cascade',         // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: false              // Specify whether the foreign key column can be nullable (false means it is not allows to be NULL)
-                );
+                // the discount of the article order
+                $table->decimal('discount', 12, 2)
+                ->comment('The discount of article order.');
 
                 // Define a foreign key for 'article_id', referencing the 'articles' table
                 $this->foreignKey(
@@ -65,12 +59,12 @@ class CreateArticleIQPsTable extends Migration
                     onDelete: 'cascade',         // Action to perform when the referenced record is deleted (cascade deletion)
                     nullable: false             // Specify whether the foreign key column can be nullable (false means it is not allows to be NULL)
                 );
-
-                // Define a foreign key for 'iqp_id', referencing the 'iqps' table
+                
+                // Define a foreign key for 'commande_id', referencing the 'commandes' table
                 $this->foreignKey(
                     table: $table,                // The table where the foreign key is being added
-                    column: 'iqp_id',        // The column to which the foreign key is added ('iqp_id' in this case)
-                    references: 'iqps',    // The referenced table (iqps) to establish the foreign key relationship
+                    column: 'commande_id',        // The column to which the foreign key is added ('commande_id' in this case)
+                    references: 'commandes',    // The referenced table (commandes) to establish the foreign key relationship
                     onDelete: 'cascade',         // Action to perform when the referenced record is deleted (cascade deletion)
                     nullable: false             // Specify whether the foreign key column can be nullable (false means it is not allows to be NULL)
                 );
@@ -97,7 +91,7 @@ class CreateArticleIQPsTable extends Migration
                 );
 
                 // Create a composite index for efficient searching on the combination of name, slug, key, status and can_be_delete
-                $this->compositeKeys(table: $table, keys: ['name', 'status', 'can_be_delete']);
+                $this->compositeKeys(table: $table, keys: ['status', 'can_be_delete']);
 
                 // Add timestamp and soft delete columns to the table
                 $this->addTimestampsAndSoftDeletesColumns($table);
@@ -111,7 +105,7 @@ class CreateArticleIQPsTable extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to migrate "article_iqps" table: ' . $exception->getMessage(),
+                message: 'Failed to migrate "commande_articles" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }
@@ -130,8 +124,8 @@ class CreateArticleIQPsTable extends Migration
         DB::beginTransaction();
 
         try {
-            // Drop the "article_iqps" table if it exists
-            Schema::dropIfExists('article_iqps');
+            // Drop the "commande_articles" table if it exists
+            Schema::dropIfExists('commande_articles');
 
             // Commit the transaction
             DB::commit();
@@ -141,7 +135,7 @@ class CreateArticleIQPsTable extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to drop "article_iqps" table: ' . $exception->getMessage(),
+                message: 'Failed to drop "commande_articles" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }

@@ -43,6 +43,7 @@ class UpdateArticleIqpDTO extends BaseDTO
         $rules = array_merge([
             "name"            		        => ["string", "sometimes", 'unique:article_iqps,name'],
             "norme"                         => ["sometimes", "string"],
+            "quantity_treated"              => ["sometimes", "string"],
             'unite_mesure_id'               => ['sometimes', 'string', 'exists:unite_mesures,id'],
             'article_id'                    => ['sometimes', 'string', 'exists:articles,id'],
             'iqp_id'                        => ['sometimes', 'string', 'exists:iqps,id'],

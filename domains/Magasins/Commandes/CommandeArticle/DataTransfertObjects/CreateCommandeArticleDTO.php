@@ -2,23 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Domains\Magasins\IQP\DataTransfertObjects;
+namespace Domains\Magasins\Commandes\CommandeArticle\DataTransfertObjects;
 
-use App\Models\Magasins\IQP;
+use App\Models\Magasins\CommandeArticle;
 use Core\Utils\DataTransfertObjects\BaseDTO;
-use Core\Utils\Enums\TypeIQPEnum;
-use Core\Utils\Enums\TypeOfIQPEnum;
-use Illuminate\Validation\Rules\Enum;
 
 /**
- * Class ***`CreateIQPDTO`***
+ * Class ***`CreateCommandeArticleDTO`***
  *
  * This class extends the ***`BaseDTO`*** class.
- * It represents the data transfer object for creating a new ***`IQP`*** model.
+ * It represents the data transfer object for creating a new ***`CommandeArticle`*** model.
  *
- * @package ***`\Domains\Magasins\IQP\DataTransfertObjects`***
+ * @package ***`\Domains\Magasins\Commandes\CommandeArticle\DataTransfertObjects`***
  */
-class CreateIQPDTO extends BaseDTO
+class CreateCommandeArticleDTO extends BaseDTO
 {
 
     public function __construct()
@@ -33,7 +30,7 @@ class CreateIQPDTO extends BaseDTO
      */
     protected function getModelClass(): string
     {
-        return IQP::class;
+        return CommandeArticle::class;
     }
 
     /**
@@ -44,14 +41,15 @@ class CreateIQPDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		        => ["string", "required", 'unique:iqps,name'],
-            "type_of_iqp"                   => ["required", "string", new Enum(TypeIQPEnum::class)],
-            "iqp_type"                      => ["required", "string", new Enum(TypeOfIQPEnum::class)],
-            'can_be_deleted'                => ['sometimes', 'boolean', 'in:'.true.','.false],
+            'articles'                          => ['sometimes','array'],
+            'articles.*.article_id'             => ["required", "string", 'exists:articles,id'],
+            'articles.*.quantity'        		=> ["required","numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            "discount"                          => ["sometimes","numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            'can_be_deleted'                    => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
         return $this->rules = parent::rules($rules);
     }
-
+    
     /**
      * Get the validation error messages for the DTO object.
      *
