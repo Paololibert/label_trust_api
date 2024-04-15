@@ -1,10 +1,13 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Http\Requests;
 
 use Core\Utils\Requests\UpdateResourceRequest;
+use Domains\Finances\PlansComptable\DataTransfertObjects\CreatePlanComptableDTO;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 /**
  * Class **`ResourceRequest`**
@@ -16,15 +19,14 @@ use Core\Utils\Requests\UpdateResourceRequest;
  */
 class ResourceRequest extends UpdateResourceRequest
 {
-
     /**
      * ResourceRequest constructor.
      *
      * @param \Core\Utils\DataTransfertObjects\DTOInterface $dto The Data Transfer Object (DTO) instance to associate with this request.
      */
-    public function __construct(\Core\Utils\DataTransfertObjects\DTOInterface $dto, string $resouce = null)
+    public function __construct(\Core\Utils\DataTransfertObjects\DTOInterface $dto, string $resouce = null, array $rules = [], array $data = [], Request $request = null)
     {
-        parent::__construct($dto::fromRequest(request()), $resouce);
+        parent::__construct($dto::fromRequest(request: $request ?? request(), data: $data, rules: $rules));
     }
 
     /**
@@ -48,5 +50,4 @@ class ResourceRequest extends UpdateResourceRequest
         // Check the concrete class's authorization.
         return $this->isAuthorize();
     }
-
 }

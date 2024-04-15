@@ -39,7 +39,7 @@ class Devise extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'code', 'name', 'symbol',
+        'name', 'symbol'
     ];
 
     /**
@@ -48,7 +48,7 @@ class Devise extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'code', 'name', 'symbol',
+        'name', 'symbol'
     ];
 
     /**
@@ -57,7 +57,6 @@ class Devise extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
-        'code'       => 'string',
         'name'       => 'string',
         'symbol'       => 'string'
     ];

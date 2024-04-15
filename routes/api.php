@@ -1,7 +1,9 @@
 <?php
 
+use App\Exports\PlanComptableExport;
 use App\Http\Controllers\API\RESTful\V1\Auths\AuthController;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -230,36 +232,70 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                     Route::apiResource('plans_comptable', 'PlanComptableController')->parameters(['plans_comptable' => 'plan_comptable_id']);
 
-                    Route::group(['prefix' => 'plans_comptable'], function () {
-                        Route::put('{plan_comptable_id}/attach-accounts', 'PlanComptableController@addNewAccountsToPlan')->name('plans_comptable.attach');
-                        Route::patch('{plan_comptable_id}/update-attach-accounts', 'PlanComptableController@updateAccountsInPlan')->name('plans_comptable.update-attach');
-                        Route::patch('{plan_comptable_id}/detach-accounts', 'PlanComptableController@deleteAccountsFromPlan')->name('plans_comptable.detach');
-                        Route::get('{plan_comptable_id}/accounts', 'PlanComptableController@fetchAccounts')->name('plans_comptable.accounts');
-                        Route::get('{plan_comptable_id}/valider', 'PlanComptableController@validatePlanComptable')->name('plans_comptable.valider');
-                    });
+                    Route::post('import-plan', 'PlanComptableController@import')->name('plans_comptable.import');
 
-                    Route::group(['prefix' => 'plans_comptable'], function () {
-                        Route::put('{plan_comptable_id}/accounts/{account_id}/attach-sub-accounts-to-an-account', 'PlanComptableController@addNewAccountsToAPlanAccount')->name('plans_comptable.account.attach-sub-account');
-                        Route::patch('{plan_comptable_id}/accounts/{account_id}/update-attach-sub-accounts-of-an-account', 'PlanComptableController@updateSubAccountsOfAPlanAccount')->name('plans_comptable.account.update-attach');
-                        Route::patch('{plan_comptable_id}/accounts/{account_id}/detach-sub-accounts-from-an-account', 'PlanComptableController@deleteSubAccountsFromAPlanAccount')->name('plans_comptable.account.detach');
-                        Route::get('{plan_comptable_id}/accounts/{account_id}/sub-accounts', 'PlanComptableController@fetchSubAccountsOfAPlanAccount')->name('plans_comptable.account.sub-accounts');
+                    Route::group(['prefix' => 'plans_comptable/{plan_comptable_id}'], function () {
+                        Route::put('attach-accounts', 'PlanComptableController@addNewAccountsToPlan')->name('plans_comptable.attach');
+                        Route::patch('update-attach-accounts', 'PlanComptableController@updateAccountsInPlan')->name('plans_comptable.update-attach');
+                        Route::patch('detach-accounts', 'PlanComptableController@deleteAccountsFromPlan')->name('plans_comptable.detach');
+                        Route::get('accounts', 'PlanComptableController@fetchAccounts')->name('plans_comptable.accounts');
+                        Route::get('valider', 'PlanComptableController@validatePlanComptable')->name('plans_comptable.valider');
+
+                        Route::group(['prefix' => 'accounts/{account_id}'], function () {
+                            Route::put('attach-sub-accounts-to-an-account', 'PlanComptableController@addNewAccountsToAPlanAccount')->name('plans_comptable.account.attach-sub-account');
+                            Route::patch('update-attach-sub-accounts-of-an-account', 'PlanComptableController@updateSubAccountsOfAPlanAccount')->name('plans_comptable.account.update-attach');
+                            Route::patch('detach-sub-accounts-from-an-account', 'PlanComptableController@deleteSubAccountsFromAPlanAccount')->name('plans_comptable.account.detach');
+                            Route::get('sub-accounts', 'PlanComptableController@fetchSubAccountsOfAPlanAccount')->name('plans_comptable.account.sub-accounts');
+                        });
                     });
 
                     Route::apiResource('exercices_comptable', 'ExerciceComptableController')->parameters(['exercices_comptable' => 'exercice_comptable_id']);
 
                     Route::group(['prefix' => 'exercices_comptable'], function () {
                         Route::put('{exercice_comptable_id}/report-des-soldes-aux-comptes', 'ExerciceComptableController@reportDesSoldesAuxComptes')->name('exercices_comptable.report');
-                        Route::put('{exercice_comptable_id}/cloture', 'ExerciceComptableController@cloture')->name('exercices_comptable.cloture');
+                        Route::get('{exercice_comptable_id}/cloture', 'ExerciceComptableController@cloture')->name('exercices_comptable.cloture');
                         Route::get('{exercice_comptable_id}/journal-entries', 'ExerciceComptableController@journaux')->name('exercices_comptable.entries.journal');
                         Route::get('{exercice_comptable_id}/journal-entries/{journal}', 'ExerciceComptableController@journal')->name('exercices_comptable.journal');
                         Route::get('{exercice_comptable_id}/balance-des-comptes', 'ExerciceComptableController@balanceDesComptes')->name('exercices_comptable.accounts.balance');
-                        Route::get('{exercice_comptable_id}/accounts/{account_id}/balance-de-compte', 'ExerciceComptableController@balanceDeCompte')->name('exercices_comptable.account.balance');
+                        Route::get('{exercice_comptable_id}/accounts/{account_id}/balance', 'ExerciceComptableController@balanceDeCompte')->name('exercices_comptable.account.balance');
                         Route::get('{exercice_comptable_id}/ecritures-comptable', 'ExerciceComptableController@fetchEcrituresComptable')->name('exercices_comptable.list-ecritures');
                         Route::put('{exercice_comptable_id}/ecritures-comptable', 'ExerciceComptableController@registerANewEcritureComptable')->name('exercices_comptable.register-ecriture');
                         Route::get('{exercice_comptable_id}/ecritures-comptable/{ecriture_comptable_id}', 'ExerciceComptableController@fetchDetailsOfAnEcritureComptable')->name('exercices_comptable.details-of-an-ecriture');
+
+                        Route::group(['prefix' => '{exercice_comptable_id}/journals'], function () {
+                            Route::get('/', 'ExerciceComptableController@journaux')->name('exercices_comptable.journals');
+                            Route::get('/filter', 'ExerciceComptableController@journaux')->name('exercices_comptable.journals');
+                            Route::get('{journal_id}/entries', 'JournalController@entries')->name('exercices_comptable.journals.entries-view-all');
+                            Route::put('{journal_id}/entries/{entry}', 'JournalController@createEntry')->name('exercices_comptable.journals.entries-view-details');
+                            Route::get('{journal_id}/entries/{entry}', 'JournalController@entry')->name('exercices_comptable.journals.entries-view-details');
+                        });
+
+                        //Route::put('{exercice_comptable_id}/suivi', 'ExerciceComptableController@suivi_comptable')->name('exercices_comptable.suivi-comptable');
+                        Route::get('{exercice_comptable_id}/operations_comptable_disponible', 'ExerciceComptableController@fetchOperationsComptable')->name('exercices_comptable.operations-comptable');
+                        Route::put('{exercice_comptable_id}/suivi', 'ExerciceComptableController@suiviComptable')->name('exercices_comptable.suivi');
+                        Route::put('{exercice_comptable_id}/validate_operations_comptable_disponible/{operationComptableId}', 'ExerciceComptableController@validateOperationComptable')->name('exercices_comptable.validate');
+
+                        Route::group(['prefix' => '{exercice_comptable_id}'], function () {
+                            Route::apiResource('immobilisations', 'ImmobilisationController')->parameters(['immobilisations' => 'immobilisation_id']);
+
+                            Route::group(['prefix' => 'projets_production/{projet_production_id}'], function () {
+                                Route::get('ecritures-analytique', 'ProjetProductionController@fetchEcrituresAnalytique')->name('projet.exercice.ecritures_analytique');
+                                Route::put('ecritures-analytique', 'ProjetProductionController@registerANewEcritureAnalytique')->name('projet.exercice.new_ecriture_analytique');
+                                Route::get('operations-analytique', 'ProjetProductionController@fetchOperationsAnalytique')->name('projet.exercice.operations_analytique');
+                                Route::put('suivi-analytique', 'ProjetProductionController@suiviAnalytique')->name('projet.exercice.suivi_analytique');
+                            });
+                        });
                     });
+
+                    //Route::apiResource('immobilisations', 'ImmobilisationController')->parameters(['immobilisations' => 'immobilisation_id']);
+
+                    Route::apiResource('projets_production', 'ProjetProductionController')->parameters(['projets_production' => 'projet_production_id']);
+
+
+                    //Route::apiResource('operations_analytique', 'ProjetProductionController')->parameters(['operations_analytique' => 'operation_analytique_id']);
+
                 });
-                
+
                 Route::group(['namespace' => 'Magasins'], function () {
 
                     Route::apiResource('magasins', 'MagasinController')->parameters(['magasins' => 'magasin_id']);
@@ -274,17 +310,15 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                 });
 
-                Route::group(['namespace' => 'Articles'], function () {                
+                Route::group(['namespace' => 'Articles'], function () {
                     Route::apiResource('articles', 'ArticleController')->parameters([
                         'articles' => 'article_id'
                     ]);
-    
+
                     Route::apiResource('categorie_articles', 'CategorieArticleController')->parameters([
                         'categorie_articles' => 'categorie_article_id'
                     ]);
-
                 });
-
             });
         });
     });

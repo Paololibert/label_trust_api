@@ -89,7 +89,7 @@ class ExerciceComptableRESTfulReadWriteService extends RestJsonReadWriteService 
         
         try {
             //
-            $result = $this->readWriteService->getRepository()->clotureDesComptesDunExercice(exerciceComptableId: $exerciceComptableId, dateCloture: $data->toArray()['dateCloture']);
+            $result = $this->readWriteService->getRepository()->clotureDesComptesDunExercice(exerciceComptableId: $exerciceComptableId, data: $data->toArray());
 
             // If the result is false, throw a custom exception
             if (!$result) {

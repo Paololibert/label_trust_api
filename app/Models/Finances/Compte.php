@@ -42,7 +42,7 @@ class Compte extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'code', 'name', 'type_de_compte', 'categorie_de_compte_id'
+        'name', 'type_de_compte', 'categorie_de_compte_id'
     ];
 
     /**
@@ -51,7 +51,7 @@ class Compte extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'code', 'name', 'type_de_compte'
+        'name', 'type_de_compte'
     ];
 
     /**
@@ -60,7 +60,6 @@ class Compte extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
-        'code'                          => 'string',
         'name'                          => 'string',
         'type_de_compte'                => TypeCompteEnum::class,
         'categorie_de_compte_id'        => 'string'

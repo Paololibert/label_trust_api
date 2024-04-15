@@ -156,7 +156,7 @@ interface DTOInterface
      * @param  Request $request The request object to populate the DTO from.
      * @return self             The new instance of the DTO.
      */
-    public static function fromRequest(Request $request): self;
+    public static function fromRequest(Request $request, array $data = [], array $rules = [], array $messages = []): self;
 
     /**
      * Convert the DTO to a request object.

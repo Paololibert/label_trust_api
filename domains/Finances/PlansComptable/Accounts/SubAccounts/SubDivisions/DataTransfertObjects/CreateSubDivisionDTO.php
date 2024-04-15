@@ -20,17 +20,33 @@ use Illuminate\Validation\Rule;
 class CreateSubDivisionDTO extends BaseDTO
 {
 
-    public function __construct()
+    public function __construct(array $data = [], array $rules = [])
     {
-        parent::__construct();
+        parent::__construct(data: $data, rules: $rules);
 
-        if (!array_key_exists('accounts.*.sub_accounts.*.sub_divisions.*.sub_account_id', $this->rules())) {
+        foreach ($this->properties["accounts"] as $key => $account) {
+
+            foreach ($account["sub_accounts"] as $sub_key => $sub_account) {
+                foreach ($sub_account["sub_divisions"] as $sub_sub_key => $sub_division) {
+                    if (!isset($sub_division['sub_account_id'])) {
+                        $this->merge(new CreateCompteDTO(data: $data, rules: $rules), "accounts.$key.sub_accounts.$sub_key.sub_divisions.$sub_sub_key.compte_data");
+                    }
+                    if (isset($sub_division['sub_divisions'])) {
+                        
+                        //$this->merge(new CreateSubDivisionDTO(data: $data, rules: $rules));
+    
+                    }
+                }
+            }
+        }
+
+        /* if (!array_key_exists('accounts.*.sub_accounts.*.sub_divisions.*.sub_account_id', $this->properties)) {
             $this->merge(new CreateCompteDTO(), 'accounts.*.sub_accounts.*.sub_divisions.*.compte_data');
         }
 
-        if (array_key_exists('sub_accounts.*.sub_accounts.*.sub_divisions.*.sub_divisions', $this->rules())) {
-            $this->merge(new CreateSubDivisionDTO());
-        }
+        if (array_key_exists('sub_accounts.*.sub_accounts.*.sub_divisions.*.sub_divisions', $this->properties)) {
+            $this->merge(new CreateSubDivisionDTO(data: $data, rules: $rules));
+        } */
 
         /* if(!isset(request()['sub_accounts']['sous_compte_id']) && !request('sous_compte_id')){
             $this->merge(new CreateCompteDTO(), 'accounts.*.sub_accounts.*.compte_data');

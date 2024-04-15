@@ -40,7 +40,7 @@ class ClasseDeCompte extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'code', 'name'
+        "intitule", "class_number"
     ];
 
     /**
@@ -49,7 +49,7 @@ class ClasseDeCompte extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'code', 'name',
+       "intitule", "class_number"
     ];
 
     /**
@@ -58,14 +58,14 @@ class ClasseDeCompte extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
-        'code'         => 'string',
-        'name'         => 'string'
+        "intitule"          => "string",
+        "class_number"      => "integer"
     ];
     
     /**
-     * Interact with the ClasseDeCompte's name.
+     * Interact with the ClasseDeCompte's intitule.
      */
-    protected function name(): Attribute
+    protected function intitule(): Attribute
     {
         return Attribute::make(
             get: fn (string $value) => ucfirst($value),

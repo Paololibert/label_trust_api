@@ -20,9 +20,9 @@ use Illuminate\Validation\Rules\Enum;
 class CreateCompteDTO extends BaseDTO
 {
 
-    public function __construct()
+    public function __construct(array $data = [], array $rules = [])
     {
-        parent::__construct();
+        parent::__construct(data: $data, rules: $rules);
     }
 
     /**

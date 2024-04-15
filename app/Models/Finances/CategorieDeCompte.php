@@ -40,7 +40,7 @@ class CategorieDeCompte extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'code', 'name'
+        'name'
     ];
 
     /**
@@ -49,7 +49,7 @@ class CategorieDeCompte extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'code', 'name'
+        'name'
     ];
 
     /**
@@ -58,7 +58,6 @@ class CategorieDeCompte extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
-        'code'         => 'string',
         'name'         => 'string'
     ];
     

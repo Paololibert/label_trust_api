@@ -19,5 +19,5 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonReadWriteServiceContract;
  */
 interface OperationDisponibleRESTfulReadWriteServiceContract extends RestJsonReadWriteServiceContract
 {
-    
+    public function validateOperationComptable(string $operationComptableId, \Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse;
 }

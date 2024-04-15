@@ -51,14 +51,13 @@ class CreateLigneEcritureComptableDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
-        // 'libelle', 'montant', 'type_ecriture_compte', 'ligneable_id', 'ligneable_type', 'accountable_id', 'accountable_type'
         $rules = array_merge([
-            "lignes_ecriture"                          => ["required", "array", "min:1", new EquilibreEcritureComptable()],
+            "lignes_ecriture"                          => ["required", "array", "min:2", new EquilibreEcritureComptable()],
             "lignes_ecriture.*"                        => ["distinct", "array"],
             'lignes_ecriture.*.type_ecriture_compte'   => ['required', "string", new Enum(TypeEcritureCompteEnum::class)],
             "lignes_ecriture.*.montant"                => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            "lignes_ecriture.*.account_number"         => ["required", new AccountNumberExistsInEitherTable()],
-            'can_be_deleted'                           => ['sometimes', 'boolean', 'in:'.true.','.false],
+            "lignes_ecriture.*.account_number"         => ["required", "distinct", new AccountNumberExistsInEitherTable()],
+            'can_be_deleted'                           => ['sometimes', 'boolean', 'in:' . true . ',' . false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);
@@ -72,8 +71,22 @@ class CreateLigneEcritureComptableDTO extends BaseDTO
     public function messages(array $messages = []): array
     {
         $default_messages = array_merge([
-            'can_be_deleted.boolean' => 'Le champ can_be_deleted doit être un booléen.',
-            'can_be_deleted.in'      => 'Le can_be_delete doit être "true" ou "false".'
+
+            "lignes_ecriture.required"                          => "Les lignes d'écriture sont requises.",
+            "lignes_ecriture.array"                             => "Les lignes d'écriture doivent être sous forme de tableau.",
+            "lignes_ecriture.min"                               => "Il doit y avoir au moins une ligne d'écriture.",
+            "lignes_ecriture.*.distinct"                        => "Les lignes d'écriture ne doivent pas contenir des éléments en double.",
+            "lignes_ecriture.*.type_ecriture_compte.required"   => "Le type d'écriture compte est requis.",
+            "lignes_ecriture.*.type_ecriture_compte.string"     => "Le type d'écriture compte doit être une chaîne de caractères.",
+            "lignes_ecriture.*.type_ecriture_compte.enum"       => "Le type d'écriture compte n'est pas valide.",
+            "lignes_ecriture.*.montant.required"                => "Le montant est requis.",
+            "lignes_ecriture.*.montant.numeric"                 => "Le montant doit être numérique.",
+            "lignes_ecriture.*.montant.regex"                   => "Le montant doit être un entier positif.",
+            "lignes_ecriture.*.account_number.required"         => "Le numéro de compte est requis.",
+            "lignes_ecriture.*.account_number.exists"           => "Le numéro de compte spécifié n'existe pas.",
+            "lignes_ecriture.*.account_number.distinct"         => "Les numéros de compte ne doivent pas être en double.",
+            "can_be_deleted.boolean"                            => "Le champ can_be_deleted doit être un booléen.",
+            "can_be_deleted.in"                                 => "La valeur du champ can_be_deleted doit être :values."
         ], $messages);
 
         $messages = array_merge([], $default_messages);

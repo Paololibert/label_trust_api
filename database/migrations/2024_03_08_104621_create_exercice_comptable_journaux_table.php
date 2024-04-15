@@ -39,7 +39,7 @@ class CreateExerciceComptableJournauxTable extends Migration
 
             Schema::create('exercice_comptable_journaux', function (Blueprint $table) {
                 // Define a UUID primary key for the 'exercice_comptable_journaux' table
-                $this->uuidPrimaryKey($table);   
+                $this->uuidPrimaryKey($table);
                 
                 // Define a foreign key for 'exercice_comptable_id', referencing the 'exercices_comptable' table
                 $this->foreignKey(
@@ -48,7 +48,7 @@ class CreateExerciceComptableJournauxTable extends Migration
                     references: 'exercices_comptable',    // The referenced table (exercices_comptable) to establish the foreign key relationship
                     onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
                     nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows to be NULL)
-                );       
+                );
                 
                 // Define a foreign key for 'journal_id', referencing the 'journaux' table
                 $this->foreignKey(
@@ -57,7 +57,7 @@ class CreateExerciceComptableJournauxTable extends Migration
                     references: 'journaux',    // The referenced table (journaux) to establish the foreign key relationship
                     onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
                     nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows to be NULL)
-                );    
+                );
 
                 // Define the decimal column 'total' for storing the monetary amount with 8 digits, 2 of which are decimal places
                 $table->decimal('total', 12, 2)->comment('');

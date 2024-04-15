@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Finances;
 
 use Core\Data\Eloquent\Contract\ModelContract;
+use Core\Utils\Enums\TypeSoldeCompteEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
@@ -33,14 +34,14 @@ class BalanceDeCompte extends ModelContract
      *
      * @var string
      */
-    protected $table = 'balance_des_comptes';
+    protected $table = "balance_des_comptes";
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'solde_debit', 'solde_credit', 'date_report', 'date_cloture', 'exercice_comptable_id', 'balanceable_id', 'balanceable_type'
+        "solde", "type_solde_compte", "date_report", "date_cloture", "exercice_comptable_id", "balanceable_id", "balanceable_type"
     ];
 
     /**
@@ -49,7 +50,7 @@ class BalanceDeCompte extends ModelContract
      * @var array<string, mixed>
      */
     protected $attributes = [
-        'date_cloture' => NULL
+        "date_cloture" => NULL
     ];
 
     /**
@@ -58,7 +59,7 @@ class BalanceDeCompte extends ModelContract
      * @var array<int, string>
      */
     protected $dates = [
-        'date_cloture', 'date_report'
+        "date_cloture", "date_report"
     ];
 
     /**
@@ -67,7 +68,7 @@ class BalanceDeCompte extends ModelContract
      * @var array<int, string>
      */
     protected $visible = [
-        'solde_debit', 'solde_credit', 'date_report', 'date_cloture'
+        "solde", "type_solde_compte", "date_report", "date_cloture"
     ];
 
     /**
@@ -76,13 +77,13 @@ class BalanceDeCompte extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
-        'solde_debit'                   => 'decimal:2',
-        'solde_credit'                  => 'decimal:2',
-        'date_report'                   => 'datetime',
-        'date_cloture'                  => 'datetime',
-        'balanceable_id'                => 'string',
-        'balanceable_type'              => 'string',
-        'exercice_comptable_id'         => 'string'
+        "solde"                         => "decimal:2",
+        "date_report"                   => "datetime",
+        "date_cloture"                  => "datetime",
+        "balanceable_id"                => "string",
+        "balanceable_type"              => "string",
+        "exercice_comptable_id"         => "string",
+        "type_solde_compte"             => TypeSoldeCompteEnum::class
     ];
 
     /**
