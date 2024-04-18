@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -21,7 +22,6 @@ class QueryBuilderServiceProvider extends ServiceProvider
                 })
                 ->exists();
         });
-
 
 
         /**

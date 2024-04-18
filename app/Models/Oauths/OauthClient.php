@@ -31,7 +31,7 @@ class OauthClient extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id', 'name', 'secret', 'provider', 'personal_access_client', 'password_client', 'revoked' 
+        'user_id', 'name', 'secret', 'provider', 'personal_access_client', 'password_client', 'revoked', "redirect"
     ];
 
     /**

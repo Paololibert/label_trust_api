@@ -136,7 +136,7 @@ class ProjetProductionController extends RESTfulResourceController
         $createRequest->getDto()->setProperty("exercice_comptable_id", $exerciceComptableId);
         $createRequest->getDto()->setProperty("projet_production_id", $projetProductionId);
 
-        return $this->ecritureAnalytiqueRESTfulQueryService->filter(filterCondition: $createRequest->getDto(), page: (int) $request->query('page', 1), perPage: (int) $request->query('perPage', 15), order: $request->query('order', 'asc'), orderBy: $request->query('sort', 'created_at'), columns: $request->query('columns', "[*]"));
+        return $this->ecritureAnalytiqueRESTfulQueryService->filter(filterCondition: $createRequest->getDto(), page: (int) $request->query('page', 1), perPage: (int) $request->query('perPage', 15), order: $request->query('order', 'asc'), orderBy: $request->query('sort', 'created_at'), columns: $request->query('columns', ['*']));
     }
 
     /**
@@ -182,7 +182,7 @@ class ProjetProductionController extends RESTfulResourceController
         $createRequest->getDto()->setProperty("exercice_comptable_id", $exerciceComptableId);
         $createRequest->getDto()->setProperty("projet_production_id", $projetProductionId);
 
-        return $this->operationAnalytiqueRESTfulQueryService->filter(filterCondition: $createRequest->getDto(), page: (int) $request->query('page', 1), perPage: (int) $request->query('perPage', 15), order: $request->query('order', 'asc'), orderBy: $request->query('sort', 'created_at'), columns: $request->query('columns', "[*]"));
+        return $this->operationAnalytiqueRESTfulQueryService->filter(filterCondition: $createRequest->getDto(), page: (int) $request->query('page', 1), perPage: (int) $request->query('perPage', 15), order: $request->query('order', 'asc'), orderBy: $request->query('sort', 'created_at'), columns: $request->query('columns', ['*']));
     }
 
     /**

@@ -161,7 +161,6 @@ return [
          */
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
-        App\Providers\RepositoryServiceProvider::class,
         App\Providers\RepositoriesServiceProvider::class,
         App\Providers\ModulesServiceProvider::class,
         App\Providers\ResourcesServiceProvider::class,

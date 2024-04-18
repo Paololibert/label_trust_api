@@ -70,8 +70,8 @@ class Ammortissement extends ModelContract
         "valeur_comptable"              => "decimal:2",
         "taux"                          => "decimal:2",
         "annete"                        => "integer",
-        'date_debut'                    => 'datetime:Y-m-d H:i:s',
-        'date_fin'                      => 'datetime:Y-m-d H:i:s',
+        'date_debut'                    => 'datetime:Y-m-d',
+        'date_fin'                      => 'datetime:Y-m-d',
         'immobilisation_id'             => 'string'
     ];
 

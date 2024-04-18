@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Domains\Finances\OperationsAnalytique\Repositories;
 
 use App\Models\Finances\ExerciceComptable;
-use App\Models\Finances\OperationComptableDisponible;
+use App\Models\Finances\OperationAnalytique;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
 use Core\Utils\Enums\StatusOperationDisponibleEnum;
+use Core\Utils\Exceptions\ApplicationException;
 use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\EcrituresAnalytique\DataTransfertObjects\CreateEcritureAnalytiqueDTO;
@@ -30,10 +31,10 @@ class OperationAnalytiqueReadWriteRepository extends EloquentReadWriteRepository
     /**
      * Create a new OperationAnalytiqueReadWriteRepository instance.
      *
-     * @param  \App\Models\Finances\OperationComptableDisponible $model
+     * @param  \App\Models\Finances\OperationAnalytique $model
      * @return void
      */
-    public function __construct(OperationComptableDisponible $model)
+    public function __construct(OperationAnalytique $model)
     {
         parent::__construct($model);
     }
@@ -66,7 +67,7 @@ class OperationAnalytiqueReadWriteRepository extends EloquentReadWriteRepository
         } catch (CoreException $exception) {
             DB::rollBack();
             // Throw a NotFoundException with an error message and the caught exception
-            throw new RepositoryException(message: "Error while registering ecriture comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+            throw new RepositoryException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -98,7 +99,7 @@ class OperationAnalytiqueReadWriteRepository extends EloquentReadWriteRepository
             return $this->model->refresh();
         } catch (CoreException $exception) {
             // Throw a RepositoryException if there is an issue with the repository operation
-            throw new RepositoryException(message: "Error while updating accounts in a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+            throw new RepositoryException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 
@@ -117,6 +118,10 @@ class OperationAnalytiqueReadWriteRepository extends EloquentReadWriteRepository
     {
         try {
 
+            $this->model = $this->find($operationAnalytiqueId);
+
+            if($this->model->status_operation === StatusOperationDisponibleEnum::VALIDER) throw new ApplicationException("Cette operation est deja valider", 1);
+            
             $this->model = $this->update(id: $operationAnalytiqueId, data: $data);
 
             $ecriture_data = CreateEcritureAnalytiqueDTO::fromModel($this->model)->toArray();
@@ -131,7 +136,7 @@ class OperationAnalytiqueReadWriteRepository extends EloquentReadWriteRepository
             return $this->model->fresh();
         } catch (CoreException $exception) {
             // Throw a RepositoryException if there is an issue with the repository operation
-            throw new RepositoryException(message: "Error while updating accounts in a plan comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+            throw new RepositoryException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }

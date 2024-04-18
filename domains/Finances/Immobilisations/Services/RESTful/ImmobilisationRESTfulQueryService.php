@@ -7,6 +7,7 @@ namespace Domains\Finances\Immobilisations\Services\RESTful;
 use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\RestJsonQueryService;
 use Domains\Finances\Immobilisations\Services\RESTful\Contracts\ImmobilisationRESTfulQueryServiceContract;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class ***`ImmobilisationRESTfulQueryService`***

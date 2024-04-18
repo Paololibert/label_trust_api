@@ -6,15 +6,10 @@ namespace App\Models\Finances;
 
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Utils\Enums\StatusExerciceEnum;
-use Core\Utils\Exceptions\ApplicationException;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\countOf;
 
 /**
  * Class ***`ExerciceComptable`***

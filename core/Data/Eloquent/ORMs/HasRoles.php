@@ -253,4 +253,39 @@ trait HasRoles
         });
     }
 
+    public function hasPermissionThroughRoles(string $permission)
+    {
+        // Check if any of the user's roles have the given permission
+        foreach ($this->roles as $role) {
+            if ($role->hasPermission($permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasAnyPermissionsThroughRoles(array $permissions, string $filter = "key")
+    {
+        // Check if any of the user's roles have all of the specified permissions
+        foreach ($this->roles as $role) {
+            if ($role->hasAnyPermissions(permissions: $permissions, filter: $filter)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasPermissionsThroughRoles(array $permissions, string $filter = "key")
+    {
+        // Check if any of the user's roles have all of the specified permissions
+        foreach ($this->roles as $role) {
+            if ($role->hasAllPermissions(permissions: $permissions, filter: $filter)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

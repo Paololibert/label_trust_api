@@ -73,7 +73,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
             Route::group(['as' => 'permissions.'], function () {
 
                 // Get all permissions
-                Route::get('/permissions', 'PermissionController');
+                Route::get('/permissions', 'PermissionController')->middleware(['auth:api', 'permission:view_permissions']);
             });
 
 
@@ -89,7 +89,17 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
             */
             Route::group([], function () {
 
-                Route::apiResource('roles', 'RoleController')->parameters(['roles' => 'role_id']);
+                Route::middleware('auth.view_roles')->get('api/roles', 'RoleController@index');
+
+                Route::apiResource('roles', 'RoleController')->parameters(['roles' => 'role_id'])->middleware('auth:api');
+
+                // Example:
+                Route::get('roles', 'RoleController@index')->name('roles.index')->middleware(['auth:api', 'permission:view_roles']); // View all roles
+                Route::post('roles', 'RoleController@store')->name('roles.store')->middleware(['auth:api', 'permission:create_role, manage_roles']); // Create a new role
+                /* Route::get('roles/{role_id}', 'RoleController@show')->name('roles.show')->middleware(['can:view-roles', 'can:manage_roles']); // View a specific role
+                Route::put('roles/{role_id}', 'RoleController@update')->name('roles.update')->middleware(['can:update-role', 'can:manage_roles']); // Update a role
+                Route::delete('roles/{role_id}', 'RoleController@destroy')->name('roles.destroy')->middleware(['can:delete-role', 'can:manage_roles']); // Delete a role
+                */
 
                 Route::group(['prefix' => 'roles'], function () {
                     // Get all roles
@@ -262,6 +272,9 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                         Route::put('{exercice_comptable_id}/ecritures-comptable', 'ExerciceComptableController@registerANewEcritureComptable')->name('exercices_comptable.register-ecriture');
                         Route::get('{exercice_comptable_id}/ecritures-comptable/{ecriture_comptable_id}', 'ExerciceComptableController@fetchDetailsOfAnEcritureComptable')->name('exercices_comptable.details-of-an-ecriture');
 
+                        Route::get('{exercice_comptable_id}/ecritures-analytique', 'ExerciceComptableController@fetchEcrituresAnalytique')->name('exercices_comptable.list-of-analytique-ecritures');
+                        Route::put('{exercice_comptable_id}/ecritures-analytique', 'ExerciceComptableController@registerANewEcritureAnalytique')->name('exercices_comptable.new-analytique-ecriture');
+
                         Route::group(['prefix' => '{exercice_comptable_id}/journals'], function () {
                             Route::get('/', 'ExerciceComptableController@journaux')->name('exercices_comptable.journals');
                             Route::get('/filter', 'ExerciceComptableController@journaux')->name('exercices_comptable.journals');
@@ -270,28 +283,30 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                             Route::get('{journal_id}/entries/{entry}', 'JournalController@entry')->name('exercices_comptable.journals.entries-view-details');
                         });
 
-                        //Route::put('{exercice_comptable_id}/suivi', 'ExerciceComptableController@suivi_comptable')->name('exercices_comptable.suivi-comptable');
-                        Route::get('{exercice_comptable_id}/operations_comptable_disponible', 'ExerciceComptableController@fetchOperationsComptable')->name('exercices_comptable.operations-comptable');
-                        Route::put('{exercice_comptable_id}/suivi', 'ExerciceComptableController@suiviComptable')->name('exercices_comptable.suivi');
-                        Route::put('{exercice_comptable_id}/validate_operations_comptable_disponible/{operationComptableId}', 'ExerciceComptableController@validateOperationComptable')->name('exercices_comptable.validate');
+                        Route::get("{exercice_comptable_id}/operations_comptable_disponible", "ExerciceComptableController@fetchOperationsComptable")->name("exercices_comptable.operations-comptable");
+                        Route::put("{exercice_comptable_id}/suivi", "ExerciceComptableController@suiviComptable")->name("exercices_comptable.suivi");
+                        Route::put("{exercice_comptable_id}/validate_operations_comptable_disponible/{operationComptableId}", "ExerciceComptableController@validateOperationComptable")->name("exercices_comptable.operation.validate");
 
-                        Route::group(['prefix' => '{exercice_comptable_id}'], function () {
-                            Route::apiResource('immobilisations', 'ImmobilisationController')->parameters(['immobilisations' => 'immobilisation_id']);
+                        Route::get("{exercice_comptable_id}/operations-analytique", "ExerciceComptableController@fetchOperationsAnalytique")->name("exercices_comptable.operations-analytique");
+                        Route::put("{exercice_comptable_id}/suivi-analytique", "ExerciceComptableController@suiviAnalytique")->name("exercices_comptable.suivi-analytique");
+                        Route::put("{exercice_comptable_id}/validate_operations_analytique/{operationComptableId}", "ExerciceComptableController@validateOperationAnalytique")->name("exercices_comptable.operation.validate");
 
-                            Route::group(['prefix' => 'projets_production/{projet_production_id}'], function () {
-                                Route::get('ecritures-analytique', 'ProjetProductionController@fetchEcrituresAnalytique')->name('projet.exercice.ecritures_analytique');
-                                Route::put('ecritures-analytique', 'ProjetProductionController@registerANewEcritureAnalytique')->name('projet.exercice.new_ecriture_analytique');
-                                Route::get('operations-analytique', 'ProjetProductionController@fetchOperationsAnalytique')->name('projet.exercice.operations_analytique');
-                                Route::put('suivi-analytique', 'ProjetProductionController@suiviAnalytique')->name('projet.exercice.suivi_analytique');
-                            });
+                        Route::group(["prefix" => "{exercice_comptable_id}"], function () {
+                            Route::apiResource("immobilisations", "ImmobilisationController")->parameters(["immobilisations" => "immobilisation_id"]);
+
+                            /* Route::group(["prefix" => "projets_production/{projet_production_id}"], function () {
+                                Route::get("ecritures-analytique", "ProjetProductionController@fetchEcrituresAnalytique")->name("projet.exercice.ecritures_analytique");
+                                Route::put("ecritures-analytique", "ProjetProductionController@registerANewEcritureAnalytique")->name("projet.exercice.new_ecriture_analytique");
+                                Route::get("operations-analytique", "ProjetProductionController@fetchOperationsAnalytique")->name("projet.exercice.operations_analytique");
+                                Route::put("suivi-analytique", "ProjetProductionController@suiviAnalytique")->name("projet.exercice.suivi_analytique");
+                            }); */
                         });
                     });
 
-                    //Route::apiResource('immobilisations', 'ImmobilisationController')->parameters(['immobilisations' => 'immobilisation_id']);
-
                     Route::apiResource('projets_production', 'ProjetProductionController')->parameters(['projets_production' => 'projet_production_id']);
 
-
+                    Route::group(["prefix" => "{exercice_comptable_id}"], function () {
+                    });
                     //Route::apiResource('operations_analytique', 'ProjetProductionController')->parameters(['operations_analytique' => 'operation_analytique_id']);
 
                 });

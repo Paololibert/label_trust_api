@@ -81,7 +81,7 @@ class CreateEcrituresAnalytiqueTable extends Migration
                 $this->foreignKey(
                     table: $table,         // The table where the foreign key is being added
                     column: 'operation_disponible_id',   // The column to which the foreign key is added ('operation_disponible_id' in this case)
-                    references: 'operations_comptable', // The referenced table (operations_comptable) to establish the foreign key relationship
+                    references: 'operations_analytique', // The referenced table (operations_comptable) to establish the foreign key relationship
                     onDelete: 'cascade',   // Action to perform when the referenced record is deleted (cascade deletion)
                     nullable: true        // Specify whether the foreign key column can be nullable (false means it not allows to be NULL)
                 );

@@ -47,7 +47,7 @@ class OperationAnalytiqueRESTfulReadWriteService extends RestJsonReadWriteServic
             DB::commit();
 
             return JsonResponseTrait::success(
-                message: 'Operation valider et convertir en ecriture compture.',
+                message: 'Operation valider et convertir en ecriture analytieque.',
                 data: $operation,
                 status_code: Response::HTTP_OK
             );
@@ -56,7 +56,7 @@ class OperationAnalytiqueRESTfulReadWriteService extends RestJsonReadWriteServic
             DB::rollback();
     
             // Throw a ServiceException if there is an issue with validating a plan comptable
-            throw new ServiceException(message: "Failed to import: " . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+            throw new ServiceException(message: "Failed to validate: " . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
         }
     }
 }

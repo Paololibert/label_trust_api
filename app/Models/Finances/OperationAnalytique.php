@@ -44,7 +44,7 @@ class OperationAnalytique extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        "libelle", "montant", "type_ecriture_compte", "date_ecriture", "status_operation", "accountable_id", "accountable_type"
+        "libelle", "montant", "type_ecriture_compte", "date_ecriture", "status_operation", "exercice_comptable_id", "accountable_id", "accountable_type"
     ];
 
     /**
@@ -111,16 +111,6 @@ class OperationAnalytique extends ModelContract
     public function accountable(): MorphTo
     {
         return $this->morphTo();
-    }
-
-    /**
-     * Ecritures analytique
-     *
-     * @return BelongsTo
-     */
-    public function ecritures_analytique(): HasMany
-    {
-        return $this->hasMany(EcritureComptable::class, 'operation_disponible_id');
     }
 
     /**

@@ -6,11 +6,10 @@ namespace Domains\Finances\OperationsAnalytique\DataTransfertObjects;
 
 use App\Models\Finances\ExerciceComptable;
 use App\Models\Finances\OperationAnalytique;
-use App\Rules\AccountNumberExistsInEitherTable;
+use App\Rules\CheckIsAnalytiqueAccountExistsInEitherTable;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Core\Utils\Enums\StatusExerciceEnum;
 use Core\Utils\Enums\TypeEcritureCompteEnum;
-use Domains\Finances\EcrituresComptable\LignesEcritureComptable\DataTransfertObjects\CreateLigneEcritureComptableDTO;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidationException;
 
@@ -71,7 +70,7 @@ class CreateOperationAnalytiqueDTO extends BaseDTO
 
         $rules = array_merge([
             "libelle"                   => ["required", "string", "max:25"],
-            "account_number"            => ["required", "distinct", new AccountNumberExistsInEitherTable()],
+            "account_number"            => ["required", "distinct", new CheckIsAnalytiqueAccountExistsInEitherTable],
             "type_ecriture_compte"      => ['required', "string", new Enum(TypeEcritureCompteEnum::class)],
             "montant"                   => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
             "date_ecriture"             => ["required", 'date_format:Y-m-d', "after_or_equal:" . $periode?->date_debut_periode . "/{$this->exercice_comptable?->fiscal_year}", 'before_or_equal:' . $periode?->date_fin_periode . "/{$this->exercice_comptable?->fiscal_year}"],

@@ -65,6 +65,7 @@ class RESTfulResourceController extends Controller implements RESTfulResourceCon
      * @param RestJsonReadWriteServiceContract $restJsonReadWriteService The RESTful service contract for managing resources.
      * @return void
      */
+    
     /**
      * Create a new RESTfulController instance.
      *

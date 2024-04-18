@@ -42,9 +42,12 @@ class UpdateProjetProductionDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "fiscal_year"           => ["required", "numeric", 'regex:/^0|[1-9]\d{3,}$/', "max:".(date('Y')+1), Rule::unique('exercices_comptable', 'fiscal_year')->where('plan_comptable_id', request("plan_comptable_id"))->ignore(request("exercice_comptable_id"))->whereNull('deleted_at')],
-            "periode_exercice_id"   => ["required", "exists:periodes_exercice,id"],
-            "plan_comptable_id"     => ["required", "exists:plans_comptable,id"],
+            "intitule"                  => ["required", "string", "unique_ignore_case:projets_production,intitule"],
+            "description"               => ["nullable", "string"],
+            "date_debut"                => ["required", "date_format:Y-m-d", "after_or_equal:" . today()],
+            "date_fin"                  => ["required", "date_format:Y-m-d", "after:date_debut"],
+            "ligne_de_production_id"    => ["required", "exists:lignes_de_production,id"],
+            "article_id"                => ["required", "exists:articles,id"],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

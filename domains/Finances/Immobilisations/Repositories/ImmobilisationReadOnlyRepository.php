@@ -6,6 +6,7 @@ namespace Domains\Finances\Immobilisations\Repositories;
 
 use App\Models\Finances\Immobilisation;
 use Core\Data\Repositories\Eloquent\EloquentReadOnlyRepository;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * ***`ImmobilisationReadOnlyRepository`***
