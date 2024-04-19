@@ -52,9 +52,9 @@ class ExerciceComptableReadOnlyRepository extends EloquentReadOnlyRepository
                 $query->soldeDesComptes($exerciceComptableId)->transactions($exerciceComptableId);
             }])->where("id", $exerciceComptableId)->first();*/
 
-            $accounts_balance = $this->find($exerciceComptableId);
+            $accounts_balance = $this->find($exerciceComptableId)->load("plan_comptable");
 
-            return new BalanceDesComptesResource(resource: $accounts_balance, start_at: isset($periodeArrayData["from_date"]) ? $periodeArrayData["from_date"] : null, end_at: isset($periodeArrayData["to_date"]) ? $periodeArrayData["to_date"] : null);
+            return new BalanceDesComptesResource(resource: $accounts_balance);
         } catch (CoreException $exception) {
             // Throw a NotFoundException with an error message and the caught exception
             throw new RepositoryException(message: "Error while quering balance of accounts of an exercice comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);

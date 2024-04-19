@@ -152,6 +152,46 @@ class ExerciceComptableController extends RESTfulResourceController
     }
 
     /**
+     * Fetch journal of an exercice comptable.
+     *
+     * @param  string                           $planComptableId    The identifier of the resource details that will be fetch.
+     * @return \Illuminate\Http\JsonResponse                        The JSON response indicating the status of the accounts fetched operation.
+     */
+    public function journaux(Request $request, string $exerciceComptableId): JsonResponse
+    {
+        // Instantiate the ResourceRequest with a CreateAccountDTO instance
+        $createRequest = app(ResourceRequest::class, ["dto" => new PeriodeOfBalanceDTO]);
+
+        // Validate the incoming request using the ResourceRequest rules
+        if ($createRequest) {
+            $createRequest->validate($createRequest->rules());
+        }
+
+        // Call the service method to add the accounts to the Plan Comptable
+        return $this->restJsonQueryService->journaux($exerciceComptableId, $createRequest->getDto());
+    }
+
+    /**
+     * Fetch balance of account of an exercice comptable.
+     *
+     * @param  string                           $planComptableId    The identifier of the resource details that will be fetch.
+     * @return \Illuminate\Http\JsonResponse                        The JSON response indicating the status of the accounts fetched operation.
+     */
+    public function journal(Request $request, string $exerciceComptableId, string $journalId): JsonResponse
+    {
+        // Instantiate the ResourceRequest with a CreateAccountDTO instance
+        $createRequest = app(ResourceRequest::class, ["dto" => new PeriodeOfBalanceDTO]);
+
+        // Validate the incoming request using the ResourceRequest rules
+        if ($createRequest) {
+            $createRequest->validate($createRequest->rules());
+        }
+
+        // Call the service method to add the accounts to the Plan Comptable
+        return $this->restJsonQueryService->journal($exerciceComptableId, $journalId, $createRequest->getDto());
+    }
+
+    /**
      * Fetch balance of account of an exercice comptable.
      *
      * @param  string                           $planComptableId    The identifier of the resource details that will be fetch.

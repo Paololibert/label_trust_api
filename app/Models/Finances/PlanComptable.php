@@ -314,5 +314,4 @@ class PlanComptable extends ModelContract
             $query->transactions($exercice_comptable_id);
         });
     }
-
 }

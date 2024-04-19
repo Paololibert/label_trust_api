@@ -2,19 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Domains\Employees\EmployeeContractuels\DataTransfertObjects;
+namespace Domains\Magasins\Commandes\Commande\DataTransfertObjects;
 
-use App\Models\EmployeeContractuel;
+use App\Models\Magasins\Commande;
 use Core\Utils\DataTransfertObjects\BaseDTO;
+use Core\Utils\Enums\StatutsOrderEnum;
+use Core\Utils\Enums\TypeOrderEnum;
+use Illuminate\Validation\Rules\Enum;
 
-class UpdateEmployeeContractuelDTO extends BaseDTO
+/**
+ * Class ***`UpdateCommandeDTO`***
+ *
+ * This class extends the ***`BaseDTO`*** class.
+ * It represents the data transfer object for updating a new ***`Commande`*** model.
+ *
+ * @package ***`\Domains\Magasins\Commande\DataTransfertObjects`***
+ */
+class UpdateCommandeDTO extends BaseDTO
 {
 
     public function __construct()
     {
         parent::__construct();
     }
-
+    
     /**
      * Get the class name of the model associated with the DTO.
      *
@@ -22,7 +33,7 @@ class UpdateEmployeeContractuelDTO extends BaseDTO
      */
     protected function getModelClass(): string
     {
-        return EmployeeContractuel::class;
+        return Commande::class;
     }
 
     /**
@@ -33,18 +44,12 @@ class UpdateEmployeeContractuelDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            'reference'             => ['sometimes', 'string'],
-            'type_contract'         => ['sometimes', 'string'],
-            'duree'                 => ['sometimes', 'numeric'],
-            'date_debut'            => ['sometimes', 'date'],
-            'date_fin'              => ['sometimes', 'date'],
-            'contract_status'       => ['sometimes', 'string'],
-            'renouvelable'          => ['sometimes', 'boolean'],
-            "poste_salaire_id"      => ["present_if:montant,null", "sometimes", "uuid", "exists:poste_salaries,id"],
-            "montant"               => ["present_if:poste_salaire_id,null", "sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
-            'poste_id'              => ['sometimes', 'string', 'exists:postes,id'],
-            'unite_mesures_id'      => ['sometimes', 'string', 'exists:unite_mesures,id'],
-            'can_be_deleted'        => ['sometimes', 'boolean']
+            "date"            		            => ["date", "sometimes"],
+            "statut"                            => ["sometimes", "string", new Enum(StatutsOrderEnum::class)],
+            "type_order"                        => ["sometimes", "string", new Enum(TypeOrderEnum::class)],
+            'client_id'                         => ["present_if:supplier_id,null","sometimes", 'uuid', 'exists:clients,id'],
+            'supplier_id'                       => ["present_if:client_id,null",'sometimes', 'uuid', 'exists:suppliers,id'],
+            'can_be_deleted'                    => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);

@@ -40,6 +40,13 @@ trait Balanceable
     public function close_balance()
     {
         return $this->morphOne(BalanceDeCompte::class, 'balanceable')->whereNotNull("date_cloture")->orderBy("created_at", "desc");
+    }/* 
+
+    public function scopeSoldeDesComptes(Builder $query, string $exercice_comptable_id, string $start_date = null, string $end_date = null)
+    {
+        return $query->with("balance", function ($query) use ($exercice_comptable_id) {
+            $query->where("exercice_comptable_id", $exercice_comptable_id);
+        })->recursive($exercice_comptable_id);
     }
     
     /* 
@@ -48,6 +55,21 @@ trait Balanceable
         return $query->with("balance", function ($query) use ($exercice_comptable_id) {
             $query->where("exercice_comptable_id", $exercice_comptable_id);
         })->recursive($exercice_comptable_id);
+    }
+
+    public function scopeRecursive(Builder $query, string $exercice_comptable_id) {
+        if($query->getModel() instanceof Account){
+            $query = $query->whereHas("sous_comptes", function ($query) use ($exercice_comptable_id) {
+                $query->soldeDesComptes($exercice_comptable_id);
+            });
+        }
+        else if($query->getModel() instanceof SubAccount){
+            $query = $query->whereHas("sub_divisions", function($query) use ($exercice_comptable_id) {
+                $query->soldeDesComptes($exercice_comptable_id);
+            });
+        }
+        
+        return $query;
     }
 
     public function scopeRecursive(Builder $query, string $exercice_comptable_id) {

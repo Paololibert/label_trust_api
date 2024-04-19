@@ -8,7 +8,7 @@ use Core\Utils\Enums\Contract\EnumContract;
 use Core\Utils\Traits\IsEnum;
 
 /**
- * Class ***`TypeIQPEnum`***
+ * Class ***`TypeOfIQPEnum`***
  *
  * This class represents the type that typeiqp can have
  *
@@ -27,37 +27,37 @@ use Core\Utils\Traits\IsEnum;
  * 
  * @package ***`\Core\Utils\Enums\Users`***
  */
-enum TypeIQPEnum: string implements EnumContract
+enum TypeOfIQPEnum: string implements EnumContract
 {
     use IsEnum;
 
     /**
-     * Represents the typeiqp "reception".
+     * Represents the typeiqp "performance".
      *
      * @var string
      */
-    case RECEPTION = 'reception';
+    case PERFORMANCE = 'performance';
 
     /**
-     * Represents the typeiqp "production".
+     * Represents the typeiqp "qualite".
      *
      * @var string
      */
-    case PRODUCTION = 'production';
+    case QUALITE = 'qualite';
 
     /**
      * The default typeiqp value.
      * 
      * @return string
      */
-    public const DEFAULT          = self::PRODUCTION->value; //self::PRODUCTION;
+    public const DEFAULT          = self::PERFORMANCE->value; //self::PERFORMANCE;
     
     /**
      * The fallback typeiqp value.
      * 
      * @return string
      */
-    public const FALLBACK         = self::PRODUCTION->value; //self::PRODUCTION;
+    public const FALLBACK         = self::PERFORMANCE->value; //self::PERFORMANCE;
 
     /**
      * Get the labels for the typeiqp.
@@ -67,8 +67,8 @@ enum TypeIQPEnum: string implements EnumContract
     public static function labels(): array
     {
         return [
-            self::PRODUCTION->value     => 'production',
-            self::RECEPTION->value   => 'reception',
+            self::QUALITE->value     => 'qualite',
+            self::PERFORMANCE->value   => 'performance',
         ];
     }
 
@@ -80,8 +80,8 @@ enum TypeIQPEnum: string implements EnumContract
     public static function descriptions(): array
     {
         return [
-            self::PRODUCTION->value     => 'Represents the "production".',
-            self::RECEPTION->value   => 'Represents the "reception".',
+            self::QUALITE->value     => 'Represents the "qualite".',
+            self::PERFORMANCE->value   => 'Represents the "performance".',
         ];
         
     }
