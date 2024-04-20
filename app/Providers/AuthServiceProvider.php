@@ -54,7 +54,7 @@ class AuthServiceProvider extends ServiceProvider
                 return false;
             });  */
         } catch (Throwable $exception) {
-            throw new ApplicationException(previous: $exception);
+            report($exception);
         }
 
         Passport::tokensExpireIn(now()->addDays(15));
