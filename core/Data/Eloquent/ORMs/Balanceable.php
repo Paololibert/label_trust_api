@@ -103,6 +103,7 @@ trait Balanceable
     {
         $solde = 0.00;
 
+        //if($this->account_number === "711") dd($this->balances);
         if (!$this->balance) {
             throw new ApplicationException("Veuillez reporter le solde du compte: " . $this->account_number, 400);
         }

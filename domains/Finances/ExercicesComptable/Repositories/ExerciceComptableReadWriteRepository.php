@@ -12,6 +12,7 @@ use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\QueryException as CoreQueryException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Finances\PlansComptable\Accounts\Repositories\AccountReadWriteRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -115,11 +116,11 @@ class ExerciceComptableReadWriteRepository extends EloquentReadWriteRepository
         $query = DB::table("plan_comptable_compte_sous_comptes")->select("id", "account_number")->get();
         
         foreach ($accountsData as $key => $subAccountData) {
-            $subAccount = $this->model->plan_comptable->findAccountOrSubAccount(query: $query, accountNumber: $subAccountData["account_number"], columns: ["id", "account_number"]);
+            $subAccount = $this->model->plan_comptable->findAccountOrSubAccount(accountNumber: $subAccountData["account_number"], columns: ["id", "account_number"]);
 
             if (!$subAccount) throw new ModelNotFoundException("Compte inconnu : {$subAccountData['account_number']}.", 1);
 
-            if(!$this->model->balances()->where("balanceable_id", $subAccount->id)->first()) $this->model->balances()->create(array_merge($subAccountData, ["balanceable_id" => $subAccount->id, "balanceable_type" => $subAccount::class]));
+            if(!$this->model->balances()->where("balanceable_id", $subAccount->id)->first()) $this->model->balances()->create(array_merge($subAccountData, ["balanceable_id" => $subAccount->id, "balanceable_type" => get_class($subAccount)]));
 
             if (isset($subAccountData["sub_divisions"])) {
                 $this->reportDeSoldeAuxSousCompte(accountsData: $subAccountData["sub_divisions"], parentAccountNumber: $subAccount->account_number);
@@ -136,16 +137,44 @@ class ExerciceComptableReadWriteRepository extends EloquentReadWriteRepository
     {
         $this->model = $this->find($exerciceComptableId);
 
-        /* foreach ($this->model->plan_comptable->accounts as $key => $account) {
+        $start_at = \Carbon\Carbon::parse($this->model->date_ouverture)->format("Y-m-d");
+        
+        $end_at   = ($this->model->fiscal_year . "-" . $this->model->periode_exercice->date_fin_periode->format('m-d'));
 
-            $this->model->close_balance()->create(['solde_debit', 'solde_credit' => $account->balance()->where(), 'date_report' => \Carbon\Carbon::now(), 'date_cloture' => \Carbon\Carbon::now(), "ligneable_id" => $account->id, "ligneable_type" => $account::class]);
+        foreach ($this->model->plan_comptable->accounts as $key => $account) {
+            
+            if(!$account->close_balance()->where("exercice_comptable_id", $this->model->id)->first()){
 
-            if (isset($subAccountData["sub_divisions"])) {
-                $this->reportDeSoldeAuxSousCompte($subAccountData["sub_divisions"]);
+                $solde_debiteur = $account->balanceDeCompte(type: "debiteur", exercice_comptable_id: $this->model->id, start_at: $start_at, end_at: $end_at);
+                $solde_crediteur = $account->balanceDeCompte(type: "crediteur", exercice_comptable_id: $this->model->id, start_at: $start_at, end_at: $end_at);
+
+                $mouv_debiteur = $account->mouvementDebit(exercice_comptable_id: $this->model->id, start_at: $start_at, end_at: $end_at);
+                $mouv_crediteur = $account->mouvementCredit(exercice_comptable_id: $this->model->id, start_at: $start_at, end_at: $end_at);
+
+                $type_solde_compte = (($account->balance ? $account->balance->solde : 0) + $mouv_debiteur) > $mouv_crediteur ? "debiteur" : "crediteur";
+
+                $accountArrayData = [
+                    "account_number" => $account->account_number,
+                    "type_solde_compte" => $type_solde_compte,
+                    "solde" =>  $type_solde_compte === "debiteur" ? $solde_debiteur : $solde_crediteur,
+                    "date_report" => \Carbon\Carbon::now(),
+                    "date_cloture" => \Carbon\Carbon::now()
+                ];
+
+                $account->close_balance()->create(array_merge($accountArrayData, ["exercice_comptable_id" => $this->model->id]));
+
+                //$this->model->close_balance()->create(array_merge($accountArrayData, ["balanceable_id" => $account->id, "balanceable_type" => $account::class]));
+
             }
-        } */
+            
+            if ($account->sous_comptes) {
+                $this->clotureDesSousComptes(accounts: $account->sous_comptes, start_at: $start_at, end_at: $end_at);
+            }
+        }
 
-        return $this->model->update(["date_fermeture" => \Carbon\Carbon::createFromFormat("d/m/Y", $data["cloture_at"]) ?? \Carbon\Carbon::now(), "status_exercice" => StatusExerciceEnum::CLOSE]);
+        $cloture_at = isset($data["cloture_at"]) ? $data["cloture_at"] : now()->format("d/m/Y");
+
+        return $this->model->update(["date_fermeture" => \Carbon\Carbon::createFromFormat("d/m/Y", $cloture_at), "status_exercice" => StatusExerciceEnum::CLOSE]);
 
     }
 
@@ -154,22 +183,34 @@ class ExerciceComptableReadWriteRepository extends EloquentReadWriteRepository
      * 
      * @return void
      */
-    private function clotureDesComptes($accountsData): void
+    private function clotureDesSousComptes(Collection $accounts, string $start_at, string $end_at): void
     {
-        foreach ($accountsData as $key => $subAccountData) {
-            $subAccount = $this->model->plan_comptable->findAccountOrSubAccount(accountNumber: $subAccountData["account_number"], columns: ["id", "account_number"]);
+        foreach ($accounts as $key => $account) {
+            
+            if(!$account->close_balance()->where("exercice_comptable_id", $this->model->id)->first()){
 
-            if (!$subAccount) throw new ModelNotFoundException("Compte inconnu : {$subAccountData['account_number']}.", 1);
+                $solde_debiteur = $account->balanceDeCompte(type: "debiteur", exercice_comptable_id: $this->model->id, start_at: $start_at, end_at: $end_at);
+                $solde_crediteur = $account->balanceDeCompte(type: "crediteur", exercice_comptable_id: $this->model->id, start_at: $start_at, end_at: $end_at);
 
-            $this->model->balances()->create(array_merge($subAccountData, ["balanceable_id" => $subAccount->id, "balanceable_type" => $subAccount::class]));
+                $mouv_debiteur = $account->mouvementDebit(exercice_comptable_id: $this->model->id, start_at: $start_at, end_at: $end_at);
+                $mouv_crediteur = $account->mouvementCredit(exercice_comptable_id: $this->model->id, start_at: $start_at, end_at: $end_at);
 
-            if (isset($subAccountData["sub_divisions"])) {
-                $this->clotureDesComptes($subAccountData["sub_divisions"]);
+                $type_solde_compte = (($account->balance ? $account->balance->solde : 0) + $mouv_debiteur) > $mouv_crediteur ? "debiteur" : "crediteur";
+
+                $accountArrayData = [
+                    "account_number" => $account->account_number,
+                    "type_solde_compte" => $type_solde_compte,
+                    "solde" =>  $type_solde_compte === "debiteur" ? $solde_debiteur : $solde_crediteur,
+                    "date_report" => \Carbon\Carbon::now(),
+                    "date_cloture" => \Carbon\Carbon::now()
+                ];
+
+                $account->close_balance()->create(array_merge($accountArrayData, ["exercice_comptable_id" => $this->model->id]));
+            }
+            
+            if ($account->sub_divisions) {
+                $this->clotureDesSousComptes(accounts: $account->sub_divisions, start_at: $start_at, end_at: $end_at);
             }
         }
-    }
-
-    private function sous()
-    {
     }
 }
