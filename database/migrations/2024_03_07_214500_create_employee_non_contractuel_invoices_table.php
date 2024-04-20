@@ -13,13 +13,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class ***`CreateNonContractuelCategoriesTable`***
+ * Class ***`CreateEmployeeNonContractuelInvoicesTable`***
  *
- * A migration class for creating the "non_contractuel_categories" table with UUID primary key and timestamps.
+ * A migration class for creating the "employee_non_contractuel_invoices" table with UUID primary key and timestamps.
  *
- * @package ***`\Database\Migrations\CreateNonContractuelCategoriesTable`***
+ * @package ***`\Database\Migrations\CreateEmployeeNonContractuelInvoicesTable`***
  */
-class CreateNonContractuelCategoriesTable extends Migration
+class CreateEmployeeNonContractuelInvoicesTable extends Migration
 {
     use CanDeleteTrait, HasCompositeKey, HasForeignKey, HasTimestampsAndSoftDeletes, HasUuidPrimaryKey;
     
@@ -37,18 +37,25 @@ class CreateNonContractuelCategoriesTable extends Migration
 
         try {
 
-            Schema::create('non_contractuel_categories', function (Blueprint $table) {
-                // Define a UUID primary key for the 'non_contractuel_categories' table
+            Schema::create('employee_non_contractuel_invoices', function (Blueprint $table) {
+                // Define a UUID primary key for the 'employee_non_contractuel_invoices' table
                 $this->uuidPrimaryKey($table);
 
-                // 
-                $table->date('date_debut')->useCurrent()
-                    ->comment('Indicate when the contract was created');
-                // 
-                $table->date('date_fin')->nullable()
-                    ->comment('Indicate when the contract was created');                
+                $table->string('invoice_number')->unique();
+
+                // Define the decimal column 'total' for storing the monetary amount with 8 digits, 2 of which are decimal places
+                $table->decimal('total', 8, 2)->comment('The monetary amount associated with the "montants" entry');
+
+                // Invoice issue date
+                $table->date('issue_date')->useCurrent(); 
+
+                // Invoice due date
+                $table->date('due_date')->useCurrent(); 
+
+                //Define if the invoice is paid or not
+                $table->boolean('invoice_status')->default(false);               
                 
-                // Define a foreign key for 'non_contractuel_categories', pointing to the 'non_contractuel_categories' table
+                // Define a foreign key for 'employee_non_contractuel_id', pointing to the 'employee_non_contractuels' table
                 $this->foreignKey(
                     table: $table,          // The table where the foreign key is being added
                     column: 'employee_non_contractuel_id',   // The column to which the foreign key is added ('employee_non_contractuel_id' in this case)
@@ -57,24 +64,6 @@ class CreateNonContractuelCategoriesTable extends Migration
                     nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows NULL)
                 );
 
-                // Define a foreign key for 'categories_of_employees', pointing to the 'categories_of_employees' table
-                $this->foreignKey(
-                    table: $table,          // The table where the foreign key is being added
-                    column: 'category_of_employee_id',   // The column to which the foreign key is added ('category_of_employee_id' in this case)
-                    references: 'categories_of_employees',    // The referenced table (categories_of_employees) to establish the foreign key relationship
-                    onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: false          // Specify whether the foreign key column can be nullable (false means it not allows NULL)
-                );
-                
-                // Define a foreign key for 'category_of_employee_taux', pointing to the 'category_of_employee_taux' table
-                $this->foreignKey(
-                    table: $table,          // The table where the foreign key is being added
-                    column: 'category_of_employee_taux_id',   // The column to which the foreign key is added ('category_of_employee_taux_id' in this case)
-                    references: 'category_of_employee_taux',    // The referenced table (category_of_employee_taux) to establish the foreign key relationship
-                    onDelete: 'cascade',    // Action to perform when the referenced record is deleted (cascade deletion)
-                    nullable: true          // Specify whether the foreign key column can be nullable (false means it not allows NULL)
-                );
-    
                 // Add a boolean column 'status' to the table
                 $table->boolean('status')
                     ->default(TRUE) // Set the default value to TRUE
@@ -96,11 +85,10 @@ class CreateNonContractuelCategoriesTable extends Migration
                 );
                 
                 // Create a composite index for efficient searching on the combination of name, slug, key, status and can_be_delete
-                $this->compositeKeys(table: $table, keys: [ 'status', 'can_be_delete']);
+                $this->compositeKeys(table: $table, keys: ['status', 'can_be_delete']);
 
                 // Add timestamp and soft delete columns to the table
                 $this->addTimestampsAndSoftDeletesColumns($table);
-
             });
 
             // Commit the transaction
@@ -111,7 +99,7 @@ class CreateNonContractuelCategoriesTable extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to migrate "non_contractuel_categories" table: ' . $exception->getMessage(),
+                message: 'Failed to migrate "employee_non_contractuel_invoices" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }
@@ -130,8 +118,8 @@ class CreateNonContractuelCategoriesTable extends Migration
         DB::beginTransaction();
 
         try {
-            // Drop the "non_contractuel_categories" table if it exists
-            Schema::dropIfExists('non_contractuel_categories');
+            // Drop the "employee_non_contractuel_invoices" table if it exists
+            Schema::dropIfExists('employee_non_contractuel_invoices');
 
             // Commit the transaction
             DB::commit();
@@ -141,7 +129,7 @@ class CreateNonContractuelCategoriesTable extends Migration
 
             // Handle the exception (e.g., logging, notification, etc.)
             throw new \Core\Utils\Exceptions\DatabaseMigrationException(
-                message: 'Failed to drop "non_contractuel_categories" table: ' . $exception->getMessage(),
+                message: 'Failed to drop "employee_non_contractuel_invoices" table: ' . $exception->getMessage(),
                 previous: $exception
             );
         }

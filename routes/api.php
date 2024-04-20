@@ -216,6 +216,15 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                 Route::group(['prefix' => 'employeenoncontractuels'], function () {
 
                     Route::put('{employee_non_contractuel_id}/{category_employee_id}/new-category', 'EmployeeNonContractuelController@changeCategoryOfNonContractualEmployee')->name('employeenoncontractuels.changeCategoryOfNonContractualEmployee');
+
+                    Route::post('{employee_non_contractuel_id}/generate-invoice', 'EmployeeNonContractuelController@generateInvoice')->name('employeenoncontractuels.generate-invoice');
+
+                    Route::get('{employee_non_contractuel_id}/invoices', 'EmployeeNonContractuelController@invoices')->name('employeenoncontractuels.invoices');
+
+                    Route::put('{employee_non_contractuel_id}/invoices/{invoice_id}', 'EmployeeNonContractuelController@updateInvoice')->name('employeenoncontractuels.update-invoice');
+
+                    Route::patch('{employee_non_contractuel_id}/invoices/{invoice_id}/validate', 'EmployeeNonContractuelController@updateInvoice')->name('employeenoncontractuels.update-invoice');
+
                 });
 
                 Route::apiResource('contracts', 'ContractController')->parameters([

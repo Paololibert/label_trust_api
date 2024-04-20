@@ -23,5 +23,13 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
  */
 interface EmployeeNonContractuelRESTfulQueryServiceContract extends RestJsonQueryServiceContract
 {
-
+    /**
+     * List of invoices
+     *
+     * @param  string                                   $employeeId     The unique identifier of the employee.
+     * @return \Illuminate\Http\JsonResponse                            The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                  If there is an issue.
+     */
+    public function invoices(string $employeeId): \Illuminate\Http\JsonResponse;
 }

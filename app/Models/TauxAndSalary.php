@@ -162,7 +162,7 @@ class TauxAndSalary extends ModelContract
     public function categories_of_employees(): BelongsToMany
     {
         return $this->belongsToMany(CategoryOfEmployee::class, 'category_of_employee_taux', 'taux_id', 'category_of_employee_id')
-                    ->withPivot('est_le_taux_de_base', 'status', 'deleted_at', 'can_be_delete')
+                    ->withPivot("id", 'est_le_taux_de_base', 'status', 'deleted_at', 'can_be_delete')
                     ->withTimestamps() // Enable automatic timestamps for the pivot table
                     ->wherePivot('status', true) // Filter records where the status is true
                     ->wherePivot('deleted_at', null) // Filter records where the deleted_at column is null

@@ -56,7 +56,7 @@ class CreateLigneEcritureComptableDTO extends BaseDTO
             "lignes_ecriture.*"                        => ["distinct", "array"],
             'lignes_ecriture.*.type_ecriture_compte'   => ['required', "string", new Enum(TypeEcritureCompteEnum::class)],
             "lignes_ecriture.*.montant"                => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
-            "lignes_ecriture.*.account_number"         => ["required", "distinct", new AccountNumberExistsInEitherTable()],
+            "lignes_ecriture.*.account_number"         => ["required", "distinct"/* , new AccountNumberExistsInEitherTable() */],
             'can_be_deleted'                           => ['sometimes', 'boolean', 'in:' . true . ',' . false],
         ], $rules);
 

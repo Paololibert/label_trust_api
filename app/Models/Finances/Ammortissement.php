@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class ***`Ammortissement`***
  *
- * This model represents the `immobilisations` table in the database.
+ * This model represents the `ammortissements` table in the database.
  * It extends the ModelContract class and provides access to the database table associated with the model.
  *
  * @property  string    $name;

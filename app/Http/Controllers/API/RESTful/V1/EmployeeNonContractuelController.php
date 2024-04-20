@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\ResourceRequest;
 use Domains\Employees\EmployeeNonContractuels\DataTransfertObjects\CreateEmployeeNonContractuelDTO;
+use Domains\Employees\EmployeeNonContractuels\DataTransfertObjects\InvoiceDTO;
+use Domains\Employees\EmployeeNonContractuels\DataTransfertObjects\InvoiceEditionDTO;
 
 /**
  * **`EmployeeNonContractuelController`**
@@ -58,6 +60,66 @@ class EmployeeNonContractuelController extends RESTfulResourceController
         }
         
         return $this->restJsonReadWriteService->changeCategoryOfNonContractualEmployee($employeeId,$newCategoryId, $createRequest->getDto());
+    }
+
+    /**
+     * Generate invoice
+     *
+     * @param  string                           $employeeId     The unique identifier of the employee.
+     * @param  Request                          $request        The request object containing the data for updating the resource.
+     * @return \Illuminate\Http\JsonResponse                    The JSON response indicating the status of the role privileges granted operation.
+     */
+    public function generateInvoice(Request $request, string $employeeId): JsonResponse
+    {
+        $createRequest = app(ResourceRequest::class, ['dto' => new InvoiceDTO(data: ["employee_non_contractuel_id" => $employeeId])]);
+
+        if ($createRequest) {
+            $createRequest->validate($createRequest->rules());
+        }
+        
+        return $this->restJsonReadWriteService->generateInvoice($employeeId, $createRequest->getDto());
+    }
+
+    /**
+     * Update invoice
+     *
+     * @param  string                           $employeeId     The unique identifier of the employee.
+     * @param  Request                          $request        The request object containing the data for updating the resource.
+     * @return \Illuminate\Http\JsonResponse                    The JSON response indicating the status of the role privileges granted operation.
+     */
+    public function updateInvoice(Request $request, string $employeeId, string $invoiceId): JsonResponse
+    {
+        $createRequest = app(ResourceRequest::class, ['dto' => new InvoiceEditionDTO(data: ["employee_non_contractuel_id" => $employeeId])]);
+
+        if ($createRequest) {
+            $createRequest->validate($createRequest->rules());
+        }
+        
+        return $this->restJsonReadWriteService->updateInvoice($employeeId, $invoiceId, $createRequest->getDto());
+    }
+
+    /**
+     * Validate invoice
+     *
+     * @param  string                           $employeeId     The unique identifier of the employee.
+     * @param  Request                          $request        The request object containing the data for updating the resource.
+     * @return \Illuminate\Http\JsonResponse                    The JSON response indicating the status of the role privileges granted operation.
+     */
+    public function validateInvoice(Request $request, string $employeeId, string $invoiceId): JsonResponse
+    {        
+        return $this->restJsonReadWriteService->validateInvoice($employeeId, $invoiceId);
+    }
+
+    /**
+     * Invoices
+     *
+     * @param  string                           $employeeId     The unique identifier of the employee.
+     * @param  Request                          $request        The request object containing the data for updating the resource.
+     * @return \Illuminate\Http\JsonResponse                    The JSON response indicating the status of the role privileges granted operation.
+     */
+    public function invoices(Request $request, string $employeeId): JsonResponse
+    {        
+        return $this->restJsonQueryService->invoices($employeeId);
     }
 
 }
