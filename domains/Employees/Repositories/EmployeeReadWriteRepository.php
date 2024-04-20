@@ -106,15 +106,17 @@ class EmployeeReadWriteRepository extends EloquentReadWriteRepository
 
                 $categoryEmployeId = $data['data']['category_of_employee_id'];
 
-                $categoryEmployeeTauxId = $data['data']['category_of_employee_taux_id'] ?? null;
+                $categoryEmployeeTauxId = $employeDetail->actual_category->taux()->wherePivot("taux_id", $data['data']['taux_id'])->first()->pivot->id;//$data['data']['category_of_employee_taux_id'] ?? null;
+
+                //dd($employeDetail->actual_category->taux()->wherePivot("taux_id", $data['data']['taux_id'])->first()->pivot->id);
 
                 $attributes = [
                     'date_debut' => $data['data']['date_debut'],
-                    'category_of_employee_taux_id' =>$categoryEmployeeTauxId
+                    'category_of_employee_taux_id' => $categoryEmployeeTauxId
                 ];
                 
-                $mu = $employeDetail->categories()->attach($categoryEmployeId, $attributes);
-
+                $employeDetail->categories()->attach($categoryEmployeId, $attributes);
+                $employeDetail->refresh();
 
                 //$employeDetail->employee()->attach($this->model);
             }

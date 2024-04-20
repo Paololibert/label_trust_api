@@ -67,8 +67,8 @@ class AddNewColumnsToArticleIQPsTables extends Migration
 
             if (Schema::hasTable('article_iqps')) {
                 Schema::table('article_iqps', function (Blueprint $table) {
-                    if (Schema::hasColumn('article_iqps', 'quantity_treated')) {    
-                        $table->string('quantity_treated')->nullable()->comment('The quantity_treated of the article_iqps');
+                    if (Schema::hasColumn('article_iqps', 'quantity_treated')) {
+                        $table->dropColumn("quantity_treated");
                     }
                 });
             }

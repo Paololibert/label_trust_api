@@ -83,7 +83,7 @@ class EcritureAnalytique extends ModelContract
         'accountable_id'                    => 'string',
         'accountable_type'                  => 'string',
         'type_ecriture_compte'              => TypeEcritureCompteEnum::class,
-        'date_ecriture'                     => 'datetime:Y-m-d H:i:s',
+        'date_ecriture'                     => 'datetime:Y-m-d',
         'exercice_comptable_journal_id'     => 'string',
         'operation_disponible_id'           => 'string',
         'projet_production_id'              => 'string'
@@ -137,7 +137,7 @@ class EcritureAnalytique extends ModelContract
      *
      * @return BelongsTo|null
      */
-    public function operation_disponible(): ?BelongsTo
+    public function operation_analytique(): ?BelongsTo
     {
         return $this->belongsTo(OperationAnalytique::class, 'operation_disponible_id');
     }

@@ -5,7 +5,7 @@ namespace App\Http\Resources\Finances;
 use App\Http\Resources\API\PaginateResource;
 use Illuminate\Http\Request;
 
-class PlanComptableCollection  extends PaginateResource
+class PlanComptableCollection extends PaginateResource
 {
     public function __construct(mixed $resource, string $resourceClass)
     {

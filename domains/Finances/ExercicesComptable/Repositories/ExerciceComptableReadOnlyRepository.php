@@ -104,7 +104,7 @@ class ExerciceComptableReadOnlyRepository extends EloquentReadOnlyRepository
         try {
             $exercice_comptable = $this->find($exerciceComptableId)->load(["journaux", "journaux.ecritures_comptable"]);
 
-            return new JournauxResource(resource: $exercice_comptable);
+            return new JournauxResource(resource: $exercice_comptable, start_at: isset($periodeArrayData["from_date"]) ? $periodeArrayData["from_date"] : null, end_at: isset($periodeArrayData["to_date"]) ? $periodeArrayData["to_date"] : null);
         } catch (CoreException $exception) {
             // Throw a NotFoundException with an error message and the caught exception
             throw new RepositoryException(message: "Error while quering balance of accounts of an exercice comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);

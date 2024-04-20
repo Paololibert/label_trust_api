@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use Core\Utils\Requests\UpdateResourceRequest;
-use Domains\Finances\PlansComptable\DataTransfertObjects\CreatePlanComptableDTO;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 
 /**
  * Class **`ResourceRequest`**
  *
- * Represents a form request for creating a role. This class extends the base `FormRequest` class provided by Laravel.
+ * Represents a form request for creating/updating an resource. This class extends UpdateResourceRequest which also extends another ResourceRequest the base `FormRequest` class provided by Laravel.
  * It handles the validation and authorization of the request data.
  *
  * @package **`\App\Http\Requests`**

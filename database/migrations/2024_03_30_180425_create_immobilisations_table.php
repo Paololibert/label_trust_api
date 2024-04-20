@@ -44,7 +44,7 @@ class CreateImmobilisationsTable extends Migration
                 $this->uuidPrimaryKey($table);
 
                 // Define a unique string column for the imm name
-                $table->string('name')->unique()
+                $table->string('name')
                     ->comment('The unique name of the immobilisation');
 
                 // "type_immobilisation" column with default value "corporelle"

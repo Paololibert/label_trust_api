@@ -2,14 +2,12 @@
 
 namespace App\Exceptions;
 
-use Core\Utils\Enums\Common\ErrorCodeEnum;
 use Core\Utils\Exceptions\ApplicationException;
 use Core\Utils\Exceptions\AuthException;
 use Core\Utils\Exceptions\AuthorizationException as CoreAuthorizationException;
 use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\HttpMethodNotAllowedException;
 use Core\Utils\Exceptions\NotFoundException;
-use Core\Utils\Exceptions\ServiceException;
 use Core\Utils\Exceptions\TooManyAttemptsException;
 use Core\Utils\Exceptions\UnprocessableException;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -46,7 +44,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        //dd($exception);
+        dd($exception);
         if ($exception instanceof MethodNotAllowedHttpException) {
             throw new HttpMethodNotAllowedException();
         }

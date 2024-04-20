@@ -46,8 +46,7 @@ class CreateNonContractuelCategoriesTable extends Migration
                     ->comment('Indicate when the contract was created');
                 // 
                 $table->date('date_fin')->nullable()
-                    ->comment('Indicate when the contract was created');
-                
+                    ->comment('Indicate when the contract was created');                
                 
                 // Define a foreign key for 'non_contractuel_categories', pointing to the 'non_contractuel_categories' table
                 $this->foreignKey(

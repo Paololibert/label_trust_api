@@ -86,6 +86,7 @@ class BalanceDesComptesResource extends JsonResource
     protected function sub_accounts($accounts)
     {
         return $accounts->map(function ($account) {
+            
             return [
                 'id'                    => $account->id,
                 'intitule'              => $account->intitule,

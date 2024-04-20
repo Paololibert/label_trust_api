@@ -74,7 +74,7 @@ class ProjetProduction extends ModelContract
      * @var array<int, string>
      */
     protected $appends = [
-        "ligne_de_production", "produit_fini"
+        "ligne", "produit_fini"
     ];
 
     /**
@@ -116,7 +116,7 @@ class ProjetProduction extends ModelContract
      *
      * @return string
      */
-    public function getLigneDeProductionAttribute(): string
+    public function getLigneAttribute(): string
     {
         return $this->ligneDeProduction->name;
     }

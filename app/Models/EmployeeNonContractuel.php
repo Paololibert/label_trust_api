@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Finances\EmployeeNonContractuelInvoice;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Contractuelable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
@@ -84,6 +86,10 @@ class EmployeeNonContractuel extends ModelContract
         'categories'
     ];
 
+    public function actual_category(){
+        return $this->belongsTo(CategoryOfEmployee::class, "category_of_employee_id");
+    }
+
     
     public function categories()
     {
@@ -113,6 +119,16 @@ class EmployeeNonContractuel extends ModelContract
     public function employees()
     {
         return $this->morphToMany(Employee::class, 'newcontractable');
+    }
+
+    /**
+     * Get the invoices
+     *
+     * @return HasMany
+     */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(EmployeeNonContractuelInvoice::class, 'employee_non_contractuel_id');
     }
 
 }

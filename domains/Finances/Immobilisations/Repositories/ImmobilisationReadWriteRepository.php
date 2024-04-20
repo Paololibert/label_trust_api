@@ -56,9 +56,6 @@ class ImmobilisationReadWriteRepository extends EloquentReadWriteRepository
 
            $this->model->createAmmortissements();
 
-           dd($this->model->refresh());
-
-
             /* foreach ($data["lignes_ecriture"] as $key => $ligne_ecriture) {
                 $account = $exerciceComptable->plan_comptable->findAccountOrSubAccount(accountNumber: $ligne_ecriture["account_number"], columns: ["id", "account_number"]);
 

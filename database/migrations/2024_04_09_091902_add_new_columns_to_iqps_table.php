@@ -68,7 +68,7 @@ class AddNewColumnsToIQPSTable extends Migration
             if (Schema::hasTable('iqps')) {
                 Schema::table('iqps', function (Blueprint $table) {
                     if (Schema::hasColumn('iqps', 'iqp_type')) {
-                        $table->enum('iqp_type', TypeOfIQPEnum::values())->default(TypeOfIQPEnum::DEFAULT);
+                        $table->dropColumn("iqp_type");
                     }
                 });
             }

@@ -57,4 +57,47 @@ class ImmobilisationController extends RESTfulResourceController
             return $this->restJsonReadWriteService->create($createRequest->getDto());
         }
     }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  Request $request              The request object containing the filter parameters.
+     * @param  string $id                    The identifier of the resource to be displayed.
+     * 
+     * @return \Illuminate\Http\JsonResponse The JSON response containing the specified resource.
+     */
+    public function show(Request $request, string $id): JsonResponse
+    {
+        $fields = explode(',', $request->query('fields', '*'));
+
+        $immobilisationId = $request->route("immobilisation_id");
+
+        $fields["exercice_comptable_id"] = $request->route("exercice_comptable_id");
+    
+        return $this->restJsonQueryService->findById($immobilisationId, $fields);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request $request The request object containing the data for updating the resource.
+     * @param  string                   $id      The identifier of the resource to be updated.
+     * @return \Illuminate\Http\JsonResponse     The JSON response indicating the status of the operation.
+     */
+    public function update(Request $request, string $id): JsonResponse
+    {
+        $createRequest = app(CreateImmobilisationRequest::class, [$request]);
+
+        if ($createRequest) {
+
+            $createRequest->validate($createRequest->rules());
+
+            $immobilisationId = $request->route("immobilisation_id");
+
+            $createRequest->getDto()->setProperty("exercice_comptable_id", $request->route("exercice_comptable_id"));
+        
+            return $this->restJsonReadWriteService->update($immobilisationId, $createRequest->getDto());
+        }
+    }
 }

@@ -141,6 +141,16 @@ class SubAccount extends ModelContract
     }
 
     /**
+     * Get the compte
+     *
+     * @return BelongsTo
+     */
+    public function compte(): BelongsTo
+    {
+        return $this->belongsTo(Compte::class, 'sous_compte_id');
+    }
+
+    /**
      * Get the sous compte
      *
      * @return BelongsTo

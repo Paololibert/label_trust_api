@@ -26,6 +26,7 @@ class CreateProductTest extends TestCase
      */
     protected $requestData;
 
+    protected $product;
     /**
      * Set up the test environment before each test method runs.
      */

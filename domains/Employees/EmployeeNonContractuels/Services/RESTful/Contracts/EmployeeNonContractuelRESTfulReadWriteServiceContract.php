@@ -32,4 +32,37 @@ interface EmployeeNonContractuelRESTfulReadWriteServiceContract extends RestJson
      */
     public function changeCategoryOfNonContractualEmployee(string $employeeId, string $newCategoryId, DTOInterface $data): \Illuminate\Http\JsonResponse;
 
+    /**
+     * Generate invoice
+     *
+     * @param  string                                           $planComptableId            The unique identifier of the employee.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $data                       Invoice items data.
+     * @return \Illuminate\Http\JsonResponse                                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                                      If there is an issue.
+     */
+    public function generateInvoice(string $employeeId, DTOInterface $data): \Illuminate\Http\JsonResponse;
+    
+    /**
+     * Update invoice
+     *
+     * @param  string                                           $employeeId The unique identifier of the employee.
+     * @param  string                                           $invoiceId The unique identifier of the invoice.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $data       Invoice items data.
+     * @return \Illuminate\Http\JsonResponse                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                      If there is an issue.
+     */
+    public function updateInvoice(string $employeeId, string $invoiceId, DTOInterface $data): \Illuminate\Http\JsonResponse;
+
+    /**
+     * Validate invoice
+     *
+     * @param  string                                           $employeeId The unique identifier of the employee.
+     * @param  string                                           $invoiceId  The unique identifier of the invoice.
+     * @return \Illuminate\Http\JsonResponse                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                      If there is an issue.
+     */
+    public function validateInvoice(string $employeeId, string $invoiceId): \Illuminate\Http\JsonResponse;
 }

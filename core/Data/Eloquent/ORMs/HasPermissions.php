@@ -76,6 +76,18 @@ trait HasPermissions
         return $relationship;
     }
 
+    public function hasAnyPermissions(array $permissions, string $filter = "key")
+    {
+        // Check if the role has any of the specified permissions
+        return $this->permissions()->whereIn("$filter", $permissions)->exists();
+    }
+
+    public function hasAllPermissions(array $permissions, string $filter = "key")
+    {
+        // Check if the role has all of the specified permissions
+        return $this->permissions()->whereIn("$filter", $permissions)->count() === count($permissions);
+    }
+
     /**
      * Check if the model has the specified permission.
      *
@@ -83,7 +95,7 @@ trait HasPermissions
      * @param  string $filter
      * @return bool
      */
-    public function hasPermission($permission, string $filter = 'slug'): bool
+    public function hasPermission(string $permission, string $filter = 'key'): bool
     {
         if ($permission instanceof Permission) {
             $permission = $permission->$filter;

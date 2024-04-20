@@ -206,61 +206,98 @@ class Immobilisation extends ModelContract
         $ammortissements = [];
 
         $item = [
-            "taux" => $taux,
-            //"montant" => $base_ammortissable
+            "taux" => $taux
         ];
+
+        $base_ammortissable = $this->valeur_origine;
+
+        $item = array_merge($item, [
+            "montant" => $base_ammortissable,
+            "annete" => $base_ammortissable * ($taux / 100)
+        ]);
+
 
         if ($this->lineaireAvecProrataTemporis()->count()) {
 
-            $base_ammortissable = $this->valeur_origine;
+            $start_date = $this->date_acquisition;
 
-            $item = [
-                "montant" => $base_ammortissable,
-                "annete" => $base_ammortissable * ($taux / 100)
-            ];
+            $index = $actual_month = 0;
+
+            $item = [$index => $item];
+
+            $interval = $this->date_acquisition->diff(\Carbon\Carbon::parse($this->date_acquisition->addYears($n)->format("Y") . "-12-31"));
+
+            $total_month = ($interval->format('%y') * 12) + $interval->format('%m');
+
+            $actual_month = \Carbon\Carbon::parse($start_date)->diff(\Carbon\Carbon::parse($start_date->year . "-12-31"))->format("%m");
+            $last_month = 12;
+            if ($actual_month < 12) {
+                $item[$index]["date_debut"] = \Carbon\Carbon::parse($start_date)->format("Y-m-d");
+                $item[$index]["date_fin"]   = \Carbon\Carbon::parse($start_date)->year . "-12-31";
+                $last_month = 12 - $last_month;
+            } else {
+                $item[$index]["date_debut"] = \Carbon\Carbon::parse($start_date)->year . "-01-01";
+                $item[$index]["date_fin"]   = \Carbon\Carbon::parse($start_date)->year . "-12-31";
+                $actual_month = 12;
+            }
+
+            $item[$index]["taux"] = $taux;
+            $item[$index]["montant"] = $base_ammortissable;
+            $item[$index]["annete"] = $base_ammortissable * ($taux / 100);
+            
+            $valeur_ammortissable =  $item[$index]["annete"] * ($index + 1);
+
+            $item[$index]["valeur_ammortissable"] = $valeur_ammortissable;
+            $item[$index]["valeur_comptable"] = $base_ammortissable - $valeur_ammortissable;
+
+            while ($actual_month < $total_month) {
+                $index++;
+                $actual_month += 12;
+
+                $item[$index]["date_debut"] = \Carbon\Carbon::parse($start_date)->addYears($index)->year . "-01-01";
+
+                if(($actual_month + $last_month) === $total_month){
+                    
+                    $item[$index]["date_fin"] = \Carbon\Carbon::parse($start_date)->addYears($index)->addMonths($last_month)->format("Y-m-d");
+                }
+                else {
+                    $item[$index]["date_fin"] = \Carbon\Carbon::parse($start_date)->addYears($index)->year . "-12-31";
+                }
+
+                $item[$index]["taux"] = $taux;
+                $item[$index]["montant"] = $base_ammortissable;
+                $item[$index]["annete"] = $base_ammortissable * ($taux / 100);
+
+                $valeur_ammortissable =  $item[$index]["annete"] * $index;
+
+                $item[$index]["valeur_ammortissable"] = $valeur_ammortissable;
+                $item[$index]["valeur_comptable"] = $base_ammortissable - $valeur_ammortissable;              
+            }
+
+            collect($item)->each(function($data){
+                $this->ammortissements()->create($data);
+            });
+            
+        } else if ($this->lineaireSansProrataTemporis()->count()) {
 
             for ($i = 0; $i < $n; $i++) {
-                
-                $valeur_ammortissable =  $item["annete"] * ($i+1);
 
-                $item = array_merge($item,[
+                $item["montant"] = $base_ammortissable;
+                $item["annete"] = $base_ammortissable * ($taux / 100);
+                $valeur_ammortissable =  $item["annete"] * ($i + 1);
+
+                $item = array_merge($item, [
                     "valeur_ammortissable" => $valeur_ammortissable,
                     "valeur_comptable" => $base_ammortissable - $valeur_ammortissable,
                     "date_debut" => \Carbon\Carbon::parse($this->date_acquisition)->addYears($i)->year . "-01-01",
-                    "date_fin" => \Carbon\Carbon::parse($this->date_acquisition)->addYears($i)->year. "-12-31"
+                    "date_fin" => \Carbon\Carbon::parse($this->date_acquisition)->addYears($i)->year . "-12-31"
                 ]);
-
-                dd($item);
 
                 $this->ammortissements()->create($item);
 
                 $ammortissements[] = $item;
             }
-
-        } else if ($this->lineaireSansProrataTemporis()->count()) {
-
-
-            $base_ammortissable = $this->valeur_origine;
-            
-            $item = [
-                "annete" => $base_ammortissable * ($taux / 100),
-                "date_debut" => \Carbon\Carbon::parse($this->date_acquisition)->year . "-01-01",
-                "date_fin" => \Carbon\Carbon::parse($this->date_acquisition)->year . "-12-31"
-            ];
-
-            /* $item = [
-                "taux" => $taux,
-                "duree" => 1,
-                "montant" => $base_ammortissable,
-                "annete" => $base_ammortissable * ($taux / 100),
-                "date_debut" => \Carbon\Carbon::parse($this->date_acquisition)->year() . "-01-01",
-                "date_fin" => \Carbon\Carbon::parse($this->date_acquisition)->year() . "-12-31"
-            ]; */
         }
-
-        dd($this->ammortissements);
-
-        //$this->ammortissements()->create($ammortissements);
     }
 
     public function degressif()

@@ -84,7 +84,7 @@ class EcritureAnalytiqueRESTfulQueryService extends RestJsonQueryService impleme
 
             return JsonResponseTrait::success(
                 message: "Ecriture comptable successfully query.",
-                data: new EcritureComptableCollection(resource: $ecritures_comptable, resourceClass: EcritureComptableResource::class),
+                data: $ecritures_comptable,
                 status_code: Response::HTTP_OK
             );
         } catch (CoreException $exception) {

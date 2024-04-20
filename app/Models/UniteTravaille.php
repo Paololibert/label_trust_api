@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Articles\Article;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Utils\Enums\TypeUniteTravailleEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

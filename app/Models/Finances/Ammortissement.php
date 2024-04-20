@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class ***`Ammortissement`***
  *
- * This model represents the `immobilisations` table in the database.
+ * This model represents the `ammortissements` table in the database.
  * It extends the ModelContract class and provides access to the database table associated with the model.
  *
  * @property  string    $name;
@@ -70,8 +70,8 @@ class Ammortissement extends ModelContract
         "valeur_comptable"              => "decimal:2",
         "taux"                          => "decimal:2",
         "annete"                        => "integer",
-        'date_debut'                    => 'datetime:Y-m-d H:i:s',
-        'date_fin'                      => 'datetime:Y-m-d H:i:s',
+        'date_debut'                    => 'datetime:Y-m-d',
+        'date_fin'                      => 'datetime:Y-m-d',
         'immobilisation_id'             => 'string'
     ];
 

@@ -312,4 +312,14 @@ class User extends ModelContract implements /* AuthenticatableContract,  */Autho
 
         return strtolower($username);
     }
+
+    public function hasPermissionTo(string $permission)
+    {
+        return $this->hasPermissionThroughRoles($permission);
+    }
+
+    public function hasPermissionsTo(array $permissions)
+    {
+        return $this->hasAnyPermissionsThroughRoles($permissions);
+    }
 }

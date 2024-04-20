@@ -86,7 +86,7 @@ class LoginController extends Controller
      * @param  \App\Models\Credential  $credential
      * @return \Illuminate\Http\JsonResponse
      */
-    private function authenticateAndIssueToken(Request $request, Credential $credential): \Illuminate\Http\JsonResponse
+    public function authenticateAndIssueToken(Request $request, Credential $credential): \Illuminate\Http\JsonResponse
     {
         if (!Auth::attempt(['identifier' => $request->input('identifier'), 'password' => $request->input('password')])) {
             RateLimiter::hit($this->throttleKey(), $seconds = 60);

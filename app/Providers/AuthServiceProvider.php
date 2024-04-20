@@ -4,11 +4,13 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 
+
 use App\Models\Permission;
+use App\Models\User;
 use Core\Utils\Exceptions\ApplicationException;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+
 use Laravel\Passport\Passport;
 use Throwable;
 
@@ -23,7 +25,8 @@ class AuthServiceProvider extends ServiceProvider
         //
     ];
 
-    public function register(): void {
+    public function register(): void
+    {
         Passport::ignoreMigrations();
     }
 
@@ -33,19 +36,26 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
-
-        /* try {
+        
+        try {
             Permission::get()->map(function ($permission) {
-                Gate::define($permission->slug, function ($user) use ($permission) {
-                    dd($user);
+                Gate::define($permission->key, function (User $user) use ($permission) {
                     return $user->hasPermissionTo($permission);
                 });
             });
+
+            /* Gate::define('check_middleware', function (User $user, ...$permissions) {
+                dd($user, $permissions);
+                foreach ($permissions as $permission) {
+                    if ($user->can($permission)) {
+                        return true;
+                    }
+                }
+                return false;
+            });  */
         } catch (Throwable $exception) {
             throw new ApplicationException(previous: $exception);
-            
-            report($exception);
-        } */
+        }
 
         Passport::tokensExpireIn(now()->addDays(15));
         Passport::refreshTokensExpireIn(now()->addDays(30));
