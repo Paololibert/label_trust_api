@@ -61,4 +61,14 @@ interface PlanComptableRESTfulReadWriteServiceContract extends RestJsonReadWrite
      * @throws \Core\Utils\Exceptions\ServiceException                      If there is an issue with validating the Plan Comptable.
      */
     public function validatePlanComptable(string $planComptableId): \Illuminate\Http\JsonResponse;
+
+    /**
+     * Importer un plan comptable.
+     *
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $data       The IDs of the accounts to be deleted.
+     * @return \Illuminate\Http\JsonResponse                                The JSON response indicating the validation result.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                      If there is an issue with validating the Plan Comptable.
+     */
+    public function import(\Core\Utils\DataTransfertObjects\DTOInterface $data): \Illuminate\Http\JsonResponse;
 }

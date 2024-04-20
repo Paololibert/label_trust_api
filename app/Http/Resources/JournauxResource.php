@@ -46,6 +46,7 @@ class JournauxResource extends JsonResource
                     'created_at'            => $journal->created_at->format("Y-m-d")
                 ];
             }),
+
             "created_at"                        => $this->created_at->format("Y-m-d")
             // Add more custom attributes or customize existing ones as needed
         ];

@@ -6,15 +6,10 @@ namespace App\Models\Finances;
 
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Utils\Enums\StatusExerciceEnum;
-use Core\Utils\Exceptions\ApplicationException;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\countOf;
 
 /**
  * Class ***`ExerciceComptable`***
@@ -127,13 +122,23 @@ class ExerciceComptable extends ModelContract
     }
 
     /**
-     * Get the user's full name attribute.
+     * Get plan name attribute.
      *
-     * @return string The user's full name.
+     * @return string The plan name.
      */
     public function getPlanNameAttribute(): string
     {
         return $this->plan_comptable->name;
+    }
+
+    /**
+     * Get the user's full name attribute.
+     *
+     * @return string The user's full name.
+     */
+    public function getPeriodeAttribute(): string
+    {
+        return $this->periode_exercice->fiscal_year;
     }
 
     /**
@@ -167,6 +172,24 @@ class ExerciceComptable extends ModelContract
     }
 
     /**
+     * Get an account balance.
+     *
+     */
+    public function balance()
+    {
+        return $this->hasOne(BalanceDeCompte::class, 'exercice_comptable_id')->whereNull("date_cloture")->orderBy("created_at", "asc");
+    }
+
+    /**
+     * Get an account balance.
+     *
+     */
+    public function balance_at_end()
+    {
+        return $this->hasOne(BalanceDeCompte::class, 'exercice_comptable_id')->whereNotNull("date_cloture")->orderBy("created_at", "desc");
+    }
+
+    /**
      * Define a many-to-many relationship with the Compte model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -177,7 +200,12 @@ class ExerciceComptable extends ModelContract
             ->withPivot('total', 'total_debit', 'total_credit', 'status', 'deleted_at', 'can_be_delete')
             ->withTimestamps() // Enable automatic timestamps for the pivot table
             ->wherePivot('status', true) // Filter records where the status is true
+            ->wherePivot('deleted_at', null) // Filter records where the deleted_at column is null
             ->using(ExerciceComptableJournal::class); // Specify the intermediate model for the pivot relationship
+    }
+
+    public function journal_entries(){
+        return $this->hasMany(ExerciceComptableJournal::class);
     }
 
     /**

@@ -44,6 +44,7 @@ class CreateArticleIqpDTO extends BaseDTO
         $rules = array_merge([
             "name"            		        => ["string", "required", 'unique:article_iqps,name'],
             "norme"                         => ["required", "string"],
+            "quantity_treated"              => ["required", "string"],
             'unite_mesure_id'               => ['required', 'string', 'exists:unite_mesures,id'],
             'article_id'                    => ['required', 'string', 'exists:articles,id'],
             'iqp_id'                        => ['required', 'string', 'exists:iqps,id'],

@@ -65,7 +65,7 @@ class Account extends ModelContract
      * @var array<int, string>
      */
     protected $appends = [
-        'intitule', 'classe_de_compte', 'categorie_de_compte'
+        'intitule', 'classe_de_compte', 'classe_number', 'categorie_de_compte'
     ];
 
     /**
@@ -90,19 +90,29 @@ class Account extends ModelContract
     ];
 
     /**
-     * Get the user's full name attribute.
+     * Get intitule of the classe.
      *
-     * @return string The user's full name.
+     * @return string
      */
     public function getClasseDeCompteAttribute(): string
     {
-        return $this->classe->name;
+        return $this->classe->intitule;
     }
 
     /**
-     * Get the user's full name attribute.
+     * Get intitule of the classe.
      *
-     * @return string The user's full name.
+     * @return string|int
+     */
+    public function getClasseNumberAttribute(): string|int
+    {
+        return $this->classe->class_number;
+    }
+
+    /**
+     * Get attribute.
+     *
+     * @return string
      */
     public function getCategorieDeCompteAttribute(): string
     {

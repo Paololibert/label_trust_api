@@ -68,7 +68,7 @@ class EcritureComptable extends ModelContract
      *
      * @var array<string, mixed>
      */
-    protected $default_attributes = [
+    protected $attributes = [
         'total_debit'   => 0.00,
         'total_credit'  => 0.00
     ];

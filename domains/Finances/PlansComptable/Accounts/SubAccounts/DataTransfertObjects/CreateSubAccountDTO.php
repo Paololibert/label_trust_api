@@ -21,21 +21,23 @@ use Illuminate\Validation\Rule;
 class CreateSubAccountDTO extends BaseDTO
 {
 
-    public function __construct()
+    public function __construct(array $data = [], array $rules = [])
     {
-        parent::__construct();
+        parent::__construct(data: $data, rules: $rules);
 
-        if (!array_key_exists('accounts.*.sub_accounts.*.sub_account_id', $this->rules())) {
-            $this->merge(new CreateCompteDTO(), 'accounts.*.sub_accounts.*.compte_data');
+        foreach ($this->properties["accounts"] as $key => $account) {
+
+            foreach ($account["sub_accounts"] as $sub_key => $sub_account) {
+                if (!isset($sub_account['sub_account_id'])) {
+                    $this->merge(new CreateCompteDTO(data: $data, rules: $rules), "accounts.$key.sub_accounts.$sub_key.compte_data");
+                }
+                if (isset($sub_account['sub_divisions'])) {
+                    
+                    $this->merge(new CreateSubDivisionDTO(data: $data, rules: $rules));
+
+                }
+            }
         }
-
-        if (array_key_exists('sub_accounts.*.sub_accounts.*.sub_divisions', $this->rules())) {
-            $this->merge(new CreateSubDivisionDTO());
-        }
-
-        /* if(!isset(request()['sub_accounts']['sous_compte_id']) && !request('sous_compte_id')){
-            $this->merge(new CreateCompteDTO(), 'accounts.*.sub_accounts.*.compte_data');
-        } */
     }
 
     /**
@@ -62,7 +64,7 @@ class CreateSubAccountDTO extends BaseDTO
             "accounts.*.sub_accounts.*.sub_account_id"          => ["sometimes", "exists:plan_comptable_compte_sous_comptes,id"],
             "accounts.*.sub_accounts.*.principal_account_id"    => ["sometimes", "exists:plan_comptable_comptes,id"],
             "accounts.*.sub_accounts.*.sous_compte_id"          => ["sometimes", "distinct", "exists:comptes,id"],
-            'can_be_deleted'                                    => ['sometimes', 'boolean', 'in:'.true.','.false],
+            'accounts.*.sub_accounts.*.can_be_deleted'          => ['sometimes', 'boolean', 'in:' . true . ',' . false]
         ], $rules);
 
         return $this->rules = parent::rules($rules);

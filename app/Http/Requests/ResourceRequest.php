@@ -1,30 +1,30 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Http\Requests;
 
 use Core\Utils\Requests\UpdateResourceRequest;
+use Illuminate\Http\Request;
 
 /**
  * Class **`ResourceRequest`**
  *
- * Represents a form request for creating a role. This class extends the base `FormRequest` class provided by Laravel.
+ * Represents a form request for creating/updating an resource. This class extends UpdateResourceRequest which also extends another ResourceRequest the base `FormRequest` class provided by Laravel.
  * It handles the validation and authorization of the request data.
  *
  * @package **`\App\Http\Requests`**
  */
 class ResourceRequest extends UpdateResourceRequest
 {
-
     /**
      * ResourceRequest constructor.
      *
      * @param \Core\Utils\DataTransfertObjects\DTOInterface $dto The Data Transfer Object (DTO) instance to associate with this request.
      */
-    public function __construct(\Core\Utils\DataTransfertObjects\DTOInterface $dto, string $resouce = null)
+    public function __construct(\Core\Utils\DataTransfertObjects\DTOInterface $dto, string $resouce = null, array $rules = [], array $data = [], Request $request = null)
     {
-        parent::__construct($dto::fromRequest(request()), $resouce);
+        parent::__construct($dto::fromRequest(request: $request ?? request(), data: $data, rules: $rules));
     }
 
     /**
@@ -48,5 +48,4 @@ class ResourceRequest extends UpdateResourceRequest
         // Check the concrete class's authorization.
         return $this->isAuthorize();
     }
-
 }

@@ -46,7 +46,7 @@ class CreateArticleIQPsTable extends Migration
                 $table->string('name')->unique()->comment('The unique name of the article_iqps');
 
                 // Define string column for the article_iqps norme
-                $table->string('norme')->unique()->comment('The norme of the article_iqps');
+                $table->string('norme')->comment('The norme of the article_iqps');
 
                 // Define a foreign key for 'unite_mesure_id', referencing the 'unite_mesures' table
                 $this->foreignKey(

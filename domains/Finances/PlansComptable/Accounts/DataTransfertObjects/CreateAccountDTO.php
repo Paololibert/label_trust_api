@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Domains\Finances\PlansComptable\Accounts\DataTransfertObjects;
 
 use App\Models\Finances\Account;
+use App\Rules\CheckCompteIdRule;
+use App\Rules\CheckSubAccountsRule;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Domains\Finances\Comptes\DataTransfertObjects\CreateCompteDTO;
 use Domains\Finances\PlansComptable\Accounts\SubAccounts\DataTransfertObjects\CreateSubAccountDTO;
@@ -20,17 +22,24 @@ use Illuminate\Validation\Rule;
  */
 class CreateAccountDTO extends BaseDTO
 {
+    /**
+     * @var array
+     */
+    public array $additionalValidationRules;
 
-    public function __construct()
+    public function __construct(array $data = [], array $rules = [])
     {
-        parent::__construct();
+        parent::__construct(data: $data, rules: $rules);
 
-        if (!array_key_exists('accounts.*.compte_id', $this->rules())) {
-            $this->merge(new CreateCompteDTO(), 'accounts.*.compte_data');
-        }
+        $this->additionalValidationRules    = $rules;
 
-        if (array_key_exists('accounts.*.sub_accounts', $this->rules())) {
-            $this->merge(new CreateSubAccountDTO());
+        // Check if 'compte_id' exists in any nested array
+        foreach ($this->properties["accounts"] as $key => $account) {
+            if (!isset($account['compte_id'])) {
+                $this->merge(new CreateCompteDTO(data: $data, rules: $rules), array_key: "accounts.$key.compte_data");
+            } else if (isset($account['sub_accounts'])) {
+                $this->merge(new CreateSubAccountDTO(data: $data, rules: $rules)/* , "accounts.$key.sub_accounts" */);
+            }
         }
     }
 
@@ -51,13 +60,14 @@ class CreateAccountDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
+        //dd(Account::where(["account_number" => request()["accounts"][0]["account_number"]])->first());
         $rules = array_merge([
             "accounts"                          => ["required", "array"],
             "accounts.*"                        => ["distinct", "array"],
             "accounts.*.account_number"         => ["required", "string", "max:120", Rule::unique('plan_comptable_comptes', 'account_number')->whereNull('deleted_at')],
             "accounts.*.classe_id"              => ["required", "exists:classes_de_compte,id"],
             "accounts.*.compte_id"              => ["sometimes", "distinct", "exists:comptes,id"],
-            'accounts.*.can_be_deleted'         => ['sometimes', 'boolean', 'in:'.true.','.false],
+            'accounts.*.can_be_deleted'         => ['sometimes', 'boolean', 'in:' . true . ',' . false],
         ], $rules);
 
         return $this->rules = parent::rules($rules);

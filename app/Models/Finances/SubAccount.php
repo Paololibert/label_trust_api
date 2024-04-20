@@ -66,7 +66,7 @@ class SubAccount extends ModelContract
      * @var array<int, string>
      */
     protected $appends = [
-        'intitule'
+        'intitule', 'categorie_de_compte'
     ];
 
     /**
@@ -99,6 +99,16 @@ class SubAccount extends ModelContract
     {
         return $this->sous_compte->name ;
     }
+
+    /**
+     * Get attribute.
+     *
+     * @return string
+     */
+    public function getCategorieDeCompteAttribute(): string
+    {
+        return $this->sous_compte->categorie_de_compte;
+    }
     
     /**
      * Get sub accountable.
@@ -128,6 +138,16 @@ class SubAccount extends ModelContract
     public function parent_sub_account(): ?BelongsTo
     {
         return $this->belongsTo(SubAccount::class, 'subaccountable_id');
+    }
+
+    /**
+     * Get the compte
+     *
+     * @return BelongsTo
+     */
+    public function compte(): BelongsTo
+    {
+        return $this->belongsTo(Compte::class, 'sous_compte_id');
     }
 
     /**

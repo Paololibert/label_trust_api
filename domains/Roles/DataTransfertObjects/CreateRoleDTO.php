@@ -42,8 +42,8 @@ class CreateRoleDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"                  => ["string", "required", 'unique_ignore_case:roles,name'],
-            "description"           => ["string", "sometimes"],
+            "name"                  => ["required", "string", 'unique_ignore_case:roles,name'],
+            "description"           => ["string", "sometimes", "max:255"],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:' . true . ',' . false],
             'permissions'           => 'required|array|min:1',
             'permissions.*'         => ['distinct', "exists:permissions,id"]
@@ -64,6 +64,7 @@ class CreateRoleDTO extends BaseDTO
             "name.required"             => "Le nom du rôle est requis.",
             "name.unique_ignore_case"   => "Le nom du rôle est déjà utilisé.", // Message personnalisé pour l"unicité
             "description.string"        => "La description du rôle doit être une chaîne de caractères.",
+            "description.max"           => "La description du rôle ne doit pas depasse :max chaîne de caractères.",
             "permissions.required"      => "Au moins une permission est requise pour le rôle.",
             "permissions.array"         => "Les permissions doivent être fournies sous forme de tableau.",
             "permissions.min"           => "Le rôle doit avoir au moins une permission assignée.",

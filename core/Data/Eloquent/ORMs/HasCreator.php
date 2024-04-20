@@ -198,7 +198,7 @@ trait HasCreator
                 // Set the default creator if not already set
                 if (!$model->{$model->authorable()}) {
                     if (auth()->check()) {
-                        $model->setCreator(auth()->user());
+                        $model->setCreator(auth()->user()->user);
                     }
                     else {
                         try {

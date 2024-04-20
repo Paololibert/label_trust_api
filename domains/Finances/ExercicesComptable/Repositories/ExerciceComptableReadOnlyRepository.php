@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Domains\Finances\ExercicesComptable\Repositories;
 
-use App\Http\Resources\BalanceDesComptesResource;
-use App\Http\Resources\ExerciceComptableResource;
-use App\Http\Resources\JournauxResource;
+use App\Http\Resources\Finances\BalanceDesComptesResource;
+use App\Http\Resources\Finances\JournauxResource;
 use App\Models\Finances\ExerciceComptable;
 use Core\Data\Repositories\Eloquent\EloquentReadOnlyRepository;
 use Core\Utils\Exceptions\Contract\CoreException;
@@ -53,7 +52,7 @@ class ExerciceComptableReadOnlyRepository extends EloquentReadOnlyRepository
                 $query->soldeDesComptes($exerciceComptableId)->transactions($exerciceComptableId);
             }])->where("id", $exerciceComptableId)->first();*/
 
-            $accounts_balance = $this->find($exerciceComptableId);
+            $accounts_balance = $this->find($exerciceComptableId)->load("plan_comptable");
 
             return new BalanceDesComptesResource(resource: $accounts_balance);
         } catch (CoreException $exception) {
@@ -67,9 +66,10 @@ class ExerciceComptableReadOnlyRepository extends EloquentReadOnlyRepository
         try {
             $exercice_comptable = $this->find($exerciceComptableId);
             
-            $account_balance = $exercice_comptable->plan_comptable->findAccountOrSubAccount($data["account_number"]);
+            $account = $exercice_comptable->plan_comptable->findAccountOrSubAccount($data["account_number"]);
 
-            return $exercice_comptable;
+
+            return new BalanceDesComptesResource(resource: $exercice_comptable);
             
             /* 
             return [
@@ -104,7 +104,7 @@ class ExerciceComptableReadOnlyRepository extends EloquentReadOnlyRepository
         try {
             $exercice_comptable = $this->find($exerciceComptableId)->load(["journaux", "journaux.ecritures_comptable"]);
 
-            return new JournauxResource(resource: $exercice_comptable);
+            return new JournauxResource(resource: $exercice_comptable, start_at: isset($periodeArrayData["from_date"]) ? $periodeArrayData["from_date"] : null, end_at: isset($periodeArrayData["to_date"]) ? $periodeArrayData["to_date"] : null);
         } catch (CoreException $exception) {
             // Throw a NotFoundException with an error message and the caught exception
             throw new RepositoryException(message: "Error while quering balance of accounts of an exercice comptable." . $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);

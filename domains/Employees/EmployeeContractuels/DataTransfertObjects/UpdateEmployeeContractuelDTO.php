@@ -40,8 +40,8 @@ class UpdateEmployeeContractuelDTO extends BaseDTO
             'date_fin'              => ['sometimes', 'date'],
             'contract_status'       => ['sometimes', 'string'],
             'renouvelable'          => ['sometimes', 'boolean'],
-            "poste_salaire_id"      => ["present_if:salaire,null", "sometimes", "uuid", "exists:poste_salaries,id"],
-            "salaire"               => ["present_if:poste_salaire_id,null", "sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            "poste_salaire_id"      => ["present_if:montant,null", "sometimes", "uuid", "exists:poste_salaries,id"],
+            "montant"               => ["present_if:poste_salaire_id,null", "sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
             'poste_id'              => ['sometimes', 'string', 'exists:postes,id'],
             'unite_mesures_id'      => ['sometimes', 'string', 'exists:unite_mesures,id'],
             'can_be_deleted'        => ['sometimes', 'boolean']

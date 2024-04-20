@@ -348,17 +348,45 @@ class RepositoriesServiceProvider extends ServiceProvider
 
         // Bind ReadWriteRepositoryInterface to IQPReadWriteRepository
         $this->app->when(\Domains\Magasins\IQP\Services\RESTful\IQPRESTfulReadWriteService::class)
-        ->needs(
-            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-        )
-        ->give(\Domains\Magasins\IQP\Repositories\IQPReadWriteRepository::class);
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Magasins\IQP\Repositories\IQPReadWriteRepository::class);
 
-    // Bind ReadWriteRepositoryInterface to IQPReadOnlyRepository
-    $this->app->when(\Domains\Magasins\IQP\Services\RESTful\IQPRESTfulQueryService::class)
-        ->needs(
-            \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
-        )
-        ->give(\Domains\Magasins\IQP\Repositories\IQPReadOnlyRepository::class);
+        // Bind ReadWriteRepositoryInterface to IQPReadOnlyRepository
+        $this->app->when(\Domains\Magasins\IQP\Services\RESTful\IQPRESTfulQueryService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Magasins\IQP\Repositories\IQPReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to CommandeReadWriteRepository
+        $this->app->when(\Domains\Magasins\Commandes\Commande\Services\RESTful\CommandeRESTfulReadWriteService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Magasins\Commandes\Commande\Repositories\CommandeReadWriteRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to CommandeReadOnlyRepository
+        $this->app->when(\Domains\Magasins\Commandes\Commande\Services\RESTful\CommandeRESTfulQueryService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Magasins\Commandes\Commande\Repositories\CommandeReadOnlyRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to CommandeArticleReadWriteRepository
+        $this->app->when(\Domains\Magasins\Commandes\CommandeArticle\Services\RESTful\CommandeArticleRESTfulReadWriteService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Magasins\Commandes\CommandeArticle\Repositories\CommandeArticleReadWriteRepository::class);
+
+        // Bind ReadWriteRepositoryInterface to CommandeArticleReadOnlyRepository
+        $this->app->when(\Domains\Magasins\Commandes\CommandeArticle\Services\RESTful\CommandeArticleRESTfulQueryService::class)
+            ->needs(
+                \Core\Data\Repositories\Contracts\ReadWriteRepositoryInterface::class
+            )
+            ->give(\Domains\Magasins\Commandes\CommandeArticle\Repositories\CommandeArticleReadOnlyRepository::class);
     }
 
     /**

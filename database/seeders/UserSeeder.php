@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Oauths\OauthClient;
 use App\Models\Oauths\OauthPersonalAccessClient;
+use App\Models\Permission;
 use App\Models\User;
 use App\Models\Person;
 use App\Models\Role;
@@ -11,6 +12,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Faker\Factory as Faker;
 
 class UserSeeder extends Seeder
 {
@@ -19,21 +21,25 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $faker = Faker::create();
+
         $person = Person::create([
-            'last_name'     => "DOE",
-            'first_name'    => "John",
-            'middle_name'   => ["Phillipe"],
-            'sex'           => 'male'
+            'last_name'     => $faker->lastName,
+            'first_name'    => $faker->firstName,
+            'middle_name'   => [$faker->firstName, $faker->firstName],
+            'sex'           => $faker->randomElement(["male", "female"])
         ]);
 
         $user = $person->user()->create([
             'login_channel' => "email",
             'type_of_account' => "personal",
-            'email' => "johndoe@gmail.com",
-            'phone_number'    => ["country_code"=> 229, "number" => 87321067]
+            'email' => $faker->email,
+            'phone_number'    => ["country_code"=> 229, "number" => (int) str_replace("+", "", $faker->e164PhoneNumber)]
         ]);
 
-        $user->assignRole(Role::first()->id);
+        $role = Role::first();
+
+        $user->assignRole($role->id);
 
         $credential = $user->credential()->create([
             'created_by' => $user->id,
@@ -51,6 +57,8 @@ class UserSeeder extends Seeder
             "redirect" => config('app.url'),
         ]);
         $client->save();
+
+        $role->permissions()->attach(Permission::distinct()->get()->pluck("id")->toArray());
 
         /*OauthPersonalAccessClient::create(["client_id" => $client->id]); */
     }

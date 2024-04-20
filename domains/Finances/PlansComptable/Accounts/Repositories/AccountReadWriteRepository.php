@@ -47,6 +47,22 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
     }
 
     /**
+     * @return SubAccountReadWriteRepository
+     */
+    public function getSubAcountRepositoryReadWrite()
+    {
+        return $this->subAcountRepositoryReadWrite;
+    }
+
+    /**
+     * @return CompteReadWriteRepository
+     */
+    public function getCompteReadWriteRepository()
+    {
+        return $this->compteReadWriteRepository;
+    }
+
+    /**
      * Create a new record.
      *
      * @param  array $data         The data for creating the record.
@@ -57,7 +73,6 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
     public function create(array $data): Model
     {
         try {
-
             $this->model = parent::create($data);
 
             if (isset($data['sub_accounts'])) {
@@ -106,19 +121,21 @@ class AccountReadWriteRepository extends EloquentReadWriteRepository
 
             $this->model = $query->where("id", $accountId)->first();
 
-            foreach ($subAccountDataArray as $subAccountItem) {
+            foreach ($subAccountDataArray as $key => $subAccountItem) {
 
-                if (isset($subAccountItem['sous_compte_id'])) {
-                    if (!parent::relationExists(relation: $this->model->sous_comptes(), ids: [$subAccountItem['sous_compte_id']], isPivot: false)) {
+                if (!is_null($subAccountItem)) {
 
-                        // Attach the sous compte to principal compte                        
-                        $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
+                    if (isset($subAccountItem['sous_compte_id'])) {
+                        if (!parent::relationExists(relation: $this->model->sous_comptes(), ids: [$subAccountItem['sous_compte_id']], isPivot: false)) {
+
+                            // Attach the sous compte to principal compte                        
+                            $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
+                        }
+                    } else if (isset($subAccountItem['compte_data'])) {
+                        $compte = $this->compteReadWriteRepository->firstOrCreate(["name" => strtolower($subAccountItem["compte_data"]["name"])], array_merge($subAccountItem, $subAccountItem["compte_data"]));
+
+                        $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["sous_compte_id" => $compte->id, "subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
                     }
-                } else {
-
-                    $compte = $this->compteReadWriteRepository->create(array_merge($subAccountItem, $subAccountItem["compte_data"]));
-
-                    $this->subAcountRepositoryReadWrite->create(array_merge($subAccountItem, ["sous_compte_id" => $compte->id, "subaccountable_id" => $this->model->id, "subaccountable_type" => $this->model::class]));
                 }
             }
 

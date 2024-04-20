@@ -8,7 +8,7 @@ use Core\Utils\Enums\Contract\EnumContract;
 use Core\Utils\Traits\IsEnum;
 
 /**
- * Class ***`TypeEmployeeEnum`***
+ * Class ***`TypeIQPEnum`***
  *
  * This class represents the type that typeiqp can have
  *

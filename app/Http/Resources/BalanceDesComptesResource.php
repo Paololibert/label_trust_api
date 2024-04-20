@@ -26,7 +26,7 @@ class BalanceDesComptesResource extends JsonResource
         $this->start_at = $start_at;
         $this->end_at   = $end_at;
     }
-
+    
     /**
      * Transform the resource into an array.
      *
@@ -40,7 +40,7 @@ class BalanceDesComptesResource extends JsonResource
             "date_ouverture"                => $this->date_ouverture->format("Y-m-d"),
             "date_fermeture"                => $this->date_fermeture,
             "status_exercice"               => $this->status_exercice,
-            "accounts"                      => $this->accounts->map(function ($account) {
+            "accounts"                      => $this->plan_comptable->accounts->map(function ($account) {
                 return [
                     'id'                    => $account->id,
                     'intitule'              => $account->intitule,
@@ -49,6 +49,7 @@ class BalanceDesComptesResource extends JsonResource
                     'account_number'        => $account->account_number,
                     "solde_debiteur"        => $this->solde($account, "debit"),
                     "solde_crediteur"       => $this->solde($account, "credit"),
+
                     "mouvement_debit"       => $this->mouvements_debit($account),
                     "mouvement_credit"      => $this->mouvements_credit($account),
                     "sub_accounts"          => $this->sub_accounts($account->sous_comptes),
@@ -56,6 +57,7 @@ class BalanceDesComptesResource extends JsonResource
                 ];
             }),
             "created_at"                    => $this->created_at->format("Y-m-d")
+            // Add more custom attributes or customize existing ones as needed
         ];
     }
 
@@ -93,18 +95,21 @@ class BalanceDesComptesResource extends JsonResource
             ->groupBy('type_ecriture_compte'); // Specify the columns you want to select;
     }
 
+
+
     private function solde(Account|SubAccount $account, string $type = "debit")
     {
         switch ($type) {
             case 'credit':
                 return $this->balance_compte($account) + $this->mouvements_credit($account, $type);
                 break;
-
+            
             default:
                 return $this->balance_compte($account) + $this->mouvements_debit($account, $type);
                 break;
         }
     }
+
 
     private function mouvements_debit(Account|SubAccount $account)
     {
@@ -116,15 +121,14 @@ class BalanceDesComptesResource extends JsonResource
         return $this->mouvements($account)->where("type_ecriture_compte", "credit")->first()?->total ?? 0.00;
     }
 
-    private function balance_compte(Account|SubAccount $account, string $type = "debit")
-    {
-        if (/* $account->relationLoaded('balance') &&  */$account->balance) {
+    private function balance_compte(Account|SubAccount $account, string $type = "debit"){
+        if($account->relationLoaded('balance') && $account->balance){
             $balance = $account->balance()->where("exercice_comptable_id", $this->id)->first();
             switch ($type) {
                 case 'credit':
                     return $balance->solde_credit;
                     break;
-
+                
                 default:
                     return $balance->solde_debit;
                     break;

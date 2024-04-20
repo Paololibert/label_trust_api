@@ -41,7 +41,8 @@ class UpdateClasseDeCompteDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            "name"            		=> ["string", "required", "max:25", 'unique_ignore_case:classes_de_compte,name,' . request()->route("classe_de_compte_id") . ',id'],
+            "intitule"              => ["string", "required", "max:25", 'unique_ignore_case:classes_de_compte,intitule,' . request()->route("classe_de_compte_id") . ',id'],
+            "class_number"          => ["string", "required", "max:25", 'unique_ignore_case:classes_de_compte,class_number,' . request()->route("classe_de_compte_id") . ',id'],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
 

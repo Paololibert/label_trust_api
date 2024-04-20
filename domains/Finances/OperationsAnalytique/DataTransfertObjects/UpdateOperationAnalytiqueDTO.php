@@ -1,0 +1,97 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Domains\Finances\OperationsAnalytique\DataTransfertObjects;
+
+use App\Models\Finances\ExerciceComptable;
+use App\Models\Finances\OperationAnalytique;
+use App\Rules\AccountNumberExistsInEitherTable;
+use App\Rules\CheckIsAnalytiqueAccountExistsInEitherTable;
+use Core\Utils\DataTransfertObjects\BaseDTO;
+use Core\Utils\Enums\StatusExerciceEnum;
+use Core\Utils\Enums\TypeEcritureCompteEnum;
+use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\ValidationException;
+
+/**
+ * Class ***`UpdateOperationAnalytiqueDTO`***
+ *
+ * This class extends the ***`BaseDTO`*** class.
+ * It represents the data transfer object for updating a new ***`OperationAnalytique`*** model.
+ *
+ * @package ***`\Domains\Finances\OperationsAnalytique\DataTransfertObjects`***
+ */
+class UpdateOperationAnalytiqueDTO extends BaseDTO
+{
+
+    /**
+     * @var
+     */
+    protected $exercice_comptable;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->exercice_comptable = ExerciceComptable::find(request()->route("exercice_comptable_id"));
+
+        if (!$this->exercice_comptable) {
+            throw ValidationException::withMessages(["Exercice comptable inconnu"]);
+        } else {
+            if ($this->exercice_comptable->status_exercice === StatusExerciceEnum::CLOSE) {
+                throw ValidationException::withMessages(["L'exercice comptable est deja cloturer"]);
+            }
+        }
+    }
+    
+    /**
+     * Get the class name of the model associated with the DTO.
+     *
+     * @return string The class name of the model.
+     */
+    protected function getModelClass(): string
+    {
+        return OperationAnalytique::class;
+    }
+
+    /**
+     * Get the validation rules for the DTO object.
+     *
+     * @return array The validation rules.
+     */
+    public function rules(array $rules = []): array
+    {
+        $periode = $this->exercice_comptable?->periode_exercice;
+
+        $rules = array_merge([
+            "libelle"                   => ["required", "string", "max:120"],
+            "account_number"            => ["required", "distinct", new CheckIsAnalytiqueAccountExistsInEitherTable],
+            "type_ecriture_compte"      => ['required', "string", new Enum(TypeEcritureCompteEnum::class)],
+            "montant"                   => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
+            "date_ecriture"             => ["required", 'date_format:Y-m-d', "after_or_equal:" . $periode?->date_debut_periode . "/{$this->exercice_comptable?->fiscal_year}", 'before_or_equal:' . $periode?->date_fin_periode . "/{$this->exercice_comptable?->fiscal_year}"],
+            "journal_id"                => ["required", "exists:journaux,id"],
+            "projet_production_id"      => ["required", "exists:projets_production,id"],
+            'can_be_deleted'            => ['sometimes', 'boolean'],
+        ], $rules);
+
+        return $this->rules = parent::rules($rules);
+    }
+
+    /**
+     * Get the validation error messages for the DTO object.
+     *
+     * @return array The validation error messages.
+     */
+    public function messages(array $messages = []): array
+    {
+        $default_messages = array_merge([
+            'can_be_delete.boolean' => 'Le champ can_be_delete doit être un booléen.',
+            'can_be_delete.in'      => 'Le can_be_delete doit être "true" ou "false".'
+        ], $messages);
+
+        $messages = array_merge([], $default_messages);
+
+        return $this->messages = parent::messages($messages);
+    }
+}

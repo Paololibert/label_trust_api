@@ -7,6 +7,7 @@ namespace Domains\Magasins\IQP\DataTransfertObjects;
 use App\Models\Magasins\IQP;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 use Core\Utils\Enums\TypeIQPEnum;
+use Core\Utils\Enums\TypeOfIQPEnum;
 use Illuminate\Validation\Rules\Enum;
 
 /**
@@ -45,6 +46,7 @@ class CreateIQPDTO extends BaseDTO
         $rules = array_merge([
             "name"            		        => ["string", "required", 'unique:iqps,name'],
             "type_of_iqp"                   => ["required", "string", new Enum(TypeIQPEnum::class)],
+            "iqp_type"                      => ["required", "string", new Enum(TypeOfIQPEnum::class)],
             'can_be_deleted'                => ['sometimes', 'boolean', 'in:'.true.','.false],
         ], $rules);
         return $this->rules = parent::rules($rules);

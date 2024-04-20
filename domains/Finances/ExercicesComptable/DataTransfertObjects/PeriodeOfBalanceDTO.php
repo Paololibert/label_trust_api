@@ -6,6 +6,7 @@ namespace Domains\Finances\ExercicesComptable\DataTransfertObjects;
 
 use App\Models\Finances\ExerciceComptable;
 use Core\Utils\DataTransfertObjects\BaseDTO;
+use Illuminate\Http\Request;
 
 /**
  * Class ***`PeriodeOfBalanceDTO`***
@@ -18,7 +19,7 @@ use Core\Utils\DataTransfertObjects\BaseDTO;
 class PeriodeOfBalanceDTO extends BaseDTO
 {
 
-    public function __construct()
+    public function __construct(Request $request = null)
     {
         parent::__construct();
     }
@@ -44,7 +45,7 @@ class PeriodeOfBalanceDTO extends BaseDTO
         $periode = $exercice?->periode_exercice;
         $rules = array_merge([
             "from_date"                                                          => ["sometimes", "date_format:d/m/Y", "after_or_equal:". $periode?->date_debut_periode . "/{$exercice?->fiscal_year}", 'before_or_equal:' . $periode?->date_fin_periode . "/{$exercice?->fiscal_year}"],
-            "to_date"                                                            => ["required", "date_format:d/m/Y", "after_or_equal:from_date"],
+            "to_date"                                                            => ["sometimes", "date_format:d/m/Y", "after_or_equal:from_date"],
         ], $rules);
 
         return $this->rules = parent::rules($rules);

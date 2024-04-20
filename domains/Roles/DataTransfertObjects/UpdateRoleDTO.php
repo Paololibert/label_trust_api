@@ -42,7 +42,7 @@ class UpdateRoleDTO extends BaseDTO
     {
         $rules = array_merge([
             "name"                  => ["string", "required", 'unique_ignore_case:roles,name,' . request()->route('role_id') . ',id'],
-            "description"           => ["string", "required"],
+            "description"           => ["string", "sometimes", "max:255"],
             'can_be_deleted'        => ['sometimes', 'boolean', 'in:' . true . ',' . false],
             'permissions'           => 'sometimes|array|min:1',
             'permissions.*'         => ['distinct', "exists:permissions,id"]

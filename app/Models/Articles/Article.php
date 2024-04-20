@@ -8,6 +8,7 @@ use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\HasPermissions;
 use Core\Utils\Helpers\Sluggable\HasSlug;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class ***`Article`***
@@ -42,27 +43,24 @@ class Article extends ModelContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'name','price','stock',
-        'description','magasin_id','categorie_article_id'
+        'name', 'price', 'stock',
+        'description', 'magasin_id', 'categorie_article_id'
     ];
-    
-    
+
+
     /**
      * The attributes that should be treated as dates.
      *
      * @var array<int, string>
      */
-    protected $dates = [
-        
-    ];
+    protected $dates = [];
 
     /**
      * The model's default attribute values.
      *
      * @var array<string, mixed>
      */
-    protected $attributes = [
-    ];
+    protected $attributes = [];
 
     /**
      * The attributes that should be visible in arrays.
@@ -78,9 +76,7 @@ class Article extends ModelContract
      *
      * @var array<int, string>
      */
-    protected $appends = [
-
-    ];
+    protected $appends = [];
 
     /**
      * Interact with the Article's name.
@@ -91,5 +87,14 @@ class Article extends ModelContract
             get: fn (string $value) => ucfirst($value),
             set: fn (string $value) => strtolower($value)
         );
+    }
+    /**
+     * Get the commandes associated with this article.
+     *
+     * @return BelongsToMany
+     */
+    public function commandes(): BelongsToMany
+    {
+        return $this->belongsToMany(Commande::class, 'commande_articles', 'article_id', 'commande_id');
     }
 }
