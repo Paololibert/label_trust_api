@@ -101,6 +101,14 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                 Route::delete('roles/{role_id}', 'RoleController@destroy')->name('roles.destroy')->middleware(['can:delete-role', 'can:manage_roles']); // Delete a role
                 */
 
+                // Example:
+                Route::get('roles', 'RoleController@index')->name('roles.index'); // View all roles
+                Route::post('roles', 'RoleController@store')->name('roles.store'); // Create a new role
+                /* Route::get('roles/{role_id}', 'RoleController@show')->name('roles.show')->middleware(['can:view-roles', 'can:manage_roles']); // View a specific role
+                Route::put('roles/{role_id}', 'RoleController@update')->name('roles.update')->middleware(['can:update-role', 'can:manage_roles']); // Update a role
+                Route::delete('roles/{role_id}', 'RoleController@destroy')->name('roles.destroy')->middleware(['can:delete-role', 'can:manage_roles']); // Delete a role
+                */
+
                 Route::group(['prefix' => 'roles'], function () {
                     // Get all roles
                     Route::put('{role_id}/grant-access', 'RoleController@grantAccess')->name('roles.grantAccess');
