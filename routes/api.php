@@ -73,7 +73,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
             Route::group(['as' => 'permissions.'], function () {
 
                 // Get all permissions
-                Route::get('/permissions', 'PermissionController')->middleware(['auth:api', 'permission:view_permissions']);
+                Route::get('/permissions', 'PermissionController');
             });
 
 
@@ -89,13 +89,11 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
             */
             Route::group([], function () {
 
-                Route::middleware('auth.view_roles')->get('api/roles', 'RoleController@index');
-
-                Route::apiResource('roles', 'RoleController')->parameters(['roles' => 'role_id'])->middleware('auth:api');
+                Route::apiResource('roles', 'RoleController')->parameters(['roles' => 'role_id']);
 
                 // Example:
-                Route::get('roles', 'RoleController@index')->name('roles.index')->middleware(['auth:api', 'permission:view_roles']); // View all roles
-                Route::post('roles', 'RoleController@store')->name('roles.store')->middleware(['auth:api', 'permission:create_role, manage_roles']); // Create a new role
+                Route::get('roles', 'RoleController@index')->name('roles.index'); // View all roles
+                Route::post('roles', 'RoleController@store')->name('roles.store'); // Create a new role
                 /* Route::get('roles/{role_id}', 'RoleController@show')->name('roles.show')->middleware(['can:view-roles', 'can:manage_roles']); // View a specific role
                 Route::put('roles/{role_id}', 'RoleController@update')->name('roles.update')->middleware(['can:update-role', 'can:manage_roles']); // Update a role
                 Route::delete('roles/{role_id}', 'RoleController@destroy')->name('roles.destroy')->middleware(['can:delete-role', 'can:manage_roles']); // Delete a role
