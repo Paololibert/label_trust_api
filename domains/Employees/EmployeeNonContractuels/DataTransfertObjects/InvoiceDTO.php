@@ -45,11 +45,9 @@ class InvoiceDTO extends BaseDTO
     public function rules(array $rules = []): array
     {
         $rules = array_merge([
-            //'employee_non_contractuel_id'        => ['required', 'string', 'exists:employee_non_contractuel_invoices,id'],
             "items"                              => ["required", "array"],
             "items.*"                            => ["distinct", "array"],
             "items.*.quantity"                   => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
-            //"items.*.unit_price"                 => ["required", "numeric", 'regex:/^0|[1-9]\d+$/'],
             "items.*.unite_travaille_id"         => ["required", "distinct", "exists:unite_travailles,id"]
         ], $rules);
 
