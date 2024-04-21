@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Finances\ContractualEmployeePayrollAdjustement;
 use App\Models\Finances\PaySlip;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Contractuelable;
@@ -108,5 +109,12 @@ class EmployeeContractuel extends ModelContract
     public function pay_slips(): HasMany
     {
         return $this->hasMany(PaySlip::class, 'employee_contractuel_id');
+    }
+
+    /**
+     * Payroll adjustements
+     */
+    public function payroll_adjustements(){
+        return $this->hasMany(ContractualEmployeePayrollAdjustement::class, 'employee_contractuel_id');
     }
 }

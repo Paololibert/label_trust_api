@@ -7,6 +7,7 @@ namespace Domains\Employees\EmployeeContractuels\PaySlips\Repositories;
 use App\Models\EmployeeContractuel;
 use App\Models\Finances\PaySlip;
 use Core\Data\Repositories\Eloquent\EloquentReadWriteRepository;
+use Core\Utils\Enums\AdjustementCategoryEnum;
 use Core\Utils\Exceptions\Contract\CoreException;
 use Core\Utils\Exceptions\RepositoryException;
 use Domains\Employees\EmployeeContractuels\Repositories\EmployeeContractuelReadWriteRepository;
@@ -59,6 +60,22 @@ class PaySlipReadWriteRepository extends EloquentReadWriteRepository
                 }
             }
 
+            if($employeeContractuel->payroll_adjustements){
+                foreach ($employeeContractuel->payroll_adjustements as $key => $payroll_adjustement) {
+                    $amount = $payroll_adjustement->ajustement_value;
+                    if($payroll_adjustement->ajustement_value_type != "fixe"){
+                        $amount = ($amount * $payroll_adjustement->base_value) / 100;
+                    }
+
+                    if($payroll_adjustement->ajustement_category != AdjustementCategoryEnum::AUGMENTATION){
+                        $amount = -1 * $amount;
+                    }
+
+                    $this->model->items()->create(["libelle" => $payroll_adjustement->ajustement_name, "amount" =>  $amount]);
+        
+                }
+            }
+
             $this->model->refresh();
 
             $total = $this->model->items->sum("amount");
@@ -89,8 +106,6 @@ class PaySlipReadWriteRepository extends EloquentReadWriteRepository
                     if (isset($item["id"])) {
 
                         $pay_slip_item = $this->model->items()->where("id", $item["id"])->first();
-
-                        dump($pay_slip_item);
 
                         if ($pay_slip_item) {
                             $pay_slip_item->update($item);
