@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\ResourceRequest;
 use Domains\Employees\EmployeeContractuels\DataTransfertObjects\CreateEmployeeContractuelAssignmentDTO;
+use Domains\Employees\EmployeeContractuels\PaySlips\DataTransfertObjects\CreatePaySlipDTO;
+use Domains\Employees\EmployeeContractuels\PaySlips\DataTransfertObjects\UpdatePaySlipDTO;
 
 /**
  * **`EmployeeContractuelController`**
@@ -67,6 +69,66 @@ class EmployeeContractuelController extends RESTfulResourceController
     public function terminateContract(Request $request, string $contractID, string $employeeContractuelID): JsonResponse
     {
         return $this->restJsonReadWriteService->terminateContract($contractID, $employeeContractuelID);
+    }
+
+    /**
+     * Generate pay slip
+     *
+     * @param  string                           $employeeContractuelId      The unique identifier of the employee.
+     * @param  Request                          $request                    The request object containing the data for updating the resource.
+     * @return \Illuminate\Http\JsonResponse                                The JSON response indicating the status of the role privileges granted operation.
+     */
+    public function generatePaySlip(Request $request, string $employeeContractuelId): JsonResponse
+    {
+        $createRequest = app(ResourceRequest::class, ['dto' => new CreatePaySlipDTO(data: ["employee_contractuel_id" => $employeeContractuelId])]);
+
+        if ($createRequest) {
+            $createRequest->validate($createRequest->rules());
+        }
+        
+        return $this->restJsonReadWriteService->generatePaySlip($employeeContractuelId, $createRequest->getDto());
+    }
+
+    /**
+     * Update pay slip
+     *
+     * @param  string                           $employeeContractuelId     The unique identifier of the employee.
+     * @param  Request                          $request        The request object containing the data for updating the resource.
+     * @return \Illuminate\Http\JsonResponse                    The JSON response indicating the status of the role privileges granted operation.
+     */
+    public function updatePaySlip(Request $request, string $employeeContractuelId, string $paySlipId): JsonResponse
+    {
+        $createRequest = app(ResourceRequest::class, ['dto' => new UpdatePaySlipDTO(data: ["employee_non_contractuel_id" => $employeeContractuelId])]);
+
+        if ($createRequest) {
+            $createRequest->validate($createRequest->rules());
+        }
+        
+        return $this->restJsonReadWriteService->updatePaySlip($employeeContractuelId, $paySlipId, $createRequest->getDto());
+    }
+
+    /**
+     * Validate pay slip
+     *
+     * @param  string                           $employeeContractuelId     The unique identifier of the employee.
+     * @param  Request                          $request        The request object containing the data for updating the resource.
+     * @return \Illuminate\Http\JsonResponse                    The JSON response indicating the status of the role privileges granted operation.
+     */
+    public function validatePaySlip(Request $request, string $employeeContractuelId, string $paySlipId): JsonResponse
+    {        
+        return $this->restJsonReadWriteService->validatePaySlip($employeeContractuelId, $paySlipId);
+    }
+
+    /**
+     * PaySlips
+     *
+     * @param  string                           $employeeContractuelId     The unique identifier of the employee.
+     * @param  Request                          $request        The request object containing the data for updating the resource.
+     * @return \Illuminate\Http\JsonResponse                    The JSON response indicating the status of the role privileges granted operation.
+     */
+    public function paySlips(Request $request, string $employeeContractuelId): JsonResponse
+    {        
+        return $this->restJsonQueryService->pay_slips($employeeContractuelId);
     }
     
 }

@@ -219,6 +219,19 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
                     Route::post('/new-post', 'EmployeeContractuelController@assignmentOfPost')->name('employeecontractuels.assignmentOfPost');
 
                     Route::get('{contract_id}/{employee_contractuel_id}/terminate-contract', 'EmployeeContractuelController@terminateContract')->name('employeecontractuels.terminateContract');
+                    
+                });
+
+                Route::group(["prefix" => "employees_contractuel"], function(){
+
+                    Route::post('{employee_contractuel_id}/generate-fiche-de-paie', 'EmployeeContractuelController@generatepaySlip')->name('employeecontractuels.generatePaySlip');
+
+                    Route::get('{employee_contractuel_id}/fiches-de-paie', 'EmployeeContractuelController@paySlips')->name('employeecontractuels.paySlips');
+
+                    Route::put('{employee_contractuel_id}/fiches-de-paie/{pay_slip_id}', 'EmployeeContractuelController@updatePaySlip')->name('employeecontractuels.updatePaySlip');
+
+                    Route::patch('{employee_contractuel_id}/fiches-de-paie/{pay_slip_id}/validate', 'EmployeeContractuelController@validatePaySlip')->name('employeecontractuels.validatePaySlip');
+
                 });
 
                 Route::group(['prefix' => 'employeenoncontractuels'], function () {
@@ -231,7 +244,7 @@ Route::namespace("App\Http\Controllers\API\RESTful")->middleware([])->group(func
 
                     Route::put('{employee_non_contractuel_id}/invoices/{invoice_id}', 'EmployeeNonContractuelController@updateInvoice')->name('employeenoncontractuels.update-invoice');
 
-                    Route::patch('{employee_non_contractuel_id}/invoices/{invoice_id}/validate', 'EmployeeNonContractuelController@updateInvoice')->name('employeenoncontractuels.update-invoice');
+                    Route::patch('{employee_non_contractuel_id}/invoices/{invoice_id}/validate', 'EmployeeNonContractuelController@validateInvoice')->name('employeenoncontractuels.update-invoice');
 
                 });
 

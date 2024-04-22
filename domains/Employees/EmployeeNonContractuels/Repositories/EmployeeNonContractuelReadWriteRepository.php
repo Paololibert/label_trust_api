@@ -128,7 +128,7 @@ class EmployeeNonContractuelReadWriteRepository extends EloquentReadWriteReposit
             }
 
             $invoice->refresh();
-            $invoice->update(array_merge($data, ["total" => $invoice->items->sum("total")]));
+            $invoice->update(["total" => $invoice->items->sum("total")]);
 
 
             return $invoice->refresh();
@@ -196,7 +196,7 @@ class EmployeeNonContractuelReadWriteRepository extends EloquentReadWriteReposit
     }
 
     /**
-     * Generate Invoice
+     * Validate Invoice
      *
      * @param   string      $employeeId     The unique identifier of the employee.
      * @param   string      $invoiceId      The unique identifier of the invoice.

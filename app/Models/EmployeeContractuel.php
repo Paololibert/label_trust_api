@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Finances\ContractualEmployeePayrollAdjustement;
+use App\Models\Finances\PaySlip;
 use Core\Data\Eloquent\Contract\ModelContract;
 use Core\Data\Eloquent\ORMs\Contractuelable;
+use Core\Utils\Enums\StatutContratEnum;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
@@ -84,8 +88,33 @@ class EmployeeContractuel extends ModelContract
     /**
      * Get the comments for the blog post.
     */
+    public function contract(): HasOne
+    {
+        return $this->hasOne(Contract::class)->where("contract_status", StatutContratEnum::EN_COURS);
+    }
+
+    /**
+     * Get the comments for the blog post.
+    */
     public function contracts(): HasMany
     {
         return $this->hasMany(Contract::class);
+    }
+
+    /**
+     * Get the pay_slips
+     *
+     * @return HasMany
+     */
+    public function pay_slips(): HasMany
+    {
+        return $this->hasMany(PaySlip::class, 'employee_contractuel_id');
+    }
+
+    /**
+     * Payroll adjustements
+     */
+    public function payroll_adjustements(){
+        return $this->hasMany(ContractualEmployeePayrollAdjustement::class, 'employee_contractuel_id');
     }
 }

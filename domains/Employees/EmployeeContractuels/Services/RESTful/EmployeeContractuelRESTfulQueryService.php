@@ -6,7 +6,13 @@ namespace Domains\Employees\EmployeeContractuels\Services\RESTful;
 
 use Core\Logic\Services\Contracts\QueryServiceContract;
 use Core\Logic\Services\RestJson\RestJsonQueryService;
+use Core\Utils\Exceptions\Contract\CoreException;
+use Core\Utils\Exceptions\ServiceException;
+use Core\Utils\Helpers\Responses\Json\JsonResponseTrait;
 use Domains\Employees\EmployeeContractuels\Services\RESTful\Contracts\EmployeeContractuelRESTfulQueryServiceContract as ContractsEmployeeContractuelRESTfulQueryServiceContract;
+use Illuminate\Http\Response;
+use Throwable;
+
 /**
  * Class ***`EmployeeContractuelRESTfulQueryService`***
  *
@@ -27,5 +33,35 @@ class EmployeeContractuelRESTfulQueryService extends RestJsonQueryService implem
     public function __construct(QueryServiceContract $queryService)
     {
         parent::__construct($queryService);
+    }
+
+    /**
+     * List of pay slips
+     *
+     * @param  string                                   $employeeContractuelId      The unique identifier of the employee contractuel.
+     * @return \Illuminate\Http\JsonResponse                                        The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                              If there is an issue.
+     */
+    public function pay_slips(string $employeeContractuelId): \Illuminate\Http\JsonResponse
+    {
+        try {
+
+            $pay_slips = $this->queryService->getRepository()->find($employeeContractuelId)->pay_slips()->latest()->paginate();
+
+            return JsonResponseTrait::success(
+                message: "Fiches de paie",
+                data: $pay_slips,
+                status_code: Response::HTTP_OK
+            );
+        } catch (CoreException $exception) {
+
+            // Throw a ServiceException if there is an issue with updating the accounts
+            throw new ServiceException(message: $exception->getMessage(), status_code: $exception->getStatusCode(), error_code: $exception->getErrorCode(), code: $exception->getCode(), error: $exception->getError(), previous: $exception);
+        
+        } catch (Throwable $exception) {
+            // Throw a ServiceException if there is an issue with updating the accounts
+            throw new ServiceException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
+        }
     }
 }
