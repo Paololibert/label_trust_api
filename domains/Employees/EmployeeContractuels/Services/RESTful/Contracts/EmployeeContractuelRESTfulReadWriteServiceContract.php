@@ -41,4 +41,40 @@ interface EmployeeContractuelRESTfulReadWriteServiceContract extends RestJsonRea
      */
     public function terminateContract(string $contractId, string $employeeId): \Illuminate\Http\JsonResponse;
     
+
+    /**
+     * Generate pay slip
+     *
+     * @param  string                                           $employeeId The unique identifier of the employee contractuel.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $data       Pay slip items data.
+     * @return \Illuminate\Http\JsonResponse                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                      If there is an issue.
+     */
+    public function generatePaySlip(string $employeeContractuelId, DTOInterface $data): \Illuminate\Http\JsonResponse;
+    
+    /**
+     * Update pay slip
+     *
+     * @param  string                                           $employeeContractuelId The unique identifier of the employee contractuel.
+     * @param  string                                           $paySlipId The unique identifier of the pay slip.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $data       Pay slip items data.
+     * @return \Illuminate\Http\JsonResponse                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                      If there is an issue.
+     */
+    public function updatePaySlip(string $employeeContractuelId, string $paySlipId, DTOInterface $data): \Illuminate\Http\JsonResponse;
+
+    /**
+     * Validate pay slip
+     *
+     * @param  string                                           $employeeContractuelId The unique identifier of the employee contractuel.
+     * @param  string                                           $paySlipId The unique identifier of the pay slip.
+     * @param  \Core\Utils\DataTransfertObjects\DTOInterface    $data       Pay slip items data.
+     * @return \Illuminate\Http\JsonResponse                                The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                      If there is an issue.
+     */
+    public function validatePaySlip(string $employeeContractuelId, string $paySlipId): \Illuminate\Http\JsonResponse;
+
 }

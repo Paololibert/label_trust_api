@@ -9,6 +9,7 @@ use Core\Utils\Enums\StatutContratEnum;
 use Core\Utils\Enums\TypeContratEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class ***`Contract`***
@@ -119,6 +120,14 @@ class Contract extends ModelContract
     public function unite_mesure(): BelongsTo
     {
         return $this->belongsTo(UniteMesure::class, 'unite_mesures_id');
+    }
+
+    /**
+     * Get the comments for the blog post.
+    */
+    public function salary(): HasOne
+    {
+        return $this->hasOne(Salaire::class)->where("est_valide", true);
     }
 
     /**

@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Domains\Employees\EmployeeNonContractuels\DataTransfertObjects;
+namespace Domains\Employees\EmployeeContractuels\PaySlips\DataTransfertObjects;
 
-use App\Models\Finances\EmployeeNonContractuelInvoice;
+use App\Models\Finances\PaySlip;
 use Core\Utils\DataTransfertObjects\BaseDTO;
 
-class InvoiceDTO extends BaseDTO
+class UpdatePaySlipDTO extends BaseDTO
 {
-
     /**
      * @var array
      */
@@ -34,8 +33,9 @@ class InvoiceDTO extends BaseDTO
      */
     protected function getModelClass(): string
     {
-        return EmployeeNonContractuelInvoice::class;
+        return PaySlip::class;
     }
+
 
     /**
      * Get the validation rules for the DTO object.
@@ -44,16 +44,24 @@ class InvoiceDTO extends BaseDTO
      */
     public function rules(array $rules = []): array
     {
-        $rules = array_merge([
-            "items"                              => ["required", "array"],
-            "items.*"                            => ["distinct", "array"],
-            "items.*.quantity"                   => ["required", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
-            "items.*.unite_travaille_id"         => ["required", "distinct", "exists:unite_travailles,id"]
+        $rules = array_merge([//
+
+            "items"                         => ["sometimes", "array"],
+            "items.*"                       => ["distinct", "array"],
+            "items.*.id"                    => ["sometimes", "distinct", "exists:pay_slip_items,id"],
+            "items.*.libelle"               => ["sometimes", "string", "max:255"],
+            "items.*.amount"                => ["sometimes", "numeric", "regex:/^\d+(\.\d{1,2})?$/"],
+            'periode_date'                  => ["sometimes", "date_format:m/Y"],
+            "start_date"                    => ["sometimes", "date_format:Y-m-d"],
+            "end_date"                      => ["sometimes", "date_format:Y-m-d", "after:start_date"],
+            "issue_date"                    => ["sometimes", "date_format:Y-m-d"],
+            "pay_slip_status"               => ["sometimes", "boolean"]
+            
         ], $rules);
-
+        
         return $this->rules = parent::rules($rules);
-
     }
+
 
     /**
      * Get the validation error messages for the DTO object.

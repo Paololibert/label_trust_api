@@ -73,7 +73,7 @@ class Salaire extends ModelContract
      * @var array<string, string>
      */
     protected $casts = [
-        'montant'                       =>'decimal',
+        'montant'                       =>'decimal:2',
         'date_debut'                    =>'datetime:Y-m-d H:i:s',
         'date_fin'                      =>'datetime:Y-m-d H:i:s',
         'est_valide'                    =>'boolean',

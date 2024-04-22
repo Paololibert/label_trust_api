@@ -23,5 +23,13 @@ use Core\Logic\Services\RestJson\Contracts\RestJsonQueryServiceContract;
  */
 interface EmployeeContractuelRESTfulQueryServiceContract extends RestJsonQueryServiceContract
 {
-
+    /**
+     * List of pay slips
+     *
+     * @param  string                                   $employeeContractuelId      The unique identifier of the employee contractuel.
+     * @return \Illuminate\Http\JsonResponse                                        The JSON response indicating the success of the operation.
+     *
+     * @throws \Core\Utils\Exceptions\ServiceException                              If there is an issue.
+     */
+    public function pay_slips(string $employeeContractuelId): \Illuminate\Http\JsonResponse;
 }
